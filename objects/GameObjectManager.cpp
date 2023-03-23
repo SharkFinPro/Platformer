@@ -1,0 +1,106 @@
+#include "GameObjectManager.h"
+#include "GameObject.h"
+#include "components/BoxCollider.h"
+#include "components/RigidBody.h"
+#include "components/Transform.h"
+
+GameObjectManager::GameObjectManager()
+    : window{nullptr}, fixedUpdateDt{1.0f / 60.0f}
+{}
+
+GameObjectManager::~GameObjectManager()
+{
+    for (auto& object : objects)
+        delete object;
+}
+
+void GameObjectManager::update(float dt)
+{
+    fixedUpdate(dt);
+    variableUpdate(dt);
+
+    draw();
+}
+
+void GameObjectManager::addObject(GameObject* object)
+{
+    objects.push_back(object);
+}
+
+void GameObjectManager::removeObject(GameObject* object)
+{
+    for (int i = 0; i < objects.size(); i++)
+        if (objects[i] == object)
+        {
+            auto tempObject = object;
+            objects.erase(objects.begin() + i);
+            delete tempObject;
+        }
+}
+
+void GameObjectManager::setWindow(sf::RenderWindow* window)
+{
+    this->window = window;
+}
+
+sf::RenderWindow *GameObjectManager::getWindow() const
+{
+    return window;
+}
+
+
+void GameObjectManager::variableUpdate(float dt)
+{
+    for (auto& object : objects)
+        object->update(dt);
+}
+
+void GameObjectManager::fixedUpdate(float dt)
+{
+    timeAccumulator += dt;
+
+    while (timeAccumulator >= fixedUpdateDt)
+    {
+        for (auto& object : objects)
+            object->fixedUpdate(fixedUpdateDt);
+
+        checkCollisions(dt);
+
+        timeAccumulator -= fixedUpdateDt;
+    }
+}
+
+void GameObjectManager::draw()
+{
+    for (auto& object : objects)
+        object->draw(window);
+}
+
+void GameObjectManager::checkCollisions(float dt)
+{
+    for (int i = 0; i < objects.size(); i++)
+    {
+        auto collider = dynamic_cast<BoxCollider*>(objects[i]->getComponent("BoxCollider"));
+        if (!collider)
+            continue;
+
+        for (int j = i + 1; j < objects.size(); j++)
+        {
+            auto otherTransform = dynamic_cast<Transform*>(objects[j]->getComponent("Transform"));
+            if (!otherTransform)
+                continue;
+
+            if (!collider->collidesWith(otherTransform))
+                continue;
+
+            auto rb = dynamic_cast<RigidBody*>(objects[i]->getComponent("RigidBody"));
+            auto rbOther = dynamic_cast<RigidBody*>(objects[j]->getComponent("RigidBody"));
+
+            if (rb)
+                rb->handleCollision(objects[j], dt);
+
+            if (rbOther)
+                rbOther->handleCollision(objects[i], dt);
+        }
+    }
+}

@@ -1,0 +1,44 @@
+#include "GameObject.h"
+#include "components/Component.h"
+#include "components/SpriteRenderer.h"
+
+GameObject::~GameObject()
+{
+    for (auto component : components)
+        delete component;
+}
+
+void GameObject::draw(sf::RenderWindow* window) const
+{
+    auto renderer = dynamic_cast<SpriteRenderer*>(getComponent("SpriteRenderer"));
+
+    if (renderer)
+        renderer->draw(window);
+}
+
+void GameObject::update(float dt)
+{
+    for (auto component : components)
+        component->update(dt);
+}
+
+void GameObject::fixedUpdate(float dt)
+{
+    for (auto component : components)
+        component->fixedUpdate(dt);
+}
+
+void GameObject::addComponent(Component* component)
+{
+    component->setOwner(this);
+    components.push_back(component);
+}
+
+Component* GameObject::getComponent(const std::string& name) const
+{
+    for (auto component : components)
+        if (component->getName() == name)
+            return component;
+
+    return nullptr;
+}
