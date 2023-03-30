@@ -91,8 +91,8 @@ void RigidBody::handleCollision(GameObject* other, float dt)
 
         if (otherRb)
         {
-            xvel = otherRb->xvel + xvel;
-            otherRb->xvel = xvel + otherRb->xvel;
+            xvel += otherRb->xvel;
+            otherRb->xvel += xvel;
         }
         else
             xvel = 0;
@@ -103,8 +103,8 @@ void RigidBody::handleCollision(GameObject* other, float dt)
 
         if (otherRb)
         {
-            xvel = otherRb->xvel + xvel;
-            otherRb->xvel = xvel + otherRb->xvel;
+            xvel += otherRb->xvel;
+            otherRb->xvel += xvel;
         }
         else
             xvel = 0;

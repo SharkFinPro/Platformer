@@ -2,14 +2,14 @@
 #define PLATFORMER_BOXCOLLIDER_H
 
 #include "Component.h"
-class Transform;
+struct BoundingRectangle;
 
 class BoxCollider : public Component
 {
 public:
     BoxCollider();
 
-    bool collidesWith(Transform* other);
+    bool collidesWith(BoundingRectangle other);
 };
 
 #endif //PLATFORMER_BOXCOLLIDER_H

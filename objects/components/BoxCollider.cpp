@@ -6,15 +6,14 @@ BoxCollider::BoxCollider()
     : Component{"BoxCollider"}
 {}
 
-bool BoxCollider::collidesWith(Transform* other)
+bool BoxCollider::collidesWith(BoundingRectangle r2)
 {
-    Transform* transform = dynamic_cast<Transform*>(owner->getComponent("Transform"));
+    auto transform = dynamic_cast<Transform*>(owner->getComponent("Transform"));
 
-    if (!transform || !other)
+    if (!transform)
         return false;
 
-    BoundingRectangle r1 = transform->getBoundingRectangle();
-    BoundingRectangle r2 = other->getBoundingRectangle();
+    auto r1 = transform->getBoundingRectangle();
 
     return !(r1.bottom < r2.top || r1.top > r2.bottom || r1.right < r2.left || r1.left > r2.right);
 }

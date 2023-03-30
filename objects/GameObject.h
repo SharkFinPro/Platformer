@@ -3,7 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include <string>
 class Component;
 
 class GameObject
@@ -16,7 +15,7 @@ public:
     void fixedUpdate(float dt);
 
     void addComponent(Component* component);
-    Component* getComponent(const std::string& name) const;
+    Component* getComponent(const char* name) const;
 
 protected:
     std::vector<Component*> components;

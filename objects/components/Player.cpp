@@ -10,13 +10,13 @@ Player::Player()
 
 void Player::update(float dt)
 {
-    Transform* transform = dynamic_cast<Transform*>(owner->getComponent("Transform"));
+    auto transform = dynamic_cast<Transform*>(owner->getComponent("Transform"));
 
     if (!transform)
         return;
 
     if (transform->getY() > 2000)
-        transform->setPosition(300, 400);
+        transform->reset();
 }
 
 void Player::fixedUpdate(float dt)
@@ -26,7 +26,7 @@ void Player::fixedUpdate(float dt)
 
 void Player::handleInput()
 {
-    RigidBody* rb = dynamic_cast<RigidBody*>(getOwner()->getComponent("RigidBody"));
+    auto rb = dynamic_cast<RigidBody*>(getOwner()->getComponent("RigidBody"));
 
     if (!rb)
         return;

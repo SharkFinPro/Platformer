@@ -28,10 +28,12 @@ public:
     BoundingRectangle getBoundingRectangle() const;
     BoundingRectangle getPastBoundingRectangle() const;
 
+    void reset();
+
 private:
     vec2 position;
     vec2 oldPosition;
-
+    vec2 initialPosition;
 
     float w, h;
 };

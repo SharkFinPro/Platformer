@@ -1,7 +1,7 @@
 #include "Transform.h"
 
 Transform::Transform(float xPos, float yPos, float width, float height)
-    : Component("Transform"), position{xPos, yPos}, oldPosition{position}, w{width}, h{height}
+    : Component("Transform"), position{xPos, yPos}, oldPosition{position}, initialPosition{position}, w{width}, h{height}
 {}
 
 float Transform::getX() const
@@ -46,4 +46,10 @@ BoundingRectangle Transform::getBoundingRectangle() const
 BoundingRectangle Transform::getPastBoundingRectangle() const
 {
     return BoundingRectangle{oldPosition.x, oldPosition.x + w, oldPosition.y, oldPosition.y + h};
+}
+
+void Transform::reset()
+{
+    oldPosition = position;
+    position = initialPosition;
 }

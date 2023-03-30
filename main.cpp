@@ -1,5 +1,4 @@
 #include <SFML/Graphics.hpp>
-#include <vector>
 
 #include "objects/GameObjectManager.h"
 
@@ -91,7 +90,7 @@ int main()
         previous = current;
 
         // clear the window with black color
-        window.clear(sf::Color(200, 200, 200));
+        window.clear(sf::Color{200, 200, 200});
 
         gameObjectManager.update(dt);
 

@@ -5,7 +5,7 @@
 #include "components/Transform.h"
 
 GameObjectManager::GameObjectManager()
-    : window{nullptr}, fixedUpdateDt{1.0f / 60.0f}
+    : window{nullptr}, fixedUpdateDt{1.0f / 60.0f}, timeAccumulator{0}
 {}
 
 GameObjectManager::~GameObjectManager()
@@ -35,6 +35,7 @@ void GameObjectManager::removeObject(GameObject* object)
             auto tempObject = object;
             objects.erase(objects.begin() + i);
             delete tempObject;
+            return;
         }
 }
 
@@ -90,7 +91,7 @@ void GameObjectManager::checkCollisions(float dt)
             if (!otherTransform)
                 continue;
 
-            if (!collider->collidesWith(otherTransform))
+            if (!collider->collidesWith(otherTransform->getBoundingRectangle()))
                 continue;
 
             auto rb = dynamic_cast<RigidBody*>(objects[i]->getComponent("RigidBody"));

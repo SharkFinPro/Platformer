@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "components/Component.h"
 #include "components/SpriteRenderer.h"
+#include <cstring>
 
 GameObject::~GameObject()
 {
@@ -34,10 +35,10 @@ void GameObject::addComponent(Component* component)
     components.push_back(component);
 }
 
-Component* GameObject::getComponent(const std::string& name) const
+Component* GameObject::getComponent(const char* name) const
 {
     for (auto component : components)
-        if (component->getName() == name)
+        if (std::strcmp(component->getName(), name) == 0)
             return component;
 
     return nullptr;
