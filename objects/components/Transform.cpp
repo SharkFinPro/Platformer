@@ -1,7 +1,7 @@
 #include "Transform.h"
 
 Transform::Transform(float xPos, float yPos, float width, float height)
-    : Component("Transform"), position{xPos, yPos}, oldPosition{position}, initialPosition{position}, w{width}, h{height}
+    : Component(ComponentType::transform), position{xPos, yPos}, oldPosition{position}, initialPosition{position}, w{width}, h{height}
 {}
 
 float Transform::getX() const

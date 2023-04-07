@@ -3,13 +3,15 @@
 
 class GameObject;
 
+enum class ComponentType { boxCollider, player, rigidBody, spriteRenderer, transform };
+
 class Component
 {
 public:
-    explicit Component(const char* name);
+    explicit Component(ComponentType type);
     virtual ~Component() = default;
 
-    const char* getName() const;
+    ComponentType getType() const;
 
     void setOwner(GameObject* componentOwner);
     GameObject* getOwner() const;
@@ -18,7 +20,7 @@ public:
     virtual void fixedUpdate(float dt);
 
 protected:
-    const char* name;
+    ComponentType type;
     GameObject* owner;
 };
 

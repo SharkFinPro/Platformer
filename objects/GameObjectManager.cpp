@@ -81,21 +81,21 @@ void GameObjectManager::checkCollisions(float dt)
 {
     for (int i = 0; i < objects.size(); i++)
     {
-        auto collider = dynamic_cast<BoxCollider*>(objects[i]->getComponent("BoxCollider"));
+        auto collider = dynamic_cast<BoxCollider*>(objects[i]->getComponent(ComponentType::boxCollider));
         if (!collider)
             continue;
 
         for (int j = i + 1; j < objects.size(); j++)
         {
-            auto otherTransform = dynamic_cast<Transform*>(objects[j]->getComponent("Transform"));
+            auto otherTransform = dynamic_cast<Transform*>(objects[j]->getComponent(ComponentType::transform));
             if (!otherTransform)
                 continue;
 
             if (!collider->collidesWith(otherTransform->getBoundingRectangle()))
                 continue;
 
-            auto rb = dynamic_cast<RigidBody*>(objects[i]->getComponent("RigidBody"));
-            auto rbOther = dynamic_cast<RigidBody*>(objects[j]->getComponent("RigidBody"));
+            auto rb = dynamic_cast<RigidBody*>(objects[i]->getComponent(ComponentType::rigidBody));
+            auto rbOther = dynamic_cast<RigidBody*>(objects[j]->getComponent(ComponentType::rigidBody));
 
             if (rb)
                 rb->handleCollision(objects[j], dt);

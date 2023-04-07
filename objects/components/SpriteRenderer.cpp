@@ -3,12 +3,12 @@
 #include "../GameObject.h"
 
 SpriteRenderer::SpriteRenderer(sf::Color color)
-    : Component{"SpriteRenderer"}, color{color}
+    : Component{ComponentType::spriteRenderer}, color{color}
 {}
 
 void SpriteRenderer::draw(sf::RenderWindow* window)
 {
-    auto transform = dynamic_cast<Transform*>(owner->getComponent("Transform"));
+    auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
     if (!transform)
         return;

@@ -4,12 +4,12 @@
 #include "Transform.h"
 
 RigidBody::RigidBody()
-    : Component{"RigidBody"}, xvel{0}, yvel{0}, doGravity{true}, gravity{0.4f}, maxFallSpeed{15}, falling{true}, collided{false}
+    : Component{ComponentType::rigidBody}, xvel{0}, yvel{0}, doGravity{true}, gravity{0.4f}, maxFallSpeed{15}, falling{true}, collided{false}
 {}
 
 void RigidBody::fixedUpdate(float dt)
 {
-    auto transform = dynamic_cast<Transform*>(owner->getComponent("Transform"));
+    auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
     if (!transform)
         return;
@@ -62,9 +62,9 @@ bool RigidBody::isFalling() const
 
 void RigidBody::handleCollision(GameObject* other, float dt)
 {
-    auto transform = dynamic_cast<Transform*>(owner->getComponent("Transform"));
-    auto otherTransform = dynamic_cast<Transform*>(other->getComponent("Transform"));
-    auto otherRb = dynamic_cast<RigidBody*>(other->getComponent("RigidBody"));
+    auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+    auto otherTransform = dynamic_cast<Transform*>(other->getComponent(ComponentType::transform));
+    auto otherRb = dynamic_cast<RigidBody*>(other->getComponent(ComponentType::rigidBody));
 
     if (!transform || !otherTransform)
         return;

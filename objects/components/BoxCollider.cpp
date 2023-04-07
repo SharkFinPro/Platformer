@@ -3,12 +3,12 @@
 #include "../GameObject.h"
 
 BoxCollider::BoxCollider()
-    : Component{"BoxCollider"}
+    : Component{ComponentType::boxCollider}
 {}
 
 bool BoxCollider::collidesWith(BoundingRectangle r2)
 {
-    auto transform = dynamic_cast<Transform*>(owner->getComponent("Transform"));
+    auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
     if (!transform)
         return false;

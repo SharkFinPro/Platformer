@@ -5,12 +5,12 @@
 #include <SFML/Window/Keyboard.hpp>
 
 Player::Player()
-    : Component{"Player"}, speed{10}, jumpHeight{14}
+    : Component{ComponentType::player}, speed{10}, jumpHeight{14}
 {}
 
 void Player::update(float dt)
 {
-    auto transform = dynamic_cast<Transform*>(owner->getComponent("Transform"));
+    auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
     if (!transform)
         return;
@@ -26,16 +26,16 @@ void Player::fixedUpdate(float dt)
 
 void Player::handleInput()
 {
-    auto rb = dynamic_cast<RigidBody*>(getOwner()->getComponent("RigidBody"));
+    auto rigidBody = dynamic_cast<RigidBody*>(getOwner()->getComponent(ComponentType::rigidBody));
 
-    if (!rb)
+    if (!rigidBody)
         return;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        rb->setXvel(-speed);
+        rigidBody->setXvel(-speed);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        rb->setXvel(speed);
+        rigidBody->setXvel(speed);
 
-    if (!rb->isFalling() && (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)))
-        rb->setYvel(-jumpHeight);
+    if (!rigidBody->isFalling() && (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)))
+        rigidBody->setYvel(-jumpHeight);
 }

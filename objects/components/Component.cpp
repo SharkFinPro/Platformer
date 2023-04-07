@@ -1,13 +1,13 @@
 #include "Component.h"
 #include "../GameObject.h"
 
-Component::Component(const char* name)
-    : name{name}, owner{nullptr}
+Component::Component(ComponentType type)
+    : type{type}, owner{nullptr}
 {}
 
-const char* Component::getName() const
+ComponentType Component::getType() const
 {
-    return name;
+    return type;
 }
 
 void Component::setOwner(GameObject* componentOwner)

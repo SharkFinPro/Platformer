@@ -11,7 +11,7 @@ GameObject::~GameObject()
 
 void GameObject::draw(sf::RenderWindow* window) const
 {
-    auto renderer = dynamic_cast<SpriteRenderer*>(getComponent("SpriteRenderer"));
+    auto renderer = dynamic_cast<SpriteRenderer*>(getComponent(ComponentType::spriteRenderer));
 
     if (renderer)
         renderer->draw(window);
@@ -35,10 +35,10 @@ void GameObject::addComponent(Component* component)
     components.push_back(component);
 }
 
-Component* GameObject::getComponent(const char* name) const
+Component* GameObject::getComponent(const ComponentType type) const
 {
     for (auto component : components)
-        if (std::strcmp(component->getName(), name) == 0)
+        if (component->getType() == type)
             return component;
 
     return nullptr;
