@@ -22,8 +22,8 @@ public:
 
 private:
     float xvel;
-
     float yvel;
+
     bool doGravity;
     float gravity;
     float maxFallSpeed;

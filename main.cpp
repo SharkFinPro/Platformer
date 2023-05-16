@@ -52,6 +52,7 @@ int main()
     gameObjectManager.addObject(createPlayer());
 
     gameObjectManager.addObject(createBlock(0, 1030, 1920, 50));
+    gameObjectManager.addObject(createBlock(800, 980, 250, 50));
 
     for (int i = 0; i < 9; i++)
         gameObjectManager.addObject(createBlock(static_cast<float>(i) * 200.0f + 75.0f, 900, 50, 50));

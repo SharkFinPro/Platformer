@@ -21,6 +21,18 @@ void Transform::setPosition(float xPos, float yPos)
     position.y = yPos;
 }
 
+void Transform::setX(float xPos)
+{
+    oldPosition.x = xPos;
+    position.x = xPos;
+}
+
+void Transform::setY(float yPos)
+{
+    oldPosition.y = position.y;
+    position.y = yPos;
+}
+
 void Transform::move(float xDif, float yDif)
 {
     oldPosition = position;
