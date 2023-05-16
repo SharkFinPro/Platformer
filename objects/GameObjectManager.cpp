@@ -91,6 +91,10 @@ void GameObjectManager::checkCollisions(float dt)
             if (!otherTransform)
                 continue;
 
+            auto otherCollider = dynamic_cast<BoxCollider*>(objects[j]->getComponent(ComponentType::boxCollider));
+            if (!otherCollider)
+                continue;
+
             if (!collider->collidesWith(otherTransform->getBoundingRectangle()))
                 continue;
 
