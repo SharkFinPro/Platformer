@@ -74,37 +74,39 @@ void RigidBody::handleCollision(GameObject* other, float dt)
     auto r2 = otherTransform->getBoundingRectangle();
     auto pr2 = otherTransform->getPastBoundingRectangle();
 
-    if (r1.bottom >= r2.top && pr1.bottom < pr2.top)
+    if (r1.bottom > r2.top && pr1.bottom <= pr2.top)
     {
-        transform->setY(r2.top - transform->getHeight() - 0.001f);
+        transform->setY(r2.top - transform->getHeight());
         falling = false;
         yvel = 0;
     }
-    else if (r1.top <= r2.bottom && pr1.top > pr2.bottom)
+    else if (r1.top - 0.001f < r2.bottom && pr1.top >= pr2.bottom)
     {
-        transform->setY(pr2.bottom + 0.001f);
+        transform->setY(pr2.bottom);
         yvel = 0;
     }
-    if (r1.right >= r2.left && pr1.right < pr2.left)
+    else if (r1.right > r2.left && pr1.right <= pr2.left)
     {
-        transform->setX(r2.left - transform->getWidth() - 0.001f);
+        transform->setX(r2.left - transform->getWidth());
 
         if (otherRb)
         {
-            xvel += otherRb->xvel;
+            float newXvel = xvel + otherRb->xvel;
             otherRb->xvel += xvel;
+            xvel = newXvel;
         }
         else
             xvel = 0;
     }
-    else if (r1.left <= r2.right && pr1.left > pr2.right)
+    else if (r1.left < r2.right && pr1.left >= pr2.right)
     {
-        transform->setX(r2.right + 0.001f);
+        transform->setX(r2.right);
 
         if (otherRb)
         {
-            xvel += otherRb->xvel;
+            float newXvel = xvel + otherRb->xvel;
             otherRb->xvel += xvel;
+            xvel = newXvel;
         }
         else
             xvel = 0;

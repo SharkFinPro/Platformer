@@ -1,8 +1,16 @@
 #include "Transform.h"
 
 Transform::Transform(float xPos, float yPos, float width, float height)
-    : Component(ComponentType::transform), position{xPos, yPos}, oldPosition{position}, initialPosition{position}, w{width}, h{height}
+    : Component(ComponentType::transform), position{xPos, yPos}, oldPosition{position}, initialPosition{position}, w{width}, h{height}, newPosition{xPos, yPos}
 {}
+
+void Transform::fixedUpdate(float dt) {
+    oldPosition.x = position.x;
+    oldPosition.y = position.y;
+
+    position.x = newPosition.x;
+    position.y = newPosition.y;
+}
 
 float Transform::getX() const
 {
@@ -16,28 +24,24 @@ float Transform::getY() const
 
 void Transform::setPosition(float xPos, float yPos)
 {
-    oldPosition = position;
-    position.x = xPos;
-    position.y = yPos;
+    newPosition.x = xPos;
+    newPosition.y = yPos;
 }
 
 void Transform::setX(float xPos)
 {
-    oldPosition.x = xPos;
-    position.x = xPos;
+    newPosition.x = xPos;
 }
 
 void Transform::setY(float yPos)
 {
-    oldPosition.y = position.y;
-    position.y = yPos;
+    newPosition.y = yPos;
 }
 
 void Transform::move(float xDif, float yDif)
 {
-    oldPosition = position;
-    position.x += xDif;
-    position.y += yDif;
+    newPosition.x += xDif;
+    newPosition.y += yDif;
 }
 
 float Transform::getWidth() const
@@ -64,4 +68,5 @@ void Transform::reset()
 {
     oldPosition = position;
     position = initialPosition;
+    newPosition = initialPosition;
 }

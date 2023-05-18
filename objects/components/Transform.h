@@ -16,6 +16,8 @@ class Transform : public Component
 public:
     Transform(float xPos, float yPos, float width, float height);
 
+    void fixedUpdate(float dt) override;
+
     float getX() const;
     float getY() const;
 
@@ -36,6 +38,7 @@ private:
     vec2 position;
     vec2 oldPosition;
     vec2 initialPosition;
+    vec2 newPosition;
 
     float w, h;
 };
