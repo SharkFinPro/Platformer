@@ -9,7 +9,7 @@ class SpriteRenderer : public Component
 public:
     explicit SpriteRenderer(sf::Color color);
 
-    void draw(sf::RenderWindow* window);
+    void update(float dt) override;
 
     void setColor(sf::Color color);
 

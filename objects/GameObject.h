@@ -6,20 +6,25 @@
 #include <string>
 #include "components/Component.h"
 
+class GameObjectManager;
+
 class GameObject
 {
 public:
     ~GameObject();
 
-    void draw(sf::RenderWindow* window) const;
     void update(float dt);
     void fixedUpdate(float dt);
 
     void addComponent(Component* component);
     Component* getComponent(ComponentType type) const;
 
+    void setOwner(GameObjectManager* objectOwner);
+    GameObjectManager* getOwner() const;
+
 protected:
     std::vector<Component*> components;
+    GameObjectManager* owner;
 };
 
 #endif //PLATFORMER_GAMEOBJECT_H

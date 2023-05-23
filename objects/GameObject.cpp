@@ -1,20 +1,10 @@
 #include "GameObject.h"
 #include "components/Component.h"
-#include "components/SpriteRenderer.h"
-#include <cstring>
 
 GameObject::~GameObject()
 {
     for (auto component : components)
         delete component;
-}
-
-void GameObject::draw(sf::RenderWindow* window) const
-{
-    auto renderer = dynamic_cast<SpriteRenderer*>(getComponent(ComponentType::spriteRenderer));
-
-    if (renderer)
-        renderer->draw(window);
 }
 
 void GameObject::update(float dt)
@@ -42,4 +32,14 @@ Component* GameObject::getComponent(const ComponentType type) const
             return component;
 
     return nullptr;
+}
+
+void GameObject::setOwner(GameObjectManager* objectOwner)
+{
+    owner = objectOwner;
+}
+
+GameObjectManager* GameObject::getOwner() const
+{
+    return owner;
 }

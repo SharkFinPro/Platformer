@@ -1,12 +1,13 @@
 #include "SpriteRenderer.h"
 #include "Transform.h"
 #include "../GameObject.h"
+#include "../GameObjectManager.h"
 
 SpriteRenderer::SpriteRenderer(sf::Color color)
     : Component{ComponentType::spriteRenderer}, color{color}
 {}
 
-void SpriteRenderer::draw(sf::RenderWindow* window)
+void SpriteRenderer::update(float dt)
 {
     auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
@@ -17,7 +18,7 @@ void SpriteRenderer::draw(sf::RenderWindow* window)
     shape.move({transform->getX(), transform->getY()});
     shape.setFillColor(color);
 
-    window->draw(shape);
+    getOwner()->getOwner()->getWindow()->draw(shape);
 }
 
 void SpriteRenderer::setColor(sf::Color color)

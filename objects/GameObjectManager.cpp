@@ -18,12 +18,11 @@ void GameObjectManager::update(float dt)
 {
     fixedUpdate(dt);
     variableUpdate(dt);
-
-    draw();
 }
 
 void GameObjectManager::addObject(GameObject* object)
 {
+    object->setOwner(this);
     objects.push_back(object);
 }
 
@@ -69,12 +68,6 @@ void GameObjectManager::fixedUpdate(float dt)
 
         timeAccumulator -= fixedUpdateDt;
     }
-}
-
-void GameObjectManager::draw()
-{
-    for (auto& object : objects)
-        object->draw(window);
 }
 
 void GameObjectManager::checkCollisions(float dt)

@@ -28,7 +28,6 @@ private:
 
     void variableUpdate(float dt);
     void fixedUpdate(float dt);
-    void draw();
 
     void checkCollisions(float dt);
 };
