@@ -82,12 +82,12 @@ void GameObjectManager::checkCollisions(float dt)
 
         for (int j = i + 1; j < objects.size(); j++)
         {
-            auto otherTransform = dynamic_cast<Transform*>(objects[j]->getComponent(ComponentType::transform));
-            if (!otherTransform)
-                continue;
-
             auto otherCollider = dynamic_cast<BoxCollider*>(objects[j]->getComponent(ComponentType::boxCollider));
             if (!otherCollider)
+                continue;
+
+            auto otherTransform = dynamic_cast<Transform*>(objects[j]->getComponent(ComponentType::transform));
+            if (!otherTransform)
                 continue;
 
             if (!collider->collidesWith(otherTransform->getBoundingRectangle()))
