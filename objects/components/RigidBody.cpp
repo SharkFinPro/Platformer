@@ -75,7 +75,7 @@ void RigidBody::handleCollision(GameObject* other, float dt)
     auto r2 = otherTransform->getBoundingRectangle();
     auto pr2 = otherTransform->getPastBoundingRectangle();
 
-    if (r1.bottom > r2.top && pr1.bottom <= pr2.top)
+    if (r1.bottom > r2.top && pr1.bottom <= pr2.top && r1.left != r2.right && r1.right != r2.left)
     {
         transform->setY(r2.top - transform->getHeight());
         falling = false;
