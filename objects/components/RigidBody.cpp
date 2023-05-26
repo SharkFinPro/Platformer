@@ -79,11 +79,13 @@ void RigidBody::handleCollision(GameObject* other, float dt)
     {
         transform->setY(r2.top - transform->getHeight());
         falling = false;
-        yvel = 0;
+
+        yvel = -gravity;
     }
-    else if (r1.top - 0.001f < r2.bottom && pr1.top >= pr2.bottom)
+    else if (r1.top < r2.bottom && pr1.top >= pr2.bottom)
     {
-        transform->setY(pr2.bottom + 0.001f);
+        transform->setY(pr2.bottom);
+
         yvel = 0;
     }
     else if (r1.right > r2.left && pr1.right <= pr2.left)
