@@ -3,32 +3,35 @@
 
 GameObject::~GameObject()
 {
-    for (auto component : components)
+    for (auto [componentType, component] : components)
+    {
         delete component;
+        component = nullptr;
+    }
 }
 
 void GameObject::update(float dt)
 {
-    for (auto component : components)
+    for (auto [componentType, component] : components)
         component->update(dt);
 }
 
 void GameObject::fixedUpdate(float dt)
 {
-    for (auto component : components)
+    for (auto [componentType, component] : components)
         component->fixedUpdate(dt);
 }
 
 void GameObject::addComponent(Component* component)
 {
     component->setOwner(this);
-    components.push_back(component);
+    components.insert({ component->getType(), component });
 }
 
 Component* GameObject::getComponent(const ComponentType type) const
 {
-    for (auto component : components)
-        if (component->getType() == type)
+    for (auto [componentType, component] : components)
+        if (componentType == type)
             return component;
 
     return nullptr;

@@ -2,11 +2,12 @@
 #define PLATFORMER_GAMEOBJECT_H
 
 #include <SFML/Graphics.hpp>
-#include <vector>
 #include <string>
-#include "components/Component.h"
+#include <unordered_map>
 
 class GameObjectManager;
+enum class ComponentType;
+class Component;
 
 class GameObject
 {
@@ -23,7 +24,7 @@ public:
     GameObjectManager* getOwner() const;
 
 protected:
-    std::vector<Component*> components;
+    std::unordered_map<ComponentType, Component*> components;
     GameObjectManager* owner;
 };
 

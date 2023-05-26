@@ -5,7 +5,7 @@
 #include "components/Transform.h"
 
 GameObjectManager::GameObjectManager()
-    : window{nullptr}, fixedUpdateDt{1.0f / 60.0f}, timeAccumulator{0}
+    : window{nullptr}, fixedUpdateDt{1.0f / 60.0f}, timeAccumulator{0.0f}, ticks{0}
 {}
 
 GameObjectManager::~GameObjectManager()
@@ -64,9 +64,10 @@ void GameObjectManager::fixedUpdate(float dt)
         for (auto& object : objects)
             object->fixedUpdate(fixedUpdateDt);
 
-        checkCollisions(dt);
+        checkCollisions(fixedUpdateDt);
 
         timeAccumulator -= fixedUpdateDt;
+        ticks++;
     }
 }
 

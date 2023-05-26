@@ -14,8 +14,7 @@ void RigidBody::fixedUpdate(float dt)
     if (!transform)
         return;
 
-    if (!collided)
-        falling = true;
+    falling = true;
 
     transform->move(xvel * dt, yvel * dt);
 
@@ -47,6 +46,8 @@ float RigidBody::getYvel() const
 
 void RigidBody::setXvel(float velocity)
 {
+    if (collided)
+        return;
     xvel = velocity;
 }
 
@@ -88,6 +89,7 @@ void RigidBody::handleCollision(GameObject* other, float dt)
     else if (r1.right > r2.left && pr1.right <= pr2.left)
     {
         transform->setX(r2.left - transform->getWidth());
+        collided = true;
 
         if (otherRb)
         {
@@ -101,6 +103,7 @@ void RigidBody::handleCollision(GameObject* other, float dt)
     else if (r1.left < r2.right && pr1.left >= pr2.right)
     {
         transform->setX(r2.right);
+        collided = true;
 
         if (otherRb)
         {
@@ -111,6 +114,4 @@ void RigidBody::handleCollision(GameObject* other, float dt)
         else
             xvel = 0;
     }
-
-    collided = true;
 }

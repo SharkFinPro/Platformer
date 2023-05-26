@@ -25,6 +25,7 @@ private:
 
     const float fixedUpdateDt;
     float timeAccumulator;
+    int ticks;
 
     void variableUpdate(float dt);
     void fixedUpdate(float dt);
