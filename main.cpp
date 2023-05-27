@@ -9,37 +9,37 @@
 #include "objects/components/Transform.h"
 #include "objects/components/SpriteRenderer.h"
 
-GameObject* createPlayer()
+GameObject* createPlayer(float x, float y, float width, float height, PlayerControlType controlType, sf::Color color)
 {
     auto player = new GameObject;
-    player->addComponent(new Transform{200, 200, 50, 50});
+    player->addComponent(new Transform{x, y, width, height});
     player->addComponent(new BoxCollider);
     player->addComponent(new RigidBody);
-    player->addComponent(new Player);
-    player->addComponent(new SpriteRenderer{sf::Color{42, 139, 200}});
+    player->addComponent(new Player(controlType));
+    player->addComponent(new SpriteRenderer{color});
 
     return player;
 }
 
-GameObject* createBlock(float x, float y, float width, float height)
+GameObject* createBlock(float x, float y, float width, float height, sf::Color color = sf::Color{125, 125, 125})
 {
     auto obj = new GameObject;
 
     obj->addComponent(new Transform{x, y, width, height});
     obj->addComponent(new BoxCollider);
-    obj->addComponent(new SpriteRenderer{sf::Color{125, 125, 125}});
+    obj->addComponent(new SpriteRenderer{color});
 
     return obj;
 }
 
-GameObject* createRigidBlock(float x, float y, float width, float height)
+GameObject* createRigidBlock(float x, float y, float width, float height, sf::Color color)
 {
     auto obj = new GameObject;
 
     obj->addComponent(new Transform{x, y, width, height});
     obj->addComponent(new BoxCollider);
     obj->addComponent(new RigidBody);
-    obj->addComponent(new SpriteRenderer{sf::Color{175, 75, 150}});
+    obj->addComponent(new SpriteRenderer{color});
 
     return obj;
 }
@@ -49,7 +49,7 @@ int main()
     // Create Entities
     GameObjectManager gameObjectManager;
 
-    gameObjectManager.addObject(createPlayer());
+    gameObjectManager.addObject(createPlayer(200, 200, 50, 50, PlayerControlType::WASD, sf::Color{42, 139, 200}));
 
     gameObjectManager.addObject(createBlock(0, 1030, 1920, 50));
     gameObjectManager.addObject(createBlock(800, 980, 250, 50));
@@ -57,7 +57,7 @@ int main()
     for (int i = 0; i < 9; i++)
         gameObjectManager.addObject(createBlock(static_cast<float>(i) * 200.0f + 75.0f, 900, 50, 50));
 
-    gameObjectManager.addObject(createRigidBlock(400, 400, 50, 50));
+    gameObjectManager.addObject(createPlayer(400, 400, 50, 50, PlayerControlType::ARROW, sf::Color{175, 75, 150}));
 
     // Create the window
     sf::ContextSettings settings;

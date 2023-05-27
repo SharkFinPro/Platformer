@@ -2,12 +2,18 @@
 #define PLATFORMER_PLAYER_H
 
 #include "Component.h"
+
 class GameObject;
+
+enum PlayerControlType {
+    WASD,
+    ARROW
+};
 
 class Player : public Component
 {
 public:
-    Player();
+    explicit Player(PlayerControlType controlType);
 
     void update(float dt) override;
     void fixedUpdate(float dt) override;
@@ -15,6 +21,8 @@ public:
 private:
     float speed;
     float jumpHeight;
+
+    PlayerControlType controlType;
 
     void handleInput();
 };
