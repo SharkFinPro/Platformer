@@ -10,8 +10,12 @@ Player::Player(PlayerControlType controlType)
 
 void Player::update(float dt)
 {
-    auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+    handleInput();
+}
 
+void Player::fixedUpdate(float dt)
+{
+    auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
     if (!transform)
         return;
 
@@ -19,15 +23,9 @@ void Player::update(float dt)
         transform->reset();
 }
 
-void Player::fixedUpdate(float dt)
-{
-    handleInput();
-}
-
 void Player::handleInput()
 {
     auto rigidBody = dynamic_cast<RigidBody*>(getOwner()->getComponent(ComponentType::rigidBody));
-
     if (!rigidBody)
         return;
 
