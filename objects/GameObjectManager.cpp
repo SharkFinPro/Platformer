@@ -73,34 +73,29 @@ void GameObjectManager::fixedUpdate(float dt)
 
 void GameObjectManager::checkCollisions(float dt)
 {
-    for (int i = 0; i < objects.size() - 1; i++)
+    for (auto& object1 : objects)
     {
-        auto collider = dynamic_cast<BoxCollider*>(objects[i]->getComponent(ComponentType::boxCollider));
+        auto collider = dynamic_cast<BoxCollider*>(object1->getComponent(ComponentType::boxCollider));
         if (!collider)
             continue;
 
-        auto rb = dynamic_cast<RigidBody*>(objects[i]->getComponent(ComponentType::rigidBody));
+        auto rb = dynamic_cast<RigidBody*>(object1->getComponent(ComponentType::rigidBody));
+        if (!rb)
+            continue;
 
-        for (int j = i + 1; j < objects.size(); j++)
+        for (auto& object2 : objects)
         {
-            auto otherCollider = dynamic_cast<BoxCollider*>(objects[j]->getComponent(ComponentType::boxCollider));
-            if (!otherCollider)
+            if (object1 == object2)
                 continue;
 
-            auto otherTransform = dynamic_cast<Transform*>(objects[j]->getComponent(ComponentType::transform));
+            auto otherTransform = dynamic_cast<Transform*>(object2->getComponent(ComponentType::transform));
             if (!otherTransform)
                 continue;
 
             if (!collider->collidesWith(otherTransform->getBoundingRectangle()))
                 continue;
 
-            auto rbOther = dynamic_cast<RigidBody*>(objects[j]->getComponent(ComponentType::rigidBody));
-
-            if (rb)
-                rb->handleCollision(objects[j], dt);
-
-            if (rbOther)
-                rbOther->handleCollision(objects[i], dt);
+            rb->handleCollision(object2, dt);
         }
     }
 }
