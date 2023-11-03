@@ -91,7 +91,7 @@ void RigidBody::handleCollision(GameObject* other, float dt)
     }
 
     if (vecY == maxY) {
-        yvel = 0;
+        yvel = -vecY;
         falling = false;
     } else if (vecY == minY) {
         yvel = gravity;
