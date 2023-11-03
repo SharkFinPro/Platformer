@@ -50,6 +50,7 @@ int main()
     GameObjectManager gameObjectManager;
 
     gameObjectManager.addObject(createPlayer(200, 200, 50, 50, PlayerControlType::WASD, sf::Color{42, 139, 200}));
+    gameObjectManager.addObject(createRigidBlock(300, 200, 50, 50, sf::Color{240, 139, 100}));
 
     gameObjectManager.addObject(createBlock(0, 1030, 1920, 50));
     gameObjectManager.addObject(createBlock(800, 980, 250, 50));

@@ -27,6 +27,7 @@ private:
     float maxFallSpeed;
 
     bool falling;
+    bool collided;
 
     void limitMovement();
 };

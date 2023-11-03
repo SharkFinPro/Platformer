@@ -5,7 +5,7 @@
 #include <cmath>
 
 RigidBody::RigidBody()
-    : Component{ComponentType::rigidBody}, xvel{0}, yvel{0}, doGravity{true}, gravity{0.4f}, maxFallSpeed{15}, falling{true}
+    : Component{ComponentType::rigidBody}, xvel{0}, yvel{0}, doGravity{true}, gravity{0.4f}, maxFallSpeed{15}, falling{true}, collided{false}
 {}
 
 void RigidBody::fixedUpdate(float dt)
@@ -17,17 +17,20 @@ void RigidBody::fixedUpdate(float dt)
 
     falling = true;
 
-    transform->move(xvel * dt, yvel * dt);
 
     if (doGravity)
         yvel += gravity * dt;
 
     limitMovement();
+
+    transform->move(xvel * dt, yvel * dt);
+
+    collided = false;
 }
 
 void RigidBody::limitMovement()
 {
-    xvel /= 2.0f;
+    xvel /= 1.01f;
 
     if (yvel > maxFallSpeed)
         yvel = maxFallSpeed;
@@ -35,6 +38,9 @@ void RigidBody::limitMovement()
 
 void RigidBody::setXvel(float velocity)
 {
+    if (collided)
+        return;
+
     xvel = velocity;
 }
 
@@ -52,7 +58,6 @@ void RigidBody::handleCollision(GameObject* other, float dt)
 {
     auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
     auto otherTransform = dynamic_cast<Transform*>(other->getComponent(ComponentType::transform));
-    auto otherRb = dynamic_cast<RigidBody*>(other->getComponent(ComponentType::rigidBody));
 
     if (!transform || !otherTransform)
         return;
@@ -90,21 +95,19 @@ void RigidBody::handleCollision(GameObject* other, float dt)
         vecY = maxY;
     }
 
-    if (vecY == maxY) {
+    if (vecY == maxY)
+    {
         yvel = -vecY;
         falling = false;
-    } else if (vecY == minY) {
+    }
+    else if (vecY == minY)
+    {
         yvel = gravity;
     }
 
-    if (vecX != 0) {
+    if (vecX != 0)
+    {
         transform->setX(transform->getX() - vecX);
-
-        if (otherRb) {
-            otherRb->xvel += xvel;
-            xvel = otherRb->xvel;
-        } else {
-            xvel = 0;
-        }
+        collided = true;
     }
 }
