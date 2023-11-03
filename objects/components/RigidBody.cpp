@@ -79,18 +79,21 @@ void RigidBody::handleCollision(GameObject* other, float dt)
     float vecX = minX;
     float vecY = 0;
 
-    if (std::fabs(maxX) < minDist) {
+    if (std::fabs(maxX) < minDist)
+    {
         minDist = std::fabs(maxX);
         vecX = maxX;
     }
 
-    if (std::fabs(minY) < minDist) {
+    if (std::fabs(minY) < minDist)
+    {
         minDist = std::fabs(minY);
         vecX = 0;
         vecY = minY;
     }
 
-    if (std::fabs(maxY) < minDist) {
+    if (std::fabs(maxY) < minDist)
+    {
         vecX = 0;
         vecY = maxY;
     }
@@ -101,9 +104,7 @@ void RigidBody::handleCollision(GameObject* other, float dt)
         falling = false;
     }
     else if (vecY == minY)
-    {
         yvel = gravity;
-    }
 
     if (vecX != 0)
     {
