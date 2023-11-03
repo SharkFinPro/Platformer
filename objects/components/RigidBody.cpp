@@ -2,9 +2,10 @@
 #include "../GameObject.h"
 #include "BoxCollider.h"
 #include "Transform.h"
+#include <cmath>
 
 RigidBody::RigidBody()
-    : Component{ComponentType::rigidBody}, xvel{0}, yvel{0}, doGravity{true}, gravity{0.4f}, maxFallSpeed{15}, falling{true}, collided{false}
+    : Component{ComponentType::rigidBody}, xvel{0}, yvel{0}, doGravity{true}, gravity{0.4f}, maxFallSpeed{15}, falling{true}
 {}
 
 void RigidBody::fixedUpdate(float dt)
@@ -22,8 +23,6 @@ void RigidBody::fixedUpdate(float dt)
         yvel += gravity * dt;
 
     limitMovement();
-
-    collided = false;
 }
 
 void RigidBody::limitMovement()
@@ -34,20 +33,8 @@ void RigidBody::limitMovement()
         yvel = maxFallSpeed;
 }
 
-float RigidBody::getXvel() const
-{
-    return xvel;
-}
-
-float RigidBody::getYvel() const
-{
-    return yvel;
-}
-
 void RigidBody::setXvel(float velocity)
 {
-    if (collided)
-        return;
     xvel = velocity;
 }
 
@@ -71,49 +58,53 @@ void RigidBody::handleCollision(GameObject* other, float dt)
         return;
 
     auto r1 = transform->getBoundingRectangle();
-    auto pr1 = transform->getPastBoundingRectangle();
     auto r2 = otherTransform->getBoundingRectangle();
-    auto pr2 = otherTransform->getPastBoundingRectangle();
 
-    if (r1.right > r2.left && pr1.right <= pr2.left)
-    {
-        transform->setX(r2.left - transform->getWidth());
-        collided = true;
+    float mdX =  r1.left - r2.right;
+    float mdY = r1.top - r2.bottom;
+    float mdW = r1.width() + r2.width();
+    float mdH = r1.height() + r2.height();
 
-        if (otherRb)
-        {
-            float newXvel = xvel + otherRb->xvel;
-            otherRb->xvel += xvel;
-            xvel = newXvel;
-        }
-        else
-            xvel = 0;
+    float minX = mdX;
+    float minY = mdY;
+    float maxX = mdX + mdW;
+    float maxY = mdY + mdH;
+
+    float minDist = std::fabs(minX);
+    float vecX = minX;
+    float vecY = 0;
+
+    if (std::fabs(maxX) < minDist) {
+        minDist = std::fabs(maxX);
+        vecX = maxX;
     }
-    else if (r1.left < r2.right && pr1.left >= pr2.right)
-    {
-        transform->setX(r2.right);
-        collided = true;
 
-        if (otherRb)
-        {
-            float newXvel = xvel + otherRb->xvel;
-            otherRb->xvel += xvel;
-            xvel = newXvel;
-        }
-        else
-            xvel = 0;
+    if (std::fabs(minY) < minDist) {
+        minDist = std::fabs(minY);
+        vecX = 0;
+        vecY = minY;
     }
-    else if (r1.bottom > r2.top && pr1.bottom <= pr2.top && r1.left != r2.right && r1.right != r2.left)
-    {
-        transform->setY(r2.top - transform->getHeight());
-        falling = false;
 
-        yvel = -gravity;
+    if (std::fabs(maxY) < minDist) {
+        vecX = 0;
+        vecY = maxY;
     }
-    else if (r1.top < r2.bottom && pr1.top >= pr2.bottom && r1.left != r2.right && r1.right != r2.left)
-    {
-        transform->setY(pr2.bottom);
 
+    if (vecY == maxY) {
         yvel = 0;
+        falling = false;
+    } else if (vecY == minY) {
+        yvel = gravity;
+    }
+
+    if (vecX != 0) {
+        transform->setX(transform->getX() - vecX);
+
+        if (otherRb) {
+            otherRb->xvel += xvel;
+            xvel = otherRb->xvel;
+        } else {
+            xvel = 0;
+        }
     }
 }

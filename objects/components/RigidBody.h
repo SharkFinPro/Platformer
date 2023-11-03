@@ -11,8 +11,6 @@ public:
 
     void fixedUpdate(float dt) override;
 
-    float getXvel() const;
-    float getYvel() const;
     void setXvel(float velocity);
     void setYvel(float velocity);
 
@@ -29,7 +27,6 @@ private:
     float maxFallSpeed;
 
     bool falling;
-    bool collided;
 
     void limitMovement();
 };
