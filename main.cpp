@@ -1,13 +1,13 @@
 #include <SFML/Graphics.hpp>
-
 #include "objects/GameObjectManager.h"
-
 #include "objects/GameObject.h"
 #include "objects/components/BoxCollider.h"
 #include "objects/components/RigidBody.h"
 #include "objects/components/Player.h"
 #include "objects/components/Transform.h"
 #include "objects/components/SpriteRenderer.h"
+
+constexpr auto FULLSCREEN = false;
 
 GameObject* createPlayer(float x, float y, float width, float height, PlayerControlType controlType, sf::Color color)
 {
@@ -64,9 +64,7 @@ int main()
     settings.majorVersion = 4;
     settings.minorVersion = 6;
     settings.antialiasingLevel = 16;
-//    sf::RenderWindow window(sf::VideoMode{1000, 800}, "Platformer", sf::Style::None, settings);
-    sf::RenderWindow window(sf::VideoMode{1920, 1080}, "Platformer", sf::Style::None, settings);
-//    sf::RenderWindow window(sf::VideoMode{1920, 1080}, "Platformer", sf::Style::Fullscreen, settings);
+    sf::RenderWindow window(sf::VideoMode{1920, 1080}, "Platformer", FULLSCREEN ? sf::Style::Fullscreen : sf::Style::None, settings);
     window.setMouseCursorVisible(false);
     gameObjectManager.setWindow(&window);
 
