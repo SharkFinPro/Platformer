@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(external/include)
 
 link_directories(${CMAKE_BINARY_DIR}/bin)
-link_directories(C:/Users/Shark/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8617.54/bin/mingw/lib/gcc/x86_64-w64-mingw32/11.2.0)
 file(COPY "external/lib/" DESTINATION "bin/")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
