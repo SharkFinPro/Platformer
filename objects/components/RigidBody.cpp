@@ -109,6 +109,8 @@ void RigidBody::handleCollision(GameObject* other, float dt)
     if (vecX != 0)
     {
         transform->setX(transform->getX() - vecX);
+        xvel = 0;
+
         collided = true;
     }
 }
