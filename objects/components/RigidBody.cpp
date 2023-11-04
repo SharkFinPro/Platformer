@@ -98,7 +98,7 @@ void RigidBody::handleCollision(GameObject* other, float dt)
         vecY = maxY;
     }
 
-    if (vecY != 0)
+    if (std::fabs(vecY) > 0.1f)
     {
         yvel = -vecY;
 
@@ -108,9 +108,8 @@ void RigidBody::handleCollision(GameObject* other, float dt)
         }
     }
 
-    if (vecX != 0)
+    if (std::fabs(vecX) > 0.01f)
     {
-        transform->setX(transform->getX() - vecX);
         xvel = -vecX;
 
         collided = true;
