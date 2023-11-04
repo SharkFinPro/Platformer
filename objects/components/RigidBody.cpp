@@ -98,18 +98,20 @@ void RigidBody::handleCollision(GameObject* other, float dt)
         vecY = maxY;
     }
 
-    if (vecY == maxY)
+    if (vecY != 0)
     {
         yvel = -vecY;
-        falling = false;
+
+        if (vecY == maxY)
+        {
+            falling = false;
+        }
     }
-    else if (vecY == minY)
-        yvel = gravity;
 
     if (vecX != 0)
     {
         transform->setX(transform->getX() - vecX);
-        xvel = 0;
+        xvel = -vecX;
 
         collided = true;
     }
