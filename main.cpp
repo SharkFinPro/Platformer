@@ -56,7 +56,10 @@ int main()
     gameObjectManager.addObject(createBlock(800, 980, 250, 50));
 
     for (int i = 0; i < 9; i++)
-        gameObjectManager.addObject(createBlock(static_cast<float>(i) * 200.0f + 75.0f, 900, 50, 50));
+        gameObjectManager.addObject(createBlock(static_cast<float>(i) * 50.0f + 75.0f, 900, 50, 50));
+
+    for (int i = 0; i < 30; i++)
+        gameObjectManager.addObject(createBlock(100, static_cast<float>(i) * 50.0f + 75.0f, 50, 50));
 
     gameObjectManager.addObject(createPlayer(400, 400, 50, 50, PlayerControlType::ARROW, sf::Color{175, 75, 150}));
 
