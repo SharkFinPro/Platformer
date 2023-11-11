@@ -30,7 +30,7 @@ private:
     void variableUpdate(float dt);
     void fixedUpdate(float dt);
 
-    void checkCollisions(float dt);
+    void checkCollisions();
 };
 
 #endif //PLATFORMER_GAMEOBJECTMANAGER_H

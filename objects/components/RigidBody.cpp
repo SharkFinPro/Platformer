@@ -5,7 +5,7 @@
 #include <cmath>
 
 RigidBody::RigidBody()
-    : Component{ComponentType::rigidBody}, xvel{0}, yvel{0}, doGravity{true}, gravity{0.4f}, maxFallSpeed{15}, falling{true}, collided{false}
+    : Component{ComponentType::rigidBody}, xvel{0}, yvel{0}, doGravity{true}, gravity{0.4f}, maxFallSpeed{15}, falling{true}
 {}
 
 void RigidBody::fixedUpdate(float dt)
@@ -17,15 +17,12 @@ void RigidBody::fixedUpdate(float dt)
 
     falling = true;
 
-
     if (doGravity)
         yvel += gravity * dt;
 
     limitMovement();
 
     transform->move(xvel * dt, yvel * dt);
-
-    collided = false;
 }
 
 void RigidBody::limitMovement()
@@ -38,9 +35,6 @@ void RigidBody::limitMovement()
 
 void RigidBody::setXvel(float velocity)
 {
-    if (collided)
-        return;
-
     xvel = velocity;
 }
 
@@ -54,64 +48,36 @@ bool RigidBody::isFalling() const
     return falling;
 }
 
-void RigidBody::handleCollision(GameObject* other, float dt)
+void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
 {
     auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
-    auto otherTransform = dynamic_cast<Transform*>(other->getComponent(ComponentType::transform));
+    auto collider = dynamic_cast<BoxCollider*>(owner->getComponent(ComponentType::boxCollider));
 
-    if (!transform || !otherTransform)
+    if (!transform || !collider)
         return;
 
-    auto r1 = transform->getBoundingRectangle();
-    auto r2 = otherTransform->getBoundingRectangle();
+    Vec2<float> finalPVec = {0, 0};
 
-    float mdX =  r1.left - r2.right;
-    float mdY = r1.top - r2.bottom;
-    float mdW = r1.width() + r2.width();
-    float mdH = r1.height() + r2.height();
-
-    float minX = mdX;
-    float minY = mdY;
-    float maxX = mdX + mdW;
-    float maxY = mdY + mdH;
-
-    float minDist = std::fabs(minX);
-    float vecX = minX;
-    float vecY = 0;
-
-    if (std::fabs(maxX) < minDist)
+    for (auto& object : objects)
     {
-        minDist = std::fabs(maxX);
-        vecX = maxX;
+        auto pVec = collider->getPenetrationVector(object);
+
+        finalPVec.setX(finalPVec.getX() + pVec.getX());
+        finalPVec.setY(finalPVec.getY() + pVec.getY());
     }
 
-    if (std::fabs(minY) < minDist)
+    if (finalPVec.getX() != 0)
     {
-        minDist = std::fabs(minY);
-        vecX = 0;
-        vecY = minY;
+        xvel = 0;
     }
 
-    if (std::fabs(maxY) < minDist)
+    if (finalPVec.getY() != 0)
     {
-        vecX = 0;
-        vecY = maxY;
-    }
-
-    if (std::fabs(vecY) > 0.5f)
-    {
-        yvel = -vecY;
-
-        if (vecY == maxY)
-        {
+        if (yvel > 0)
             falling = false;
-        }
+
+        yvel = 0;
     }
 
-    if (std::fabs(vecX) > 0.005f)
-    {
-        xvel = -vecX;
-
-        collided = true;
-    }
+    transform->move(-finalPVec.getX(), -finalPVec.getY());
 }

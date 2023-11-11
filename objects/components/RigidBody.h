@@ -16,7 +16,7 @@ public:
 
     bool isFalling() const;
 
-    void handleCollision(GameObject* other, float dt);
+    void handleCollisions(const std::vector<GameObject*> &objects);
 
 private:
     float xvel;
@@ -27,7 +27,6 @@ private:
     float maxFallSpeed;
 
     bool falling;
-    bool collided;
 
     void limitMovement();
 };

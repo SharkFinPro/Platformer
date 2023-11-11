@@ -64,14 +64,14 @@ void GameObjectManager::fixedUpdate(float dt)
         for (auto& object : objects)
             object->fixedUpdate(fixedUpdateDt);
 
-        checkCollisions(fixedUpdateDt);
+        checkCollisions();
 
         timeAccumulator -= fixedUpdateDt;
         ticks++;
     }
 }
 
-void GameObjectManager::checkCollisions(float dt)
+void GameObjectManager::checkCollisions()
 {
     for (auto& object1 : objects)
     {
@@ -82,6 +82,8 @@ void GameObjectManager::checkCollisions(float dt)
         auto rb = dynamic_cast<RigidBody*>(object1->getComponent(ComponentType::rigidBody));
         if (!rb)
             continue;
+
+        std::vector<GameObject*> collisions;
 
         for (auto& object2 : objects)
         {
@@ -98,7 +100,10 @@ void GameObjectManager::checkCollisions(float dt)
             if (!collider->collidesWith(otherTransform->getBoundingRectangle()))
                 continue;
 
-            rb->handleCollision(object2, dt);
+            collisions.push_back(object2);
         }
+
+        if (!collisions.empty())
+            rb->handleCollisions(collisions);
     }
 }
