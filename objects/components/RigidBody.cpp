@@ -153,7 +153,7 @@ void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
         if (finalPVec.getX() != 0)
             handleXCollision();
 
-        if (std::fabs(finalPVec.getY()) != 0)
+        if (finalPVec.getY() != 0)
             handleYCollision();
     }
 }
