@@ -35,6 +35,23 @@ Vec2<float> BoxCollider::getPenetrationVector(GameObject* object) const
     auto r1 = transform->getBoundingRectangle();
     auto r2 = otherTransform->getBoundingRectangle();
 
+    return getActualPenetrationVector(r1, r2);
+}
+
+Vec2<float> BoxCollider::getTheoreticalPenetrationVector(BoundingRectangle boundingRectangle, GameObject* object)
+{
+    auto otherTransform = dynamic_cast<Transform*>(object->getComponent(ComponentType::transform));
+
+    if (!otherTransform)
+        return { 0, 0 };
+
+    auto r2 = otherTransform->getBoundingRectangle();
+
+    return getActualPenetrationVector(boundingRectangle, r2);
+}
+
+Vec2<float> BoxCollider::getActualPenetrationVector(BoundingRectangle r1, BoundingRectangle r2)
+{
     float mdX =  r1.left - r2.right;
     float mdY = r1.top - r2.bottom;
     float mdW = r1.width() + r2.width();
