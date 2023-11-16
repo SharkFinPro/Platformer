@@ -29,6 +29,9 @@ private:
     bool falling;
 
     void limitMovement();
+
+    void handleXCollision();
+    void handleYCollision();
 };
 
 

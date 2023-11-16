@@ -78,14 +78,10 @@ void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
     }
 
     if (xCollisions != 0)
-    {
         finalPVec.setX(finalPVec.getX() / xCollisions);
-    }
 
     if (yCollisions != 0)
-    {
         finalPVec.setY(finalPVec.getY() / yCollisions);
-    }
 
     if (finalPVec.getX() != 0 && finalPVec.getY() != 0)
     {
@@ -96,7 +92,7 @@ void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
             theoreticalRectangle.right -= finalPVec.getX();
 
             transform->move(-finalPVec.getX(), 0);
-            xvel = 0;
+            handleXCollision();
 
             finalPVec.setX(0);
             finalPVec.setY(0);
@@ -115,10 +111,7 @@ void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
 
             if (finalPVec.getY() != 0)
             {
-                if (yvel > 0)
-                    falling = false;
-
-                yvel = 0;
+                handleYCollision();
                 transform->move(0, -(finalPVec.getY() / yCollisions));
             }
         }
@@ -129,10 +122,7 @@ void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
             theoreticalRectangle.bottom -= finalPVec.getY();
 
             transform->move(0, -finalPVec.getY());
-            if (yvel > 0)
-                falling = false;
-
-            yvel = 0;
+            handleYCollision();
 
             finalPVec.setX(0);
             finalPVec.setY(0);
@@ -151,8 +141,8 @@ void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
 
             if (finalPVec.getX() != 0)
             {
+                handleXCollision();
                 transform->move(-(finalPVec.getX() / xCollisions), 0);
-                xvel = 0;
             }
         }
     }
@@ -161,16 +151,22 @@ void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
         transform->move(-finalPVec.getX(), -finalPVec.getY());
 
         if (finalPVec.getX() != 0)
-        {
-            xvel = 0;
-        }
+            handleXCollision();
 
         if (std::fabs(finalPVec.getY()) != 0)
-        {
-            if (yvel > 0)
-                falling = false;
-
-            yvel = 0;
-        }
+            handleYCollision();
     }
+}
+
+void RigidBody::handleXCollision()
+{
+    xvel = 0;
+}
+
+void RigidBody::handleYCollision()
+{
+    if (yvel > 0)
+        falling = false;
+
+    yvel = 0;
 }
