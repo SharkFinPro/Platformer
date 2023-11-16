@@ -152,6 +152,7 @@ void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
             if (finalPVec.getX() != 0)
             {
                 transform->move(-(finalPVec.getX() / xCollisions), 0);
+                xvel = 0;
             }
         }
     }
