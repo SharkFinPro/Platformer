@@ -40,7 +40,8 @@ void Player::handleInput()
     {
         xVelUpdate += speed;
     }
-    rigidBody->setXvel(xVelUpdate);
+    if (xVelUpdate != 0)
+        rigidBody->setXvel(xVelUpdate);
 
     if (!rigidBody->isFalling() && ((sf::Keyboard::isKeyPressed(sf::Keyboard::W) && controlType == PlayerControlType::WASD)
         || (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && controlType == PlayerControlType::ARROW)))
