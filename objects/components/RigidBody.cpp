@@ -57,8 +57,8 @@ void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
         return;
 
     Vec2<float> finalPVec = {0, 0};
-    float xCollisions;
-    float yCollisions;
+    float xCollisions = 0;
+    float yCollisions = 0;
 
     for (auto& object : objects)
     {
