@@ -5,12 +5,14 @@
 #include <cmath>
 
 RigidBody::RigidBody()
-    : Component{ComponentType::rigidBody}, xvel{0}, yvel{0}, doGravity{true}, gravity{0.4f}, maxFallSpeed{15}, falling{true}
+    : Component{ComponentType::rigidBody}, xvel{0}, yvel{0}, doGravity{true}, gravity{0.4f}, maxFallSpeed{15}, falling{true}, transform{
+    nullptr}, boxCollider{nullptr}
 {}
 
 void RigidBody::fixedUpdate(float dt)
 {
-    auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+    if (!transform)
+        transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
     if (!transform)
         return;
@@ -50,10 +52,16 @@ bool RigidBody::isFalling() const
 
 void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
 {
-    auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
-    auto collider = dynamic_cast<BoxCollider*>(owner->getComponent(ComponentType::boxCollider));
+    if (!transform)
+        transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
-    if (!transform || !collider)
+    if (!transform)
+        return;
+
+    if (!boxCollider)
+        boxCollider = dynamic_cast<BoxCollider*>(owner->getComponent(ComponentType::boxCollider));
+
+    if (!boxCollider)
         return;
 
     Vec2<float> finalPVec = {0, 0};
@@ -62,7 +70,7 @@ void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
 
     for (auto& object : objects)
     {
-        auto pVec = collider->getPenetrationVector(object);
+        auto pVec = boxCollider->getPenetrationVector(object);
 
         if (pVec.getX() != 0)
         {

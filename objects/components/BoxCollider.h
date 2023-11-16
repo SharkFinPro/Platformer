@@ -6,6 +6,7 @@
 
 struct BoundingRectangle;
 class GameObject;
+class Transform;
 
 class BoxCollider : public Component
 {
@@ -14,10 +15,12 @@ public:
 
     bool collidesWith(BoundingRectangle other);
 
-    Vec2<float> getPenetrationVector(GameObject* object) const;
+    Vec2<float> getPenetrationVector(GameObject* object);
     static Vec2<float> getTheoreticalPenetrationVector(BoundingRectangle boundingRectangle, GameObject* object);
 
 private:
+    Transform* transform;
+
     static Vec2<float> getActualPenetrationVector(BoundingRectangle r1, BoundingRectangle r2);
 };
 

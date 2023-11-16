@@ -4,6 +4,8 @@
 #include "Component.h"
 
 class GameObject;
+class Transform;
+class RigidBody;
 
 enum PlayerControlType {
     WASD,
@@ -23,6 +25,9 @@ private:
     float jumpHeight;
 
     PlayerControlType controlType;
+
+    Transform* transform;
+    RigidBody* rigidBody;
 
     void handleInput();
 };

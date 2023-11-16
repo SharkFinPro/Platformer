@@ -5,7 +5,8 @@
 #include <SFML/Window/Keyboard.hpp>
 
 Player::Player(PlayerControlType controlType)
-    : Component{ComponentType::player}, speed{10}, jumpHeight{14}, controlType{controlType}
+    : Component{ComponentType::player}, speed{10}, jumpHeight{14}, controlType{controlType}, transform{nullptr}, rigidBody{
+    nullptr}
 {}
 
 void Player::update(float dt)
@@ -15,7 +16,9 @@ void Player::update(float dt)
 
 void Player::fixedUpdate(float dt)
 {
-    auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+    if (!transform)
+        transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+
     if (!transform)
         return;
 
@@ -25,7 +28,9 @@ void Player::fixedUpdate(float dt)
 
 void Player::handleInput()
 {
-    auto rigidBody = dynamic_cast<RigidBody*>(getOwner()->getComponent(ComponentType::rigidBody));
+    if (!rigidBody)
+        rigidBody = dynamic_cast<RigidBody*>(getOwner()->getComponent(ComponentType::rigidBody));
+
     if (!rigidBody)
         return;
 

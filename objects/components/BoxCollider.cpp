@@ -4,12 +4,13 @@
 #include <cmath>
 
 BoxCollider::BoxCollider()
-    : Component{ComponentType::boxCollider}
+    : Component{ComponentType::boxCollider}, transform{nullptr}
 {}
 
 bool BoxCollider::collidesWith(BoundingRectangle r2)
 {
-    auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+    if (!transform)
+        transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
     if (!transform)
         return false;
@@ -24,13 +25,18 @@ bool BoxCollider::collidesWith(BoundingRectangle r2)
     return mdX <= 0 && mdX + mdW >= 0 && mdY <= 0 && mdY + mdH >= 0;
 }
 
-Vec2<float> BoxCollider::getPenetrationVector(GameObject* object) const
+Vec2<float> BoxCollider::getPenetrationVector(GameObject* object)
 {
-    auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+    if (!transform)
+        transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+
+    if (!transform)
+        return { 0, 0 };
+
     auto otherTransform = dynamic_cast<Transform*>(object->getComponent(ComponentType::transform));
 
     if (!transform || !otherTransform)
-        return {0, 0};
+        return { 0, 0 };
 
     auto r1 = transform->getBoundingRectangle();
     auto r2 = otherTransform->getBoundingRectangle();

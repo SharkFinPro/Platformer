@@ -4,6 +4,9 @@
 #include "Component.h"
 #include <vector>
 
+class Transform;
+class BoxCollider;
+
 class RigidBody : public Component
 {
 public:
@@ -27,6 +30,9 @@ private:
     float maxFallSpeed;
 
     bool falling;
+
+    Transform* transform;
+    BoxCollider* boxCollider;
 
     void limitMovement();
 

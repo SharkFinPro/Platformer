@@ -4,6 +4,8 @@
 #include "Component.h"
 #include <SFML/Graphics.hpp>
 
+class Transform;
+
 class SpriteRenderer : public Component
 {
 public:
@@ -15,6 +17,8 @@ public:
 
 private:
     sf::Color color;
+
+    Transform* transform;
 };
 
 

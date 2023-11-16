@@ -4,12 +4,13 @@
 #include "../GameObjectManager.h"
 
 SpriteRenderer::SpriteRenderer(sf::Color color)
-    : Component{ComponentType::spriteRenderer}, color{color}
+    : Component{ComponentType::spriteRenderer}, color{color}, transform{nullptr}
 {}
 
 void SpriteRenderer::update(float dt)
 {
-    auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+    if (!transform)
+        transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
     if (!transform)
         return;
