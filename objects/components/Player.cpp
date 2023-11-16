@@ -29,16 +29,18 @@ void Player::handleInput()
     if (!rigidBody)
         return;
 
+    float xVelUpdate = 0;
     if ((sf::Keyboard::isKeyPressed(sf::Keyboard::A) && controlType == PlayerControlType::WASD)
         || (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && controlType == PlayerControlType::ARROW))
     {
-        rigidBody->setXvel(-speed);
+        xVelUpdate -= speed;
     }
     if ((sf::Keyboard::isKeyPressed(sf::Keyboard::D) && controlType == PlayerControlType::WASD)
         || (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && controlType == PlayerControlType::ARROW))
     {
-        rigidBody->setXvel(speed);
+        xVelUpdate += speed;
     }
+    rigidBody->setXvel(xVelUpdate);
 
     if (!rigidBody->isFalling() && ((sf::Keyboard::isKeyPressed(sf::Keyboard::W) && controlType == PlayerControlType::WASD)
         || (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && controlType == PlayerControlType::ARROW)))
