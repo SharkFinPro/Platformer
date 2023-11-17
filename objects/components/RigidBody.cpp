@@ -171,6 +171,6 @@ void RigidBody::handleYCollision()
 {
     if (yvel > 0)
         falling = false;
-    
+
     yvel = 0;
 }
