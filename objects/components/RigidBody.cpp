@@ -5,7 +5,7 @@
 #include <cmath>
 
 RigidBody::RigidBody()
-    : Component{ComponentType::rigidBody}, xvel{0}, yvel{0}, doGravity{true}, gravity{0.4f}, maxFallSpeed{15}, falling{true}, transform{
+    : Component{ComponentType::rigidBody}, xvel{0}, yvel{0}, doGravity{true}, gravity{0.4f}, falling{true}, transform{
     nullptr}, boxCollider{nullptr}
 {}
 
@@ -36,9 +36,6 @@ void RigidBody::applyForce(float x, float y)
 void RigidBody::limitMovement()
 {
     xvel /= 1.5f;
-
-    if (yvel > maxFallSpeed)
-        yvel = maxFallSpeed;
 }
 
 bool RigidBody::isFalling() const

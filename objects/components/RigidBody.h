@@ -26,7 +26,6 @@ private:
 
     bool doGravity;
     float gravity;
-    float maxFallSpeed;
 
     bool falling;
 
