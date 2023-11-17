@@ -29,9 +29,6 @@ public:
     float getX() const;
     float getY() const;
 
-    void setPosition(float xPos, float yPos);
-    void setX(float xPos);
-    void setY(float yPos);
     void move(float xDif, float yDif);
 
     float getWidth() const;

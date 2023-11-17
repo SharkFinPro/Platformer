@@ -22,22 +22,6 @@ float Transform::getY() const
     return position.y;
 }
 
-void Transform::setPosition(float xPos, float yPos)
-{
-    newPosition.x = xPos;
-    newPosition.y = yPos;
-}
-
-void Transform::setX(float xPos)
-{
-    newPosition.x = xPos;
-}
-
-void Transform::setY(float yPos)
-{
-    newPosition.y = yPos;
-}
-
 void Transform::move(float xDif, float yDif)
 {
     newPosition.x += xDif;
