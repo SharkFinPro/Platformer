@@ -14,8 +14,7 @@ public:
 
     void fixedUpdate(float dt) override;
 
-    void setXvel(float velocity);
-    void setYvel(float velocity);
+    void applyForce(float x, float y);
 
     bool isFalling() const;
 

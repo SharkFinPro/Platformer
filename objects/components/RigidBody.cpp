@@ -27,22 +27,18 @@ void RigidBody::fixedUpdate(float dt)
     transform->move(xvel * dt, yvel * dt);
 }
 
+void RigidBody::applyForce(float x, float y)
+{
+    xvel += x;
+    yvel += y;
+}
+
 void RigidBody::limitMovement()
 {
-    xvel /= 1.01f;
+    xvel /= 1.5f;
 
     if (yvel > maxFallSpeed)
         yvel = maxFallSpeed;
-}
-
-void RigidBody::setXvel(float velocity)
-{
-    xvel = velocity;
-}
-
-void RigidBody::setYvel(float velocity)
-{
-    yvel = velocity;
 }
 
 bool RigidBody::isFalling() const

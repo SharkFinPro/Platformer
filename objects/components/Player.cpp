@@ -5,7 +5,7 @@
 #include <SFML/Window/Keyboard.hpp>
 
 Player::Player(PlayerControlType controlType)
-    : Component{ComponentType::player}, speed{10}, jumpHeight{14}, controlType{controlType}, transform{nullptr}, rigidBody{
+    : Component{ComponentType::player}, speed{5}, jumpHeight{14}, controlType{controlType}, transform{nullptr}, rigidBody{
     nullptr}
 {}
 
@@ -34,23 +34,20 @@ void Player::handleInput()
     if (!rigidBody)
         return;
 
-    float xVelUpdate = 0;
     if ((sf::Keyboard::isKeyPressed(sf::Keyboard::A) && controlType == PlayerControlType::WASD)
         || (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && controlType == PlayerControlType::ARROW))
     {
-        xVelUpdate -= speed;
+        rigidBody->applyForce(-speed, 0);
     }
     if ((sf::Keyboard::isKeyPressed(sf::Keyboard::D) && controlType == PlayerControlType::WASD)
         || (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && controlType == PlayerControlType::ARROW))
     {
-        xVelUpdate += speed;
+        rigidBody->applyForce(speed, 0);
     }
-    if (xVelUpdate != 0)
-        rigidBody->setXvel(xVelUpdate);
 
     if (!rigidBody->isFalling() && ((sf::Keyboard::isKeyPressed(sf::Keyboard::W) && controlType == PlayerControlType::WASD)
         || (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && controlType == PlayerControlType::ARROW)))
     {
-        rigidBody->setYvel(-jumpHeight);
+        rigidBody->applyForce(0, -jumpHeight);
     }
 }
