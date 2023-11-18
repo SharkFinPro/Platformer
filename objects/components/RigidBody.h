@@ -2,10 +2,9 @@
 #define PLATFORMER_RIGIDBODY_H
 
 #include "Component.h"
-#include <vector>
+#include "../../math/Vec2.h"
 
 class Transform;
-class BoxCollider;
 
 class RigidBody : public Component
 {
@@ -18,7 +17,7 @@ public:
 
     bool isFalling() const;
 
-    void handleCollisions(const std::vector<GameObject*> &objects);
+    void handleCollision(Vec2<float> penetrationVector);
 
 private:
     float xvel;
@@ -30,7 +29,6 @@ private:
     bool falling;
 
     Transform* transform;
-    BoxCollider* boxCollider;
 
     void limitMovement();
 

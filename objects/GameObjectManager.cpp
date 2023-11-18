@@ -84,7 +84,6 @@ void GameObjectManager::checkCollisions()
             continue;
 
         std::vector<GameObject*> collisions;
-
         for (auto& object2 : objects)
         {
             if (object1 == object2)
@@ -104,6 +103,10 @@ void GameObjectManager::checkCollisions()
         }
 
         if (!collisions.empty())
-            rb->handleCollisions(collisions);
+        {
+            auto penetrationVector = collider->getPenetrationVector(collisions);
+
+            rb->handleCollision(penetrationVector);
+        }
     }
 }

@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "../../math/Vec2.h"
+#include <vector>
 
 struct BoundingRectangle;
 class GameObject;
@@ -15,13 +16,14 @@ public:
 
     bool collidesWith(BoundingRectangle other);
 
-    Vec2<float> getPenetrationVector(GameObject* object);
-    static Vec2<float> getTheoreticalPenetrationVector(BoundingRectangle boundingRectangle, GameObject* object);
+    Vec2<float> getPenetrationVector(const std::vector<GameObject*>& objects);
 
 private:
     Transform* transform;
 
-    static Vec2<float> getActualPenetrationVector(BoundingRectangle r1, BoundingRectangle r2);
+    Vec2<float> getPenetration(GameObject* object);
+    static Vec2<float> getTheoreticalPenetration(BoundingRectangle boundingRectangle, GameObject* object);
+    static Vec2<float> getActualPenetration(BoundingRectangle r1, BoundingRectangle r2);
 };
 
 #endif //PLATFORMER_BOXCOLLIDER_H
