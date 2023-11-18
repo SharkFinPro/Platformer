@@ -78,12 +78,6 @@ void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
         }
     }
 
-    if (xCollisions != 0)
-        finalPVec.setX(finalPVec.getX() / xCollisions);
-
-    if (yCollisions != 0)
-        finalPVec.setY(finalPVec.getY() / yCollisions);
-
     if (finalPVec.getX() != 0 && finalPVec.getY() != 0)
     {
         if (std::fabs(finalPVec.getX()) > std::fabs(finalPVec.getY()))
@@ -92,10 +86,6 @@ void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
             theoreticalRectangle.left -= finalPVec.getX();
             theoreticalRectangle.right -= finalPVec.getX();
 
-            transform->move(-finalPVec.getX(), 0);
-            handleXCollision();
-
-            finalPVec.setX(0);
             finalPVec.setY(0);
 
             yCollisions = 0;
@@ -109,12 +99,6 @@ void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
                     finalPVec.setY(finalPVec.getY() + pVec.getY());
                 }
             }
-
-            if (finalPVec.getY() != 0)
-            {
-                handleYCollision();
-                transform->move(0, -(finalPVec.getY() / yCollisions));
-            }
         }
         else
         {
@@ -122,11 +106,7 @@ void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
             theoreticalRectangle.top -= finalPVec.getY();
             theoreticalRectangle.bottom -= finalPVec.getY();
 
-            transform->move(0, -finalPVec.getY());
-            handleYCollision();
-
             finalPVec.setX(0);
-            finalPVec.setY(0);
 
             xCollisions = 0;
             for (auto& object : objects)
@@ -139,24 +119,22 @@ void RigidBody::handleCollisions(const std::vector<GameObject*>& objects)
                     finalPVec.setX(finalPVec.getX() + pVec.getX());
                 }
             }
-
-            if (finalPVec.getX() != 0)
-            {
-                handleXCollision();
-                transform->move(-(finalPVec.getX() / xCollisions), 0);
-            }
         }
     }
-    else
-    {
-        transform->move(-finalPVec.getX(), -finalPVec.getY());
 
-        if (finalPVec.getX() != 0)
-            handleXCollision();
+    if (xCollisions != 0)
+        finalPVec.setX(finalPVec.getX() / xCollisions);
 
-        if (finalPVec.getY() != 0)
-            handleYCollision();
-    }
+    if (yCollisions != 0)
+        finalPVec.setY(finalPVec.getY() / yCollisions);
+
+    if (finalPVec.getX() != 0)
+        handleXCollision();
+
+    if (finalPVec.getY() != 0)
+        handleYCollision();
+
+    transform->move(-finalPVec.getX(), -finalPVec.getY());
 }
 
 void RigidBody::handleXCollision()
