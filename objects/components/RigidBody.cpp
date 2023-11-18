@@ -5,7 +5,7 @@
 #include <cmath>
 
 RigidBody::RigidBody()
-    : Component{ComponentType::rigidBody}, xvel{0}, yvel{0}, doGravity{true}, gravity{0.4f}, falling{true}, transform{
+    : Component{ComponentType::rigidBody}, xvel{0}, yvel{0}, doGravity{true}, gravity{0.01f}, falling{true}, transform{
     nullptr}, boxCollider{nullptr}
 {}
 
@@ -20,7 +20,7 @@ void RigidBody::fixedUpdate(float dt)
     falling = true;
 
     if (doGravity)
-        yvel += gravity * dt;
+        yvel += gravity;
 
     limitMovement();
 

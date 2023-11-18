@@ -5,7 +5,7 @@
 #include <SFML/Window/Keyboard.hpp>
 
 Player::Player(PlayerControlType controlType)
-    : Component{ComponentType::player}, speed{5}, jumpHeight{14}, controlType{controlType}, transform{nullptr}, rigidBody{
+    : Component{ComponentType::player}, speed{5}, jumpHeight{15}, controlType{controlType}, transform{nullptr}, rigidBody{
     nullptr}
 {}
 
