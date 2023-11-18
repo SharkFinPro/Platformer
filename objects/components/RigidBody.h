@@ -20,8 +20,7 @@ public:
     void handleCollision(Vec2<float> penetrationVector);
 
 private:
-    float xvel;
-    float yvel;
+    Vec2<float> velocity;
 
     bool doGravity;
     float gravity;

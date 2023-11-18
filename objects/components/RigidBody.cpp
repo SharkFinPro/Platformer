@@ -4,7 +4,7 @@
 #include <cmath>
 
 RigidBody::RigidBody()
-    : Component{ComponentType::rigidBody}, xvel{0}, yvel{0}, doGravity{true}, gravity{0.01f}, falling{true}, transform{nullptr}
+    : Component{ComponentType::rigidBody}, velocity{0, 0}, doGravity{true}, gravity{0.01f}, falling{true}, transform{nullptr}
 {}
 
 void RigidBody::fixedUpdate(float dt)
@@ -18,22 +18,22 @@ void RigidBody::fixedUpdate(float dt)
     falling = true;
 
     if (doGravity)
-        yvel += gravity;
+        velocity.setY(velocity.getY() + gravity);
 
     limitMovement();
 
-    transform->move(xvel * dt, yvel * dt);
+    transform->move(velocity.getX() * dt, velocity.getY() * dt);
 }
 
 void RigidBody::applyForce(float x, float y)
 {
-    xvel += x;
-    yvel += y;
+    velocity.setX(velocity.getX() + x);
+    velocity.setY(velocity.getY() + y);
 }
 
 void RigidBody::limitMovement()
 {
-    xvel /= 1.5f;
+    velocity.setX(velocity.getX() / 1.5f);
 }
 
 bool RigidBody::isFalling() const
@@ -60,13 +60,13 @@ void RigidBody::handleCollision(Vec2<float> penetrationVector)
 
 void RigidBody::handleXCollision()
 {
-    xvel = 0;
+    velocity.setX(0);
 }
 
 void RigidBody::handleYCollision()
 {
-    if (yvel > 0)
+    if (velocity.getY() > 0)
         falling = false;
 
-    yvel = 0;
+    velocity.setY(0);
 }
