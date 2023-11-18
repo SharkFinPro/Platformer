@@ -27,78 +27,78 @@ bool BoxCollider::collidesWith(BoundingRectangle r2)
 
 Vec2<float> BoxCollider::getPenetrationVector(const std::vector<GameObject *>& objects)
 {
-    Vec2<float> finalPVec = {0, 0};
+    Vec2<float> finalPenetrationVector = {0, 0};
     float xCollisions = 0;
     float yCollisions = 0;
 
     for (auto& object : objects)
     {
-        auto pVec = getPenetration(object);
+        auto penetrationVector = getPenetration(object);
 
-        if (pVec.getX() != 0)
+        if (penetrationVector.getX() != 0)
         {
             xCollisions++;
-            finalPVec.setX(finalPVec.getX() + pVec.getX());
+            finalPenetrationVector.setX(finalPenetrationVector.getX() + penetrationVector.getX());
         }
 
-        if (pVec.getY() != 0)
+        if (penetrationVector.getY() != 0)
         {
             yCollisions++;
-            finalPVec.setY(finalPVec.getY() + pVec.getY());
+            finalPenetrationVector.setY(finalPenetrationVector.getY() + penetrationVector.getY());
         }
     }
 
-    if (finalPVec.getX() != 0 && finalPVec.getY() != 0)
+    if (finalPenetrationVector.getX() != 0 && finalPenetrationVector.getY() != 0)
     {
-        if (std::fabs(finalPVec.getX()) > std::fabs(finalPVec.getY()))
+        if (std::fabs(finalPenetrationVector.getX()) > std::fabs(finalPenetrationVector.getY()))
         {
             auto theoreticalRectangle = transform->getBoundingRectangle();
-            theoreticalRectangle.left -= finalPVec.getX();
-            theoreticalRectangle.right -= finalPVec.getX();
+            theoreticalRectangle.left -= finalPenetrationVector.getX();
+            theoreticalRectangle.right -= finalPenetrationVector.getX();
 
-            finalPVec.setY(0);
+            finalPenetrationVector.setY(0);
 
             yCollisions = 0;
             for (auto& object : objects)
             {
-                auto pVec = BoxCollider::getTheoreticalPenetration(theoreticalRectangle, object);
+                auto penetrationVector = BoxCollider::getTheoreticalPenetration(theoreticalRectangle, object);
 
-                if (pVec.getY() != 0)
+                if (penetrationVector.getY() != 0)
                 {
                     yCollisions++;
-                    finalPVec.setY(finalPVec.getY() + pVec.getY());
+                    finalPenetrationVector.setY(finalPenetrationVector.getY() + penetrationVector.getY());
                 }
             }
         }
         else
         {
             auto theoreticalRectangle = transform->getBoundingRectangle();
-            theoreticalRectangle.top -= finalPVec.getY();
-            theoreticalRectangle.bottom -= finalPVec.getY();
+            theoreticalRectangle.top -= finalPenetrationVector.getY();
+            theoreticalRectangle.bottom -= finalPenetrationVector.getY();
 
-            finalPVec.setX(0);
+            finalPenetrationVector.setX(0);
 
             xCollisions = 0;
             for (auto& object : objects)
             {
-                auto pVec = BoxCollider::getTheoreticalPenetration(theoreticalRectangle, object);
+                auto penetrationVector = BoxCollider::getTheoreticalPenetration(theoreticalRectangle, object);
 
-                if (pVec.getX() != 0)
+                if (penetrationVector.getX() != 0)
                 {
                     xCollisions++;
-                    finalPVec.setX(finalPVec.getX() + pVec.getX());
+                    finalPenetrationVector.setX(finalPenetrationVector.getX() + penetrationVector.getX());
                 }
             }
         }
     }
 
     if (xCollisions != 0)
-        finalPVec.setX(finalPVec.getX() / xCollisions);
+        finalPenetrationVector.setX(finalPenetrationVector.getX() / xCollisions);
 
     if (yCollisions != 0)
-        finalPVec.setY(finalPVec.getY() / yCollisions);
+        finalPenetrationVector.setY(finalPenetrationVector.getY() / yCollisions);
 
-    return finalPVec;
+    return finalPenetrationVector;
 }
 
 Vec2<float> BoxCollider::getPenetration(GameObject* object)
@@ -143,26 +143,26 @@ Vec2<float> BoxCollider::getActualPenetration(BoundingRectangle r1, BoundingRect
     Vec2<float> max{mdX + mdW, mdY + mdH};
 
     float minDist = std::fabs(min.getX());
-    Vec2<float> pVec{min.getX(), 0};
+    Vec2<float> penetrationVector{min.getX(), 0};
 
     if (std::fabs(max.getX()) < minDist)
     {
         minDist = std::fabs(max.getX());
-        pVec.setX(max.getX());
+        penetrationVector.setX(max.getX());
     }
 
     if (std::fabs(min.getY()) < minDist)
     {
         minDist = std::fabs(min.getY());
-        pVec.setX(0);
-        pVec.setY(min.getY());
+        penetrationVector.setX(0);
+        penetrationVector.setY(min.getY());
     }
 
     if (std::fabs(max.getY()) < minDist)
     {
-        pVec.setX(0);
-        pVec.setY(max.getY());
+        penetrationVector.setX(0);
+        penetrationVector.setY(max.getY());
     }
 
-    return pVec;
+    return penetrationVector;
 }
