@@ -43,7 +43,7 @@ void GameObjectManager::setWindow(sf::RenderWindow* window)
     this->window = window;
 }
 
-sf::RenderWindow *GameObjectManager::getWindow() const
+sf::RenderWindow* GameObjectManager::getWindow() const
 {
     return window;
 }
