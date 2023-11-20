@@ -61,7 +61,7 @@ Vec2<float> BoxCollider::getPenetrationVector(const std::vector<GameObject *>& o
             yCollisions = 0;
             for (auto& object : objects)
             {
-                auto penetrationVector = BoxCollider::getTheoreticalPenetration(theoreticalRectangle, object);
+                auto penetrationVector = getTheoreticalPenetration(theoreticalRectangle, object);
 
                 if (penetrationVector.getY() != 0)
                 {
@@ -81,7 +81,7 @@ Vec2<float> BoxCollider::getPenetrationVector(const std::vector<GameObject *>& o
             xCollisions = 0;
             for (auto& object : objects)
             {
-                auto penetrationVector = BoxCollider::getTheoreticalPenetration(theoreticalRectangle, object);
+                auto penetrationVector = getTheoreticalPenetration(theoreticalRectangle, object);
 
                 if (penetrationVector.getX() != 0)
                 {
