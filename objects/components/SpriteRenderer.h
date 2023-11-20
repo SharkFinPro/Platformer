@@ -9,16 +9,15 @@ class Transform;
 class SpriteRenderer : public Component
 {
 public:
-    explicit SpriteRenderer(sf::Color color);
+  explicit SpriteRenderer(sf::Color color);
 
-    void update(float dt) override;
+  void update(float dt) override;
 
-    void setColor(sf::Color color);
+  void setColor(sf::Color color);
 
 private:
-    sf::Color color;
-
-    Transform* transform;
+  sf::Color color;
+  Transform* transform;
 };
 
 

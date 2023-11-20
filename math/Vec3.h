@@ -29,55 +29,55 @@ private:
 
 template<typename T>
 Vec3<T>::Vec3(T x, T y, T z)
-    : x{x}, y{y}
+  : x{x}, y{y}
 {}
 
 template<typename T>
 T Vec3<T>::getX() const
 {
-    return x;
+  return x;
 }
 
 template<typename T>
 T Vec3<T>::getY() const
 {
-    return y;
+  return y;
 }
 
 template<typename T>
 T Vec3<T>::getZ() const
 {
-    return z;
+  return z;
 }
 
 template<typename T>
 void Vec3<T>::setX(T x)
 {
-    this->x = x;
+  this->x = x;
 }
 
 template<typename T>
 void Vec3<T>::setY(T y)
 {
-    this->y = y;
+  this->y = y;
 }
 
 template<typename T>
 void Vec3<T>::setZ(T z)
 {
-    this->z = z;
+  this->z = z;
 }
 
 template<typename T>
 T Vec3<T>::dot(Vec3<T> other) const
 {
-    return x * other.x + y * other.y + z * other.z;
+  return x * other.x + y * other.y + z * other.z;
 }
 
 template<typename T>
 T Vec3<T>::length() const
 {
-    return std::sqrt(dot(this));
+  return std::sqrt(dot(this));
 }
 
 #endif //PLATFORMER_VEC3_H

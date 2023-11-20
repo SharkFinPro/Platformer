@@ -8,20 +8,20 @@ enum class ComponentType { boxCollider, player, rigidBody, spriteRenderer, trans
 class Component
 {
 public:
-    explicit Component(ComponentType type);
-    virtual ~Component() = default;
+  explicit Component(ComponentType type);
+  virtual ~Component() = default;
 
-    ComponentType getType() const;
+  ComponentType getType() const;
 
-    void setOwner(GameObject* componentOwner);
-    GameObject* getOwner() const;
+  void setOwner(GameObject* componentOwner);
+  GameObject* getOwner() const;
 
-    virtual void update(float dt);
-    virtual void fixedUpdate(float dt);
+  virtual void update(float dt);
+  virtual void fixedUpdate(float dt);
 
 protected:
-    ComponentType type;
-    GameObject* owner;
+  ComponentType type;
+  GameObject* owner;
 };
 
 #endif //PLATFORMER_COMPONENT_H

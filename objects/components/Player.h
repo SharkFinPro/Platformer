@@ -7,29 +7,26 @@ class GameObject;
 class Transform;
 class RigidBody;
 
-enum PlayerControlType {
-    WASD,
-    ARROW
-};
+enum PlayerControlType { WASD, ARROW };
 
 class Player : public Component
 {
 public:
-    explicit Player(PlayerControlType controlType);
+  explicit Player(PlayerControlType controlType);
 
-    void update(float dt) override;
-    void fixedUpdate(float dt) override;
+  void update(float dt) override;
+  void fixedUpdate(float dt) override;
 
 private:
-    float speed;
-    float jumpHeight;
+  float speed;
+  float jumpHeight;
 
-    PlayerControlType controlType;
+  PlayerControlType controlType;
 
-    Transform* transform;
-    RigidBody* rigidBody;
+  Transform* transform;
+  RigidBody* rigidBody;
 
-    void handleInput();
+  void handleInput();
 };
 
 

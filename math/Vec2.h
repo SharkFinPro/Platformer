@@ -20,49 +20,49 @@ public:
   T length() const;
 
 private:
-    T x;
-    T y;
+  T x;
+  T y;
 };
 
 template<typename T>
 Vec2<T>::Vec2(T x, T y)
-    : x{x}, y{y}
+  : x{x}, y{y}
 {}
 
 template<typename T>
 T Vec2<T>::getX() const
 {
-    return x;
+  return x;
 }
 
 template<typename T>
 T Vec2<T>::getY() const
 {
-    return y;
+  return y;
 }
 
 template<typename T>
 void Vec2<T>::setX(T x)
 {
-    this->x = x;
+  this->x = x;
 }
 
 template<typename T>
 void Vec2<T>::setY(T y)
 {
-    this->y = y;
+  this->y = y;
 }
 
 template<typename T>
 T Vec2<T>::dot(Vec2<T> other) const
 {
-    return x * other.x + y * other.y;
+  return x * other.x + y * other.y;
 }
 
 template<typename T>
 T Vec2<T>::length() const
 {
-    return std::sqrt(dot(this));
+  return std::sqrt(dot(this));
 }
 
 #endif //PLATFORMER_VEC2_H

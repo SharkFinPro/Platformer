@@ -2,22 +2,22 @@
 #include "../GameObject.h"
 
 Component::Component(ComponentType type)
-    : type{type}, owner{nullptr}
+  : type{type}, owner{nullptr}
 {}
 
 ComponentType Component::getType() const
 {
-    return type;
+  return type;
 }
 
 void Component::setOwner(GameObject* componentOwner)
 {
-    owner = componentOwner;
+  owner = componentOwner;
 }
 
 GameObject* Component::getOwner() const
 {
-    return owner;
+  return owner;
 }
 
 void Component::update(float dt)

@@ -12,18 +12,18 @@ class Transform;
 class BoxCollider : public Component
 {
 public:
-    BoxCollider();
+  BoxCollider();
 
-    bool collidesWith(BoundingRectangle other);
+  bool collidesWith(BoundingRectangle other);
 
-    Vec2<float> getPenetrationVector(const std::vector<GameObject*>& objects);
+  Vec2<float> getPenetrationVector(const std::vector<GameObject*>& objects);
 
 private:
-    Transform* transform;
+  Transform* transform;
 
-    Vec2<float> getPenetration(GameObject* object);
-    static Vec2<float> getTheoreticalPenetration(BoundingRectangle boundingRectangle, GameObject* object);
-    static Vec2<float> getActualPenetration(BoundingRectangle r1, BoundingRectangle r2);
+  Vec2<float> getPenetration(GameObject* object);
+  static Vec2<float> getTheoreticalPenetration(BoundingRectangle boundingRectangle, GameObject* object);
+  static Vec2<float> getActualPenetration(BoundingRectangle r1, BoundingRectangle r2);
 };
 
 #endif //PLATFORMER_BOXCOLLIDER_H

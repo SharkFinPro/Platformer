@@ -8,29 +8,29 @@ class GameObject;
 class GameObjectManager
 {
 public:
-    GameObjectManager();
-    ~GameObjectManager();
+  GameObjectManager();
+  ~GameObjectManager();
 
-    void update(float dt);
+  void update(float dt);
 
-    void addObject(GameObject* object);
-    void removeObject(GameObject* object);
+  void addObject(GameObject* object);
+  void removeObject(GameObject* object);
 
-    void setWindow(sf::RenderWindow* window);
-    sf::RenderWindow* getWindow() const;
+  void setWindow(sf::RenderWindow* window);
+  sf::RenderWindow* getWindow() const;
 
 private:
-    std::vector<GameObject*> objects;
-    sf::RenderWindow* window;
+  std::vector<GameObject*> objects;
+  sf::RenderWindow* window;
 
-    const float fixedUpdateDt;
-    float timeAccumulator;
-    int ticks;
+  const float fixedUpdateDt;
+  float timeAccumulator;
+  int ticks;
 
-    void variableUpdate(float dt);
-    void fixedUpdate(float dt);
+  void variableUpdate(float dt);
+  void fixedUpdate(float dt);
 
-    void checkCollisions();
+  void checkCollisions();
 };
 
 #endif //PLATFORMER_GAMEOBJECTMANAGER_H

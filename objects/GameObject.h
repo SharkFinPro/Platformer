@@ -12,20 +12,20 @@ class Component;
 class GameObject
 {
 public:
-    ~GameObject();
+  ~GameObject();
 
-    void update(float dt);
-    void fixedUpdate(float dt);
+  void update(float dt);
+  void fixedUpdate(float dt);
 
-    void addComponent(Component* component);
-    Component* getComponent(ComponentType type) const;
+  void addComponent(Component* component);
+  Component* getComponent(ComponentType type) const;
 
-    void setOwner(GameObjectManager* objectOwner);
-    GameObjectManager* getOwner() const;
+  void setOwner(GameObjectManager* objectOwner);
+  GameObjectManager* getOwner() const;
 
 protected:
-    std::unordered_map<ComponentType, Component*> components;
-    GameObjectManager* owner;
+  std::unordered_map<ComponentType, Component*> components;
+  GameObjectManager* owner;
 };
 
 #endif //PLATFORMER_GAMEOBJECT_H

@@ -9,30 +9,30 @@ class Transform;
 class RigidBody : public Component
 {
 public:
-    RigidBody();
+  RigidBody();
 
-    void fixedUpdate(float dt) override;
+  void fixedUpdate(float dt) override;
 
-    void applyForce(float x, float y);
+  void applyForce(float x, float y);
 
-    bool isFalling() const;
+  bool isFalling() const;
 
-    void handleCollision(Vec2<float> penetrationVector);
+  void handleCollision(Vec2<float> penetrationVector);
 
 private:
-    Vec2<float> velocity;
+  Vec2<float> velocity;
 
-    bool doGravity;
-    float gravity;
+  bool doGravity;
+  float gravity;
 
-    bool falling;
+  bool falling;
 
-    Transform* transform;
+  Transform* transform;
 
-    void limitMovement();
+  void limitMovement();
 
-    void handleXCollision();
-    void handleYCollision();
+  void handleXCollision();
+  void handleYCollision();
 };
 
 
