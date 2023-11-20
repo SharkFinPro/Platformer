@@ -1,6 +1,7 @@
 #ifndef PLATFORMER_VEC2_H
 #define PLATFORMER_VEC2_H
 
+#include <cmath>
 
 template<typename T>
 class Vec2
@@ -13,6 +14,10 @@ public:
 
   void setX(T x);
   void setY(T y);
+
+  T dot(Vec2<T> other) const;
+
+  T length() const;
 
 private:
     T x;
@@ -46,6 +51,18 @@ template<typename T>
 void Vec2<T>::setY(T y)
 {
     this->y = y;
+}
+
+template<typename T>
+T Vec2<T>::dot(Vec2<T> other) const
+{
+    return x * other.x + y * other.y;
+}
+
+template<typename T>
+T Vec2<T>::length() const
+{
+    return std::sqrt(dot(this));
 }
 
 #endif //PLATFORMER_VEC2_H
