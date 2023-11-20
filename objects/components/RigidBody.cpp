@@ -1,7 +1,6 @@
 #include "RigidBody.h"
 #include "../GameObject.h"
 #include "Transform.h"
-#include <cmath>
 
 RigidBody::RigidBody()
     : Component{ComponentType::rigidBody}, velocity{0, 0}, doGravity{true}, gravity{0.01f}, falling{true}, transform{nullptr}
