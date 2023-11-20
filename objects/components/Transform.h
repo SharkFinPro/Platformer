@@ -35,7 +35,6 @@ public:
   float getHeight() const;
 
   BoundingRectangle getBoundingRectangle() const;
-  BoundingRectangle getPastBoundingRectangle() const;
 
   void reset();
 

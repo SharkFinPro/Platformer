@@ -43,11 +43,6 @@ BoundingRectangle Transform::getBoundingRectangle() const
   return BoundingRectangle{position.x, position.x + w, position.y, position.y + h};
 }
 
-BoundingRectangle Transform::getPastBoundingRectangle() const
-{
-  return BoundingRectangle{oldPosition.x, oldPosition.x + w, oldPosition.y, oldPosition.y + h};
-}
-
 void Transform::reset()
 {
   oldPosition = position;
