@@ -1,10 +1,10 @@
 #include "Transform.h"
 
 Transform::Transform(float xPos, float yPos, float width, float height)
-  : Component(ComponentType::transform), position{xPos, yPos}, oldPosition{position}, initialPosition{position}, w{width}, h{height}, newPosition{xPos, yPos}
+  : Component(ComponentType::transform), position{xPos, yPos}, oldPosition{position}, initialPosition{position}, newPosition{xPos, yPos}, w{width}, h{height}
 {}
 
-void Transform::fixedUpdate(float dt) {
+void Transform::fixedUpdate([[maybe_unused]] float dt) {
   oldPosition.x = position.x;
   oldPosition.y = position.y;
 

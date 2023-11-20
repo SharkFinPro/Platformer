@@ -8,12 +8,12 @@ Player::Player(PlayerControlType controlType)
   : Component{ComponentType::player}, speed{5}, jumpHeight{15}, controlType{controlType}, transform{nullptr}, rigidBody{nullptr}
 {}
 
-void Player::update(float dt)
+void Player::update([[maybe_unused]] float dt)
 {
   handleInput();
 }
 
-void Player::fixedUpdate(float dt)
+void Player::fixedUpdate([[maybe_unused]] float dt)
 {
   if (!transform)
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));

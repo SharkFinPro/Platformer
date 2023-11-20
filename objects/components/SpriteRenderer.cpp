@@ -7,7 +7,7 @@ SpriteRenderer::SpriteRenderer(sf::Color color)
   : Component{ComponentType::spriteRenderer}, color{color}, transform{nullptr}
 {}
 
-void SpriteRenderer::update(float dt)
+void SpriteRenderer::update([[maybe_unused]] float dt)
 {
   if (!transform)
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));

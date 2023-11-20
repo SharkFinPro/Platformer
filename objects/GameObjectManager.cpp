@@ -28,7 +28,7 @@ void GameObjectManager::addObject(GameObject* object)
 
 void GameObjectManager::removeObject(GameObject* object)
 {
-  for (int i = 0; i < objects.size(); i++)
+  for (int i = 0; i < static_cast<int>(objects.size()); i++)
     if (objects[i] == object)
     {
       auto tempObject = object;
