@@ -7,7 +7,7 @@ SpriteRenderer::SpriteRenderer(sf::Color color)
   : Component{ComponentType::spriteRenderer}, color{color}, transform{nullptr}
 {}
 
-void SpriteRenderer::update([[maybe_unused]] float dt)
+void SpriteRenderer::update([[maybe_unused]] double dt)
 {
   if (!transform)
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
@@ -19,9 +19,8 @@ void SpriteRenderer::update([[maybe_unused]] float dt)
   sf::ConvexShape shape;
   shape.setPointCount(mesh.size());
   for (int i = 0; i < static_cast<int>(mesh.size()); i++)
-  {
-    shape.setPoint(i, sf::Vector2f(mesh[i].getX(), mesh[i].getY()));
-  }
+    shape.setPoint(i, sf::Vector2f(static_cast<float>(mesh[i].getX()), static_cast<float>(mesh[i].getY())));
+
   shape.setFillColor(color);
 
   getOwner()->getOwner()->getWindow()->draw(shape);

@@ -10,13 +10,13 @@ GameObject::~GameObject()
   }
 }
 
-void GameObject::update(float dt)
+void GameObject::update(double dt)
 {
   for (auto [componentType, component] : components)
     component->update(dt);
 }
 
-void GameObject::fixedUpdate(float dt)
+void GameObject::fixedUpdate(double dt)
 {
   for (auto [componentType, component] : components)
     component->fixedUpdate(dt);

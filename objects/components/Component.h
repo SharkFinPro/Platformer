@@ -16,8 +16,8 @@ public:
   void setOwner(GameObject* componentOwner);
   GameObject* getOwner() const;
 
-  virtual void update(float dt);
-  virtual void fixedUpdate(float dt);
+  virtual void update(double dt);
+  virtual void fixedUpdate(double dt);
 
 protected:
   ComponentType type;

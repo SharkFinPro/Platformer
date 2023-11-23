@@ -15,19 +15,19 @@ class Player : public Component
 public:
   explicit Player(PlayerControlType controlType);
 
-  void update(float dt) override;
-  void fixedUpdate(float dt) override;
+  void update(double dt) override;
+  void fixedUpdate(double dt) override;
 
 private:
-  float speed;
-  float jumpHeight;
+  double speed;
+  double jumpHeight;
 
   PlayerControlType controlType;
 
   Transform* transform;
   RigidBody* rigidBody;
 
-  Vec2<float> appliedForce;
+  Vec2<double> appliedForce;
 
   void handleInput();
 };

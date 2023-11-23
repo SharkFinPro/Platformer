@@ -8,12 +8,12 @@ Player::Player(PlayerControlType controlType)
   : Component{ComponentType::player}, speed{5}, jumpHeight{15}, controlType{controlType}, transform{nullptr}, rigidBody{nullptr}, appliedForce{0, 0}
 {}
 
-void Player::update([[maybe_unused]] float dt)
+void Player::update([[maybe_unused]] double dt)
 {
   handleInput();
 }
 
-void Player::fixedUpdate([[maybe_unused]] float dt)
+void Player::fixedUpdate([[maybe_unused]] double dt)
 {
   if (!transform)
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
@@ -43,7 +43,7 @@ void Player::handleInput()
   if (!rigidBody)
     return;
 
-  float xForce = 0;
+  double xForce = 0;
   if ((sf::Keyboard::isKeyPressed(sf::Keyboard::A) && controlType == PlayerControlType::WASD)
     || (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && controlType == PlayerControlType::ARROW))
   {

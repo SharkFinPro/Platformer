@@ -11,7 +11,7 @@ public:
   GameObjectManager();
   ~GameObjectManager();
 
-  void update(float dt);
+  void update(double dt);
 
   void addObject(GameObject* object);
   void removeObject(GameObject* object);
@@ -23,12 +23,12 @@ private:
   std::vector<GameObject*> objects;
   sf::RenderWindow* window;
 
-  const float fixedUpdateDt;
-  float timeAccumulator;
+  const double fixedUpdateDt;
+  double timeAccumulator;
   int ticks;
 
-  void variableUpdate(float dt);
-  void fixedUpdate(float dt);
+  void variableUpdate(double dt);
+  void fixedUpdate(double dt);
 
   void checkCollisions();
 };

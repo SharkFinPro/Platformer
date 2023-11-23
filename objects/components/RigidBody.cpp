@@ -6,7 +6,7 @@ RigidBody::RigidBody()
   : Component{ComponentType::rigidBody}, velocity{0, 0}, doGravity{true}, gravity{0.01f}, falling{true}, transform{nullptr}
 {}
 
-void RigidBody::fixedUpdate(float dt)
+void RigidBody::fixedUpdate(double dt)
 {
   if (!transform)
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
@@ -24,7 +24,7 @@ void RigidBody::fixedUpdate(float dt)
   transform->move({velocity.getX() * dt, velocity.getY() * dt});
 }
 
-void RigidBody::applyForce(Vec2<float> force)
+void RigidBody::applyForce(Vec2<double> force)
 {
   velocity.setX(velocity.getX() + force.getX());
   velocity.setY(velocity.getY() + force.getY());
@@ -40,7 +40,7 @@ bool RigidBody::isFalling() const
   return falling;
 }
 
-void RigidBody::handleCollision(Vec2<float> penetrationVector)
+void RigidBody::handleCollision(Vec2<double> penetrationVector)
 {
   if (!transform)
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
