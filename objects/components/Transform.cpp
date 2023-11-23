@@ -5,27 +5,24 @@ Transform::Transform(float xPos, float yPos, float width, float height)
 {}
 
 void Transform::fixedUpdate([[maybe_unused]] float dt) {
-  oldPosition.x = position.x;
-  oldPosition.y = position.y;
-
-  position.x = newPosition.x;
-  position.y = newPosition.y;
+  oldPosition = position;
+  position = newPosition;
 }
 
 float Transform::getX() const
 {
-  return position.x;
+  return position.getX();
 }
 
 float Transform::getY() const
 {
-  return position.y;
+  return position.getY();
 }
 
 void Transform::move(float xDif, float yDif)
 {
-  newPosition.x += xDif;
-  newPosition.y += yDif;
+  newPosition.setX(newPosition.getX() + xDif);
+  newPosition.setY(newPosition.getY() + yDif);
 }
 
 float Transform::getWidth() const
@@ -40,7 +37,7 @@ float Transform::getHeight() const
 
 BoundingRectangle Transform::getBoundingRectangle() const
 {
-  return BoundingRectangle{position.x, position.x + w, position.y, position.y + h};
+  return BoundingRectangle{position.getX(), position.getX() + w, position.getY(), position.getY() + h};
 }
 
 void Transform::reset()

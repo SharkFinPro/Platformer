@@ -2,6 +2,7 @@
 #define PLATFORMER_TRANSFORM_H
 
 #include "Component.h"
+#include "../../math/Vec2.h"
 
 struct BoundingRectangle {
   float left, right, top, bottom;
@@ -13,10 +14,6 @@ struct BoundingRectangle {
   float height() const {
     return bottom - top;
   }
-};
-
-struct vec2 {
-  float x, y;
 };
 
 class Transform : public Component
@@ -39,10 +36,10 @@ public:
   void reset();
 
 private:
-  vec2 position;
-  vec2 oldPosition;
-  vec2 initialPosition;
-  vec2 newPosition;
+  Vec2<float> position;
+  Vec2<float> oldPosition;
+  Vec2<float> initialPosition;
+  Vec2<float> newPosition;
 
   float w, h;
 };
