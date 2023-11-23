@@ -6,6 +6,7 @@
 #include "objects/components/Player.h"
 #include "objects/components/Transform.h"
 #include "objects/components/SpriteRenderer.h"
+#include <chrono>
 
 constexpr auto FULLSCREEN = false;
 
@@ -72,8 +73,7 @@ int main()
   window.setMouseCursorVisible(false);
   gameObjectManager.setWindow(&window);
 
-  sf::Clock deltaClock;
-  sf::Time previous = deltaClock.getElapsedTime();
+  std::chrono::steady_clock::time_point previous = std::chrono::steady_clock::now();
 
   // run the program as long as the window is open
   while (window.isOpen())
@@ -88,8 +88,8 @@ int main()
       window.close();
 
     // Delta Time
-    sf::Time current = deltaClock.getElapsedTime();
-    auto dt = static_cast<float>((current - previous).asMicroseconds()) / 10000.0f;
+    std::chrono::steady_clock::time_point current = std::chrono::steady_clock::now();
+    float dt = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(current - previous).count()) / 10000.0f;
     previous = current;
 
     // clear the window with black color
