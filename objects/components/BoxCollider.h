@@ -5,9 +5,20 @@
 #include "../../math/Vec2.h"
 #include <vector>
 
-struct BoundingRectangle;
 class GameObject;
 class Transform;
+
+struct BoundingRectangle {
+  float left, right, top, bottom;
+
+  float width() const {
+    return right - left;
+  }
+
+  float height() const {
+    return bottom - top;
+  }
+};
 
 class BoxCollider : public Component
 {
@@ -17,6 +28,8 @@ public:
   bool collidesWith(BoundingRectangle other);
 
   Vec2<float> getPenetrationVector(const std::vector<GameObject*>& objects);
+
+  static BoundingRectangle getBoundingRectangle(std::vector<Vec2<float>> mesh);
 
 private:
   Transform* transform;

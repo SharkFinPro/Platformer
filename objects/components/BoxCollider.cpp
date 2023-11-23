@@ -15,7 +15,7 @@ bool BoxCollider::collidesWith(BoundingRectangle r2)
   if (!transform)
     return false;
 
-  auto r1 = transform->getBoundingRectangle();
+  auto r1 = getBoundingRectangle(transform->getMesh());
 
   float mdX =  r1.left - r2.right;
   float mdY = r1.top - r2.bottom;
@@ -52,7 +52,7 @@ Vec2<float> BoxCollider::getPenetrationVector(const std::vector<GameObject *>& o
   {
     if (std::fabs(finalPenetrationVector.getX()) > std::fabs(finalPenetrationVector.getY()))
     {
-      auto theoreticalRectangle = transform->getBoundingRectangle();
+      auto theoreticalRectangle = getBoundingRectangle(transform->getMesh());
       theoreticalRectangle.left -= finalPenetrationVector.getX();
       theoreticalRectangle.right -= finalPenetrationVector.getX();
 
@@ -72,7 +72,7 @@ Vec2<float> BoxCollider::getPenetrationVector(const std::vector<GameObject *>& o
     }
     else
     {
-      auto theoreticalRectangle = transform->getBoundingRectangle();
+      auto theoreticalRectangle = getBoundingRectangle(transform->getMesh());
       theoreticalRectangle.top -= finalPenetrationVector.getY();
       theoreticalRectangle.bottom -= finalPenetrationVector.getY();
 
@@ -114,8 +114,8 @@ Vec2<float> BoxCollider::getPenetration(GameObject* object)
   if (!transform || !otherTransform)
     return { 0, 0 };
 
-  auto r1 = transform->getBoundingRectangle();
-  auto r2 = otherTransform->getBoundingRectangle();
+  auto r1 = getBoundingRectangle(transform->getMesh());
+  auto r2 = getBoundingRectangle(otherTransform->getMesh());
 
   return getActualPenetration(r1, r2);
 }
@@ -127,7 +127,7 @@ Vec2<float> BoxCollider::getTheoreticalPenetration(BoundingRectangle boundingRec
   if (!otherTransform)
     return { 0, 0 };
 
-  auto r2 = otherTransform->getBoundingRectangle();
+  auto r2 = getBoundingRectangle(otherTransform->getMesh());
 
   return getActualPenetration(boundingRectangle, r2);
 }
@@ -165,4 +165,31 @@ Vec2<float> BoxCollider::getActualPenetration(BoundingRectangle r1, BoundingRect
   }
 
   return penetrationVector;
+}
+
+BoundingRectangle BoxCollider::getBoundingRectangle(std::vector<Vec2<float>> mesh)
+{
+  Vec2<float> bl{0, 0}, tr{0, 0};
+
+  float maxDot = -10000;
+  for (auto& m : mesh)
+  {
+    if (m.dot({-1, 1}) > maxDot)
+    {
+      maxDot = m.dot({-1, 1});
+      bl = m;
+    }
+  }
+
+  maxDot = -10000;
+  for (auto& m : mesh)
+  {
+    if (m.dot({1, -1}) > maxDot)
+    {
+      maxDot = m.dot({1, -1});
+      tr = m;
+    }
+  }
+
+  return BoundingRectangle{bl.getX(), tr.getX(), tr.getY(), bl.getY()};
 }

@@ -3,18 +3,7 @@
 
 #include "Component.h"
 #include "../../math/Vec2.h"
-
-struct BoundingRectangle {
-  float left, right, top, bottom;
-
-  float width() const {
-    return right - left;
-  }
-
-  float height() const {
-    return bottom - top;
-  }
-};
+#include <vector>
 
 class Transform : public Component
 {
@@ -28,20 +17,15 @@ public:
 
   void move(float xDif, float yDif);
 
-  float getWidth() const;
-  float getHeight() const;
-
-  BoundingRectangle getBoundingRectangle() const;
+  std::vector<Vec2<float>> getMesh() const;
 
   void reset();
 
 private:
-  Vec2<float> position;
-  Vec2<float> oldPosition;
-  Vec2<float> initialPosition;
-  Vec2<float> newPosition;
-
-  float w, h;
+  std::vector<Vec2<float>> initialMesh;
+  std::vector<Vec2<float>> oldMesh;
+  std::vector<Vec2<float>> mesh;
+  std::vector<Vec2<float>> newMesh;
 };
 
 

@@ -96,7 +96,7 @@ void GameObjectManager::checkCollisions()
       if (!otherTransform)
         continue;
 
-      if (!collider->collidesWith(otherTransform->getBoundingRectangle()))
+      if (!collider->collidesWith(BoxCollider::getBoundingRectangle(otherTransform->getMesh())))
         continue;
 
       collisions.push_back(object2);

@@ -15,8 +15,13 @@ void SpriteRenderer::update([[maybe_unused]] float dt)
   if (!transform)
     return;
 
-  sf::RectangleShape shape = sf::RectangleShape({transform->getWidth(), transform->getHeight()});
-  shape.move({transform->getX(), transform->getY()});
+  auto mesh = transform->getMesh();
+  sf::ConvexShape shape;
+  shape.setPointCount(mesh.size());
+  for (int i = 0; i < static_cast<int>(mesh.size()); i++)
+  {
+    shape.setPoint(i, sf::Vector2f(mesh[i].getX(), mesh[i].getY()));
+  }
   shape.setFillColor(color);
 
   getOwner()->getOwner()->getWindow()->draw(shape);

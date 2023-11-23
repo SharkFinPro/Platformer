@@ -1,48 +1,49 @@
 #include "Transform.h"
 
 Transform::Transform(float xPos, float yPos, float width, float height)
-  : Component(ComponentType::transform), position{xPos, yPos}, oldPosition{position}, initialPosition{position}, newPosition{xPos, yPos}, w{width}, h{height}
-{}
+  : Component(ComponentType::transform)
+{
+  initialMesh.push_back({xPos, yPos});
+  initialMesh.push_back({xPos + width, yPos});
+  initialMesh.push_back({xPos + width, yPos + height});
+  initialMesh.push_back({xPos, yPos + height});
+
+  oldMesh = initialMesh;
+  mesh = initialMesh;
+  newMesh = initialMesh;
+}
 
 void Transform::fixedUpdate([[maybe_unused]] float dt) {
-  oldPosition = position;
-  position = newPosition;
+  oldMesh = mesh;
+  mesh = newMesh;
 }
 
 float Transform::getX() const
 {
-  return position.getX();
+  return mesh.at(0).getX();
 }
 
 float Transform::getY() const
 {
-  return position.getY();
+  return mesh.at(0).getY();
 }
 
 void Transform::move(float xDif, float yDif)
 {
-  newPosition.setX(newPosition.getX() + xDif);
-  newPosition.setY(newPosition.getY() + yDif);
-}
-
-float Transform::getWidth() const
-{
-  return w;
-}
-
-float Transform::getHeight() const
-{
-  return h;
-}
-
-BoundingRectangle Transform::getBoundingRectangle() const
-{
-  return BoundingRectangle{position.getX(), position.getX() + w, position.getY(), position.getY() + h};
+  for (auto& m : newMesh)
+  {
+    m.setX(m.getX() + xDif);
+    m.setY(m.getY() + yDif);
+  }
 }
 
 void Transform::reset()
 {
-  oldPosition = position;
-  position = initialPosition;
-  newPosition = initialPosition;
+  oldMesh = initialMesh;
+  mesh = initialMesh;
+  newMesh = mesh;
+}
+
+std::vector<Vec2<float>> Transform::getMesh() const {
+  return mesh;
 }
