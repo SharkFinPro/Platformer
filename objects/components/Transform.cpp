@@ -1,6 +1,6 @@
 #include "Transform.h"
 
-Transform::Transform(double xPos, double yPos, double width, double height)
+Transform::Transform(float xPos, float yPos, float width, float height)
   : Component(ComponentType::transform)
 {
   initialMesh.push_back({xPos, yPos});
@@ -13,22 +13,22 @@ Transform::Transform(double xPos, double yPos, double width, double height)
   newMesh = initialMesh;
 }
 
-void Transform::fixedUpdate([[maybe_unused]] double dt) {
+void Transform::fixedUpdate([[maybe_unused]] float dt) {
   oldMesh = mesh;
   mesh = newMesh;
 }
 
-double Transform::getX() const
+float Transform::getX() const
 {
   return mesh.at(0).getX();
 }
 
-double Transform::getY() const
+float Transform::getY() const
 {
   return mesh.at(0).getY();
 }
 
-void Transform::move(Vec2<double> vector)
+void Transform::move(Vec2<float> vector)
 {
   for (auto& m : newMesh)
   {
@@ -44,6 +44,6 @@ void Transform::reset()
   newMesh = mesh;
 }
 
-std::vector<Vec2<double>> Transform::getMesh() const {
+std::vector<Vec2<float>> Transform::getMesh() const {
   return mesh;
 }

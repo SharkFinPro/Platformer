@@ -8,24 +8,24 @@
 class Transform : public Component
 {
 public:
-  Transform(double xPos, double yPos, double width, double height);
+  Transform(float xPos, float yPos, float width, float height);
 
-  void fixedUpdate(double dt) override;
+  void fixedUpdate(float dt) override;
 
-  double getX() const;
-  double getY() const;
+  float getX() const;
+  float getY() const;
 
-  void move(Vec2<double> vector);
+  void move(Vec2<float> vector);
 
-  std::vector<Vec2<double>> getMesh() const;
+  std::vector<Vec2<float>> getMesh() const;
 
   void reset();
 
 private:
-  std::vector<Vec2<double>> initialMesh;
-  std::vector<Vec2<double>> oldMesh;
-  std::vector<Vec2<double>> mesh;
-  std::vector<Vec2<double>> newMesh;
+  std::vector<Vec2<float>> initialMesh;
+  std::vector<Vec2<float>> oldMesh;
+  std::vector<Vec2<float>> mesh;
+  std::vector<Vec2<float>> newMesh;
 };
 
 

@@ -14,7 +14,7 @@ GameObjectManager::~GameObjectManager()
     delete object;
 }
 
-void GameObjectManager::update(double dt)
+void GameObjectManager::update(float dt)
 {
   fixedUpdate(dt);
   variableUpdate(dt);
@@ -49,13 +49,13 @@ sf::RenderWindow* GameObjectManager::getWindow() const
 }
 
 
-void GameObjectManager::variableUpdate(double dt)
+void GameObjectManager::variableUpdate(float dt)
 {
   for (auto& object : objects)
     object->update(dt);
 }
 
-void GameObjectManager::fixedUpdate(double dt)
+void GameObjectManager::fixedUpdate(float dt)
 {
   timeAccumulator += dt;
 

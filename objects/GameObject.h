@@ -14,8 +14,8 @@ class GameObject
 public:
   ~GameObject();
 
-  void update(double dt);
-  void fixedUpdate(double dt);
+  void update(float dt);
+  void fixedUpdate(float dt);
 
   void addComponent(Component* component);
   Component* getComponent(ComponentType type) const;

@@ -20,8 +20,8 @@ GameObject* Component::getOwner() const
   return owner;
 }
 
-void Component::update([[maybe_unused]] double dt)
+void Component::update([[maybe_unused]] float dt)
 {}
 
-void Component::fixedUpdate([[maybe_unused]] double dt)
+void Component::fixedUpdate([[maybe_unused]] float dt)
 {}

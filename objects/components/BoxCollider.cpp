@@ -17,19 +17,19 @@ bool BoxCollider::collidesWith(BoundingRectangle r2)
 
   auto r1 = getBoundingRectangle(transform->getMesh());
 
-  double mdX =  r1.left - r2.right;
-  double mdY = r1.top - r2.bottom;
-  double mdW = r1.width() + r2.width();
-  double mdH = r1.height() + r2.height();
+  float mdX =  r1.left - r2.right;
+  float mdY = r1.top - r2.bottom;
+  float mdW = r1.width() + r2.width();
+  float mdH = r1.height() + r2.height();
 
   return mdX <= 0 && mdX + mdW >= 0 && mdY <= 0 && mdY + mdH >= 0;
 }
 
-Vec2<double> BoxCollider::getPenetrationVector(const std::vector<GameObject *>& objects)
+Vec2<float> BoxCollider::getPenetrationVector(const std::vector<GameObject *>& objects)
 {
-  Vec2<double> finalPenetrationVector = {0, 0};
-  double xCollisions = 0;
-  double yCollisions = 0;
+  Vec2<float> finalPenetrationVector = {0, 0};
+  float xCollisions = 0;
+  float yCollisions = 0;
 
   for (auto& object : objects)
   {
@@ -101,7 +101,7 @@ Vec2<double> BoxCollider::getPenetrationVector(const std::vector<GameObject *>& 
   return finalPenetrationVector;
 }
 
-Vec2<double> BoxCollider::getPenetration(GameObject* object)
+Vec2<float> BoxCollider::getPenetration(GameObject* object)
 {
   if (!transform)
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
@@ -120,7 +120,7 @@ Vec2<double> BoxCollider::getPenetration(GameObject* object)
   return getActualPenetration(r1, r2);
 }
 
-Vec2<double> BoxCollider::getTheoreticalPenetration(BoundingRectangle boundingRectangle, GameObject* object)
+Vec2<float> BoxCollider::getTheoreticalPenetration(BoundingRectangle boundingRectangle, GameObject* object)
 {
   auto otherTransform = dynamic_cast<Transform*>(object->getComponent(ComponentType::transform));
 
@@ -132,18 +132,18 @@ Vec2<double> BoxCollider::getTheoreticalPenetration(BoundingRectangle boundingRe
   return getActualPenetration(boundingRectangle, r2);
 }
 
-Vec2<double> BoxCollider::getActualPenetration(BoundingRectangle r1, BoundingRectangle r2)
+Vec2<float> BoxCollider::getActualPenetration(BoundingRectangle r1, BoundingRectangle r2)
 {
-  double mdX =  r1.left - r2.right;
-  double mdY = r1.top - r2.bottom;
-  double mdW = r1.width() + r2.width();
-  double mdH = r1.height() + r2.height();
+  float mdX =  r1.left - r2.right;
+  float mdY = r1.top - r2.bottom;
+  float mdW = r1.width() + r2.width();
+  float mdH = r1.height() + r2.height();
 
-  Vec2<double> min{mdX, mdY};
-  Vec2<double> max{mdX + mdW, mdY + mdH};
+  Vec2<float> min{mdX, mdY};
+  Vec2<float> max{mdX + mdW, mdY + mdH};
 
-  double minDist = std::fabs(min.getX());
-  Vec2<double> penetrationVector{min.getX(), 0};
+  float minDist = std::fabs(min.getX());
+  Vec2<float> penetrationVector{min.getX(), 0};
 
   if (std::fabs(max.getX()) < minDist)
   {
@@ -167,11 +167,11 @@ Vec2<double> BoxCollider::getActualPenetration(BoundingRectangle r1, BoundingRec
   return penetrationVector;
 }
 
-BoundingRectangle BoxCollider::getBoundingRectangle(const std::vector<Vec2<double>>& mesh)
+BoundingRectangle BoxCollider::getBoundingRectangle(const std::vector<Vec2<float>>& mesh)
 {
-  Vec2<double> bl{0, 0}, tr{0, 0};
+  Vec2<float> bl{0, 0}, tr{0, 0};
 
-  double maxDot = -10000;
+  float maxDot = -10000;
   for (auto& m : mesh)
   {
     if (m.dot({-1, 1}) > maxDot)

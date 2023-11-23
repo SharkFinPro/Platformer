@@ -11,19 +11,19 @@ class RigidBody : public Component
 public:
   RigidBody();
 
-  void fixedUpdate(double dt) override;
+  void fixedUpdate(float dt) override;
 
-  void applyForce(Vec2<double> force);
+  void applyForce(Vec2<float> force);
 
   bool isFalling() const;
 
-  void handleCollision(Vec2<double> penetrationVector);
+  void handleCollision(Vec2<float> penetrationVector);
 
 private:
-  Vec2<double> velocity;
+  Vec2<float> velocity;
 
   bool doGravity;
-  double gravity;
+  float gravity;
 
   bool falling;
 
