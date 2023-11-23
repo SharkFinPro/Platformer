@@ -167,7 +167,7 @@ Vec2<float> BoxCollider::getActualPenetration(BoundingRectangle r1, BoundingRect
   return penetrationVector;
 }
 
-BoundingRectangle BoxCollider::getBoundingRectangle(std::vector<Vec2<float>> mesh)
+BoundingRectangle BoxCollider::getBoundingRectangle(const std::vector<Vec2<float>>& mesh)
 {
   Vec2<float> bl{0, 0}, tr{0, 0};
 

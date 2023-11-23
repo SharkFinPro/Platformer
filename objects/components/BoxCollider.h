@@ -29,7 +29,7 @@ public:
 
   Vec2<float> getPenetrationVector(const std::vector<GameObject*>& objects);
 
-  static BoundingRectangle getBoundingRectangle(std::vector<Vec2<float>> mesh);
+  static BoundingRectangle getBoundingRectangle(const std::vector<Vec2<float>>& mesh);
 
 private:
   Transform* transform;

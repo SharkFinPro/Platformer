@@ -28,12 +28,12 @@ float Transform::getY() const
   return mesh.at(0).getY();
 }
 
-void Transform::move(float xDif, float yDif)
+void Transform::move(Vec2<float> vector)
 {
   for (auto& m : newMesh)
   {
-    m.setX(m.getX() + xDif);
-    m.setY(m.getY() + yDif);
+    m.setX(m.getX() + vector.getX());
+    m.setY(m.getY() + vector.getY());
   }
 }
 

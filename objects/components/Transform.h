@@ -15,7 +15,7 @@ public:
   float getX() const;
   float getY() const;
 
-  void move(float xDif, float yDif);
+  void move(Vec2<float> vector);
 
   std::vector<Vec2<float>> getMesh() const;
 

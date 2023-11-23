@@ -21,7 +21,7 @@ void RigidBody::fixedUpdate(float dt)
 
   limitMovement();
 
-  transform->move(velocity.getX() * dt, velocity.getY() * dt);
+  transform->move({velocity.getX() * dt, velocity.getY() * dt});
 }
 
 void RigidBody::applyForce(Vec2<float> force)
@@ -54,7 +54,7 @@ void RigidBody::handleCollision(Vec2<float> penetrationVector)
   if (penetrationVector.getY() != 0)
     handleYCollision();
 
-  transform->move(-penetrationVector.getX(), -penetrationVector.getY());
+  transform->move({-penetrationVector.getX(), -penetrationVector.getY()});
 }
 
 void RigidBody::handleXCollision()
