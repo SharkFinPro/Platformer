@@ -24,10 +24,10 @@ void RigidBody::fixedUpdate(float dt)
   transform->move(velocity.getX() * dt, velocity.getY() * dt);
 }
 
-void RigidBody::applyForce(float x, float y)
+void RigidBody::applyForce(Vec2<float> force)
 {
-  velocity.setX(velocity.getX() + x);
-  velocity.setY(velocity.getY() + y);
+  velocity.setX(velocity.getX() + force.getX());
+  velocity.setY(velocity.getY() + force.getY());
 }
 
 void RigidBody::limitMovement()

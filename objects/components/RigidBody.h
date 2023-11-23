@@ -13,7 +13,7 @@ public:
 
   void fixedUpdate(float dt) override;
 
-  void applyForce(float x, float y);
+  void applyForce(Vec2<float> force);
 
   bool isFalling() const;
 

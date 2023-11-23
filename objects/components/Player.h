@@ -2,6 +2,7 @@
 #define PLATFORMER_PLAYER_H
 
 #include "Component.h"
+#include "../../math/Vec2.h"
 
 class GameObject;
 class Transform;
@@ -25,6 +26,8 @@ private:
 
   Transform* transform;
   RigidBody* rigidBody;
+
+  Vec2<float> appliedForce;
 
   void handleInput();
 };
