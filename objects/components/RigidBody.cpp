@@ -3,7 +3,7 @@
 #include "Transform.h"
 
 RigidBody::RigidBody()
-  : Component{ComponentType::rigidBody}, velocity{0, 0}, doGravity{true}, gravity{0.1f}, falling{true}, transform{nullptr}
+  : Component{ComponentType::rigidBody}, velocity{0, 0}, doGravity{true}, gravity{0.4f}, falling{true}, transform{nullptr}
 {}
 
 void RigidBody::fixedUpdate(float dt)
@@ -32,7 +32,7 @@ void RigidBody::applyForce(Vec2<float> force)
 
 void RigidBody::limitMovement()
 {
-  velocity.setX(velocity.getX() / 1.5f);
+  velocity.setX(velocity.getX() / 1.4f);
 }
 
 bool RigidBody::isFalling() const
