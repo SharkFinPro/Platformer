@@ -1,49 +1,36 @@
 #include "Transform.h"
+#include <utility>
 
-Transform::Transform(float xPos, float yPos, float width, float height)
-  : Component(ComponentType::transform)
-{
-  initialMesh.push_back({xPos, yPos});
-  initialMesh.push_back({xPos + width, yPos});
-  initialMesh.push_back({xPos + width, yPos + height});
-  initialMesh.push_back({xPos, yPos + height});
-
-  oldMesh = initialMesh;
-  mesh = initialMesh;
-  newMesh = initialMesh;
-}
+Transform::Transform(float xPos, float yPos, std::vector<Vec2<float>> mesh)
+  : Component(ComponentType::transform), initialPosition{xPos, yPos}, position{initialPosition}, newPosition{initialPosition}, mesh{std::move(mesh)}
+{}
 
 void Transform::fixedUpdate([[maybe_unused]] float dt) {
-  oldMesh = mesh;
-  mesh = newMesh;
+  position = newPosition;
 }
 
-float Transform::getX() const
+Vec2<float> Transform::getPosition() const
 {
-  return mesh.at(0).getX();
-}
-
-float Transform::getY() const
-{
-  return mesh.at(0).getY();
+  return position;
 }
 
 void Transform::move(Vec2<float> vector)
 {
-  for (auto& m : newMesh)
-  {
-    m.setX(m.getX() + vector.getX());
-    m.setY(m.getY() + vector.getY());
-  }
+  newPosition.setX(newPosition.getX() + vector.getX());
+  newPosition.setY(newPosition.getY() + vector.getY());
 }
 
 void Transform::reset()
 {
-  oldMesh = initialMesh;
-  mesh = initialMesh;
-  newMesh = mesh;
+  position = initialPosition;
+  newPosition = initialPosition;
 }
 
 std::vector<Vec2<float>> Transform::getMesh() const {
-  return mesh;
+  std::vector<Vec2<float>> newMesh;
+
+  for (auto& m : mesh)
+    newMesh.emplace_back(m.getX() + position.getX(), m.getY() + position.getY());
+
+  return newMesh;
 }

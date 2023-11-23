@@ -8,12 +8,11 @@
 class Transform : public Component
 {
 public:
-  Transform(float xPos, float yPos, float width, float height);
+  Transform(float xPos, float yPos, std::vector<Vec2<float>> mesh);
 
   void fixedUpdate(float dt) override;
 
-  float getX() const;
-  float getY() const;
+  Vec2<float> getPosition() const;
 
   void move(Vec2<float> vector);
 
@@ -22,10 +21,11 @@ public:
   void reset();
 
 private:
-  std::vector<Vec2<float>> initialMesh;
-  std::vector<Vec2<float>> oldMesh;
+  Vec2<float> initialPosition;
+  Vec2<float> position;
+  Vec2<float> newPosition;
+
   std::vector<Vec2<float>> mesh;
-  std::vector<Vec2<float>> newMesh;
 };
 
 

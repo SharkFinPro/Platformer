@@ -10,10 +10,21 @@
 
 constexpr auto FULLSCREEN = false;
 
+std::vector<Vec2<float>> createQuadMesh(float width, float height)
+{
+  auto mesh = std::vector<Vec2<float>>{};
+  mesh.emplace_back(0, 0);
+  mesh.emplace_back(width, 0);
+  mesh.emplace_back(width, height);
+  mesh.emplace_back(0, height);
+
+  return mesh;
+}
+
 GameObject* createPlayer(float x, float y, float width, float height, PlayerControlType controlType, sf::Color color)
 {
   auto player = new GameObject;
-  player->addComponent(new Transform{x, y, width, height});
+  player->addComponent(new Transform{x, y, createQuadMesh(width, height)});
   player->addComponent(new BoxCollider);
   player->addComponent(new RigidBody);
   player->addComponent(new Player(controlType));
@@ -26,7 +37,7 @@ GameObject* createBlock(float x, float y, float width, float height, sf::Color c
 {
   auto obj = new GameObject;
 
-  obj->addComponent(new Transform{x, y, width, height});
+  obj->addComponent(new Transform{x, y, createQuadMesh(width, height)});
   obj->addComponent(new BoxCollider);
   obj->addComponent(new SpriteRenderer{color});
 
@@ -37,7 +48,7 @@ GameObject* createRigidBlock(float x, float y, float width, float height, sf::Co
 {
   auto obj = new GameObject;
 
-  obj->addComponent(new Transform{x, y, width, height});
+  obj->addComponent(new Transform{x, y, createQuadMesh(width, height)});
   obj->addComponent(new BoxCollider);
   obj->addComponent(new RigidBody);
   obj->addComponent(new SpriteRenderer{color});

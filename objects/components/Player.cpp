@@ -21,7 +21,7 @@ void Player::fixedUpdate([[maybe_unused]] float dt)
   if (!transform)
     return;
 
-  if (transform->getY() > 2000)
+  if (transform->getPosition().getY() > 2000)
     transform->reset();
 
   if (!rigidBody)
