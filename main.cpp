@@ -7,6 +7,7 @@
 #include "objects/components/Transform.h"
 #include "objects/components/SpriteRenderer.h"
 #include <chrono>
+#include "objects/components/MeshCollider.h"
 
 constexpr auto FULLSCREEN = false;
 
@@ -29,6 +30,7 @@ GameObject* createPlayer(float x, float y, float width, float height, PlayerCont
   player->addComponent(new RigidBody);
   player->addComponent(new Player(controlType));
   player->addComponent(new SpriteRenderer{color});
+  player->addComponent(new MeshCollider);
 
   return player;
 }

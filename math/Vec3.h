@@ -18,8 +18,13 @@ public:
   void setZ(T z);
 
   T dot(Vec3<T> other) const;
+  Vec3<T> cross(Vec3<T> other) const;
 
   T length() const;
+
+  Vec3<T> operator+(Vec3<T> const& other);
+  Vec3<T> operator-(Vec3<T> const& other);
+  Vec3<T> operator*(float scalar);
 
 private:
   T x;
@@ -75,9 +80,36 @@ T Vec3<T>::dot(Vec3<T> other) const
 }
 
 template<typename T>
+Vec3<T> Vec3<T>::cross(Vec3<T> other) const {
+  return {
+    y * other.z - z * other.y,
+    z * other.x - x * other.z,
+    x * other.y - y * other.x
+  };
+}
+
+template<typename T>
 T Vec3<T>::length() const
 {
   return std::sqrt(dot(this));
+}
+
+template<typename T>
+Vec3<T> Vec3<T>::operator+(const Vec3<T> &other)
+  {
+  return { x + other.x, y + other.y, z + other.z };
+}
+
+template<typename T>
+Vec3<T> Vec3<T>::operator-(const Vec3<T> &other)
+  {
+  return { x - other.x, y - other.y, z - other.z };
+}
+
+template<typename T>
+Vec3<T> Vec3<T>::operator*(const float scalar)
+  {
+  return { x * scalar, y * scalar, z * scalar };
 }
 
 #endif //PLATFORMER_VEC3_H

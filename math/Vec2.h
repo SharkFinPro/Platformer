@@ -19,6 +19,10 @@ public:
 
   T length() const;
 
+  Vec2<T> operator+(Vec2<T> const& other);
+  Vec2<T> operator-(Vec2<T> const& other);
+  Vec2<T> operator*(float scalar);
+
 private:
   T x;
   T y;
@@ -63,6 +67,24 @@ template<typename T>
 T Vec2<T>::length() const
 {
   return std::sqrt(dot(this));
+}
+
+template<typename T>
+Vec2<T> Vec2<T>::operator+(const Vec2<T> &other)
+  {
+  return { x + other.x, y + other.y };
+}
+
+template<typename T>
+Vec2<T> Vec2<T>::operator-(const Vec2<T> &other)
+  {
+  return { x - other.x, y - other.y };
+}
+
+template<typename T>
+Vec2<T> Vec2<T>::operator*(const float scalar)
+  {
+  return { x * scalar, y * scalar };
 }
 
 #endif //PLATFORMER_VEC2_H

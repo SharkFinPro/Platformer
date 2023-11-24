@@ -3,7 +3,7 @@
 
 class GameObject;
 
-enum class ComponentType { boxCollider, player, rigidBody, spriteRenderer, transform };
+enum class ComponentType { boxCollider, player, rigidBody, spriteRenderer, transform, collider };
 
 class Component
 {

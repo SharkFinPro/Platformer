@@ -3,6 +3,7 @@
 #include "components/BoxCollider.h"
 #include "components/RigidBody.h"
 #include "components/Transform.h"
+#include "components/MeshCollider.h"
 
 GameObjectManager::GameObjectManager()
   : window{nullptr}, fixedUpdateDt{1.0f / 60.0f}, timeAccumulator{0.0f}, ticks{0}
@@ -83,6 +84,8 @@ void GameObjectManager::checkCollisions()
     if (!rb)
       continue;
 
+    auto meshCollider = dynamic_cast<Collider*>(object1->getComponent(ComponentType::collider));
+
     std::vector<GameObject*> collisions;
     for (auto& object2 : objects)
     {
@@ -95,6 +98,13 @@ void GameObjectManager::checkCollisions()
       auto otherTransform = dynamic_cast<Transform*>(object2->getComponent(ComponentType::transform));
       if (!otherTransform)
         continue;
+
+      auto otherMeshCollider = dynamic_cast<Collider*>(object2->getComponent(ComponentType::collider));
+
+      if (meshCollider && otherMeshCollider)
+      {
+        bool collides = meshCollider->collidesWith(object2);
+      }
 
       if (!collider->collidesWith(BoxCollider::getBoundingRectangle(otherTransform->getMesh())))
         continue;

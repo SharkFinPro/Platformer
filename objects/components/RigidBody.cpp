@@ -26,8 +26,7 @@ void RigidBody::fixedUpdate(float dt)
 
 void RigidBody::applyForce(Vec2<float> force)
 {
-  velocity.setX(velocity.getX() + force.getX());
-  velocity.setY(velocity.getY() + force.getY());
+  velocity = velocity + force;
 }
 
 void RigidBody::limitMovement()
