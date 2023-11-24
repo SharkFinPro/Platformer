@@ -22,6 +22,8 @@ public:
 
   T length() const;
 
+  Vec3<T> normalized() const;
+
   Vec3<T> operator+(Vec3<T> const& other);
   Vec3<T> operator-(Vec3<T> const& other);
   Vec3<T> operator*(float scalar);
@@ -91,7 +93,15 @@ Vec3<T> Vec3<T>::cross(Vec3<T> other) const {
 template<typename T>
 T Vec3<T>::length() const
 {
-  return std::sqrt(dot(this));
+  return std::sqrt(dot(*this));
+}
+
+template<typename T>
+Vec3<T> Vec3<T>::normalized() const
+{
+  T len = length();
+
+  return Vec3<T>(x / len, y / len, z / len);
 }
 
 template<typename T>
