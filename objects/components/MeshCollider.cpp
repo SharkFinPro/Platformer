@@ -20,17 +20,18 @@ Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction)
   float furthestDistance = -FLT_MAX;
   Vec3<float> furthestVertex{ 0, 0, 0 };
 
-  int rep = 0;
+  float distance;
+  Vec3<float> vert = {0, 0, 0};
+
   for (auto& vertex : mesh)
   {
-    Vec3<float> vert = { vertex.getX(), vertex.getY(), 0 };
-    float distance = vert.dot(direction);
+    vert = { vertex.getX(), vertex.getY(), 0 };
+    distance = vert.dot(direction);
 
     if (distance > furthestDistance)
     {
       furthestDistance = distance;
       furthestVertex = vert;
-      rep++;
     }
   }
 
