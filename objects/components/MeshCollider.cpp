@@ -4,6 +4,10 @@
 #include <cfloat>
 #include <iostream>
 
+MeshCollider::MeshCollider(bool debug)
+  : Collider(debug)
+{}
+
 Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction)
 {
   auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
@@ -16,7 +20,7 @@ Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction)
   float furthestDistance = -FLT_MAX;
   Vec3<float> furthestVertex{ 0, 0, 0 };
 
-  direction = direction.normalized();
+  int rep = 0;
   for (auto& vertex : mesh)
   {
     Vec3<float> vert = { vertex.getX(), vertex.getY(), 0 };
@@ -26,6 +30,7 @@ Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction)
     {
       furthestDistance = distance;
       furthestVertex = vert;
+      rep++;
     }
   }
 

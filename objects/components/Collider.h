@@ -11,11 +11,13 @@ class GameObject;
 class Collider : public Component
 {
 public:
-  Collider();
+  explicit Collider(bool debug);
 
   bool collidesWith(GameObject* other);
 
 private:
+  bool debug;
+
   virtual Vec3<float> findFurthestPoint(Vec3<float> direction) = 0;
 
   static Vec3<float> getSupport(Collider* a, Collider* b, Vec3<float> direction);
