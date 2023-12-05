@@ -36,7 +36,7 @@ private:
 
 template<typename T>
 Vec3<T>::Vec3(T x, T y, T z)
-  : x{x}, y{y}
+  : x{x}, y{y}, z{z}
 {}
 
 template<typename T>
