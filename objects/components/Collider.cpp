@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Collider.h"
 #include "../GameObject.h"
 #include "Transform.h"

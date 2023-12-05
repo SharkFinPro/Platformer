@@ -2,7 +2,6 @@
 #include "../GameObject.h"
 #include "Transform.h"
 #include <cfloat>
-#include <iostream>
 
 MeshCollider::MeshCollider(bool debug)
   : Collider(debug)
