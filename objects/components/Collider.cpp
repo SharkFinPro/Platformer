@@ -34,7 +34,6 @@ bool Collider::collidesWith(GameObject* other)
   {
     support = getSupport(this, otherCollider, direction);
 
-
     if (support.dot(direction) < 0)
       return false;
 
