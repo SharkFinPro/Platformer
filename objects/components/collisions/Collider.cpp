@@ -16,8 +16,7 @@ bool Collider::collidesWith(GameObject* other)
     return false;
 
   Simplex simplex;
-  auto initialDirection = transform->getPosition() - otherTransform->getPosition();
-  Vec3<float> direction = { initialDirection.getX(), initialDirection.getY(), 0 };
+  Vec3<float> direction = { transform->getPosition() - otherTransform->getPosition(), 0 };
 
   Vec3<float> support = getSupport(this, otherCollider, direction);
 
