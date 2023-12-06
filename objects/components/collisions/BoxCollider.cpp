@@ -1,6 +1,6 @@
 #include "BoxCollider.h"
-#include "Transform.h"
-#include "../GameObject.h"
+#include "../Transform.h"
+#include "../../GameObject.h"
 #include <cmath>
 
 BoxCollider::BoxCollider()

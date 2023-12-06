@@ -1,8 +1,8 @@
 #ifndef PLATFORMER_BOXCOLLIDER_H
 #define PLATFORMER_BOXCOLLIDER_H
 
-#include "Component.h"
-#include "../../math/Vec2.h"
+#include "../Component.h"
+#include "../../../math/Vec2.h"
 #include <vector>
 
 class GameObject;

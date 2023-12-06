@@ -1,6 +1,6 @@
 #include "Collider.h"
-#include "../GameObject.h"
-#include "Transform.h"
+#include "../../GameObject.h"
+#include "../Transform.h"
 
 Collider::Collider()
   : Component{ComponentType::collider}

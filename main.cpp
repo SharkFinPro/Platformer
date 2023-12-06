@@ -5,8 +5,8 @@
 #include "objects/components/Player.h"
 #include "objects/components/Transform.h"
 #include "objects/components/SpriteRenderer.h"
-#include "objects/components/MeshCollider.h"
-#include "objects/components/BoxCollider.h"
+#include "objects/components/collisions/MeshCollider.h"
+#include "objects/components/collisions/BoxCollider.h"
 #include <chrono>
 
 constexpr auto FULLSCREEN = false;

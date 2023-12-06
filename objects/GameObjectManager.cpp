@@ -1,9 +1,9 @@
 #include "GameObjectManager.h"
 #include "GameObject.h"
-#include "components/BoxCollider.h"
+#include "components/collisions/BoxCollider.h"
 #include "components/RigidBody.h"
 #include "components/Transform.h"
-#include "components/MeshCollider.h"
+#include "components/collisions/MeshCollider.h"
 
 GameObjectManager::GameObjectManager()
   : window{nullptr}, fixedUpdateDt{1.0f / 60.0f}, timeAccumulator{0.0f}, ticks{0}
