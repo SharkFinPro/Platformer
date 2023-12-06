@@ -17,6 +17,8 @@ add_executable(platformer main.cpp objects/GameObject.cpp objects/GameObject.h o
   objects/components/collisions/Collider.h
   objects/components/collisions/MeshCollider.cpp
   objects/components/collisions/MeshCollider.h
+  objects/components/collisions/Simplex.cpp
+  objects/components/collisions/Simplex.h
 )
 
 target_link_libraries(platformer PRIVATE
