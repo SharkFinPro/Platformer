@@ -170,7 +170,7 @@ Vec2<float> BoxCollider::getActualPenetration(BoundingRectangle r1, BoundingRect
 
 BoundingRectangle BoxCollider::getBoundingRectangle(const std::vector<Vec2<float>>& mesh)
 {
-  Vec2<float> x{0, 0}, y{0, 0};
+  Vec2<float> x, y;
 
   float maxDot = -FLT_MAX;
   Vec2<float> direction = { -1, 0 };
