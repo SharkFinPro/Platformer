@@ -17,7 +17,7 @@ void RigidBody::fixedUpdate(float dt)
   falling = true;
 
   if (doGravity)
-    velocity.setY(velocity.getY() + gravity);
+    velocity += { 0.0f, gravity };
 
   limitMovement();
 
@@ -26,7 +26,7 @@ void RigidBody::fixedUpdate(float dt)
 
 void RigidBody::applyForce(Vec2<float> force)
 {
-  velocity = velocity + force;
+  velocity += force;
 }
 
 void RigidBody::limitMovement()
