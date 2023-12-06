@@ -21,7 +21,7 @@ bool Collider::collidesWith(GameObject* other)
   Vec3<float> support = getSupport(this, otherCollider, direction);
 
   simplex.addVertex(support);
-  direction = support * -1.0f;
+  direction *= -1.0f;
 
   do
   {

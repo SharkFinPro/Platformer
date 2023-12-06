@@ -31,6 +31,10 @@ public:
   Vec3<T> operator-(Vec3<T> const& other);
   Vec3<T> operator*(float scalar);
 
+  Vec3<T> operator+=(Vec3<T> const& other);
+  Vec3<T> operator-=(Vec3<T> const& other);
+  Vec3<T> operator*=(float scalar);
+
 private:
   T x;
   T y;
@@ -133,6 +137,36 @@ template<typename T>
 Vec3<T> Vec3<T>::operator*(const float scalar)
   {
   return { x * scalar, y * scalar, z * scalar };
+}
+
+template<typename T>
+Vec3<T> Vec3<T>::operator+=(const Vec3<T>& other) {
+  auto newVector = *this + other;
+  x = newVector.x;
+  y = newVector.y;
+  z = newVector.z;
+
+  return *this;
+}
+
+template<typename T>
+Vec3<T> Vec3<T>::operator-=(const Vec3<T>& other) {
+  auto newVector = *this - other;
+  x = newVector.x;
+  y = newVector.y;
+  z = newVector.z;
+
+  return *this;
+}
+
+template<typename T>
+Vec3<T> Vec3<T>::operator*=(float scalar) {
+  auto newVector = *this * scalar;
+  x = newVector.x;
+  y = newVector.y;
+  z = newVector.z;
+
+  return *this;
 }
 
 #endif //PLATFORMER_VEC3_H
