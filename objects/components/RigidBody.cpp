@@ -1,4 +1,3 @@
-#include <iostream>
 #include "RigidBody.h"
 #include "../GameObject.h"
 #include "Transform.h"
