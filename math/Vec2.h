@@ -23,6 +23,10 @@ public:
   Vec2<T> operator-(Vec2<T> const& other);
   Vec2<T> operator*(float scalar);
 
+  Vec2<T> operator+=(Vec2<T> const& other);
+  Vec2<T> operator-=(Vec2<T> const& other);
+  Vec2<T> operator*=(float scalar);
+
 private:
   T x;
   T y;
@@ -85,6 +89,33 @@ template<typename T>
 Vec2<T> Vec2<T>::operator*(const float scalar)
   {
   return { x * scalar, y * scalar };
+}
+
+template<typename T>
+Vec2<T> Vec2<T>::operator+=(const Vec2<T>& other) {
+  auto newVector = *this + other;
+  x = newVector.x;
+  y = newVector.y;
+
+  return *this;
+}
+
+template<typename T>
+Vec2<T> Vec2<T>::operator-=(const Vec2<T>& other) {
+  auto newVector = *this - other;
+  x = newVector.x;
+  y = newVector.y;
+
+  return *this;
+}
+
+template<typename T>
+Vec2<T> Vec2<T>::operator*=(float scalar) {
+  auto newVector = *this * scalar;
+  x = newVector.x;
+  y = newVector.y;
+
+  return *this;
 }
 
 #endif //PLATFORMER_VEC2_H
