@@ -7,6 +7,7 @@ template<typename T>
 class Vec2
 {
 public:
+  Vec2();
   Vec2(T x, T y);
 
   T getX() const;
@@ -31,6 +32,11 @@ private:
   T x;
   T y;
 };
+
+template<typename T>
+Vec2<T>::Vec2()
+  : x{0}, y{0}
+{}
 
 template<typename T>
 Vec2<T>::Vec2(T x, T y)

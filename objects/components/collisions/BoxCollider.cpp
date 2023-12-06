@@ -2,6 +2,7 @@
 #include "../Transform.h"
 #include "../../GameObject.h"
 #include <cmath>
+#include <cfloat>
 
 BoxCollider::BoxCollider()
   : Component{ComponentType::boxCollider}, transform{nullptr}
@@ -169,27 +170,51 @@ Vec2<float> BoxCollider::getActualPenetration(BoundingRectangle r1, BoundingRect
 
 BoundingRectangle BoxCollider::getBoundingRectangle(const std::vector<Vec2<float>>& mesh)
 {
-  Vec2<float> bl{0, 0}, tr{0, 0};
+  Vec2<float> x{0, 0}, y{0, 0};
 
-  float maxDot = -10000;
+  float maxDot = -FLT_MAX;
+  Vec2<float> direction = { -1, 0 };
   for (auto& m : mesh)
   {
-    if (m.dot({-1, 1}) > maxDot)
+    if (m.dot(direction) > maxDot)
     {
-      maxDot = m.dot({-1, 1});
-      bl = m;
+      maxDot = m.dot(direction);
+      x.setX(m.getX());
     }
   }
 
-  maxDot = -10000;
+  maxDot = -FLT_MAX;
+  direction = { 1, 0 };
   for (auto& m : mesh)
   {
-    if (m.dot({1, -1}) > maxDot)
+    if (m.dot(direction) > maxDot)
     {
-      maxDot = m.dot({1, -1});
-      tr = m;
+      maxDot = m.dot(direction);
+      x.setY(m.getX());
     }
   }
 
-  return BoundingRectangle{bl.getX(), tr.getX(), tr.getY(), bl.getY()};
+  maxDot = -FLT_MAX;
+  direction = { 0, -1 };
+  for (auto& m : mesh)
+  {
+    if (m.dot(direction) > maxDot)
+    {
+      maxDot = m.dot(direction);
+      y.setX(m.getY());
+    }
+  }
+
+  maxDot = -FLT_MAX;
+  direction = { 0, 1 };
+  for (auto& m : mesh)
+  {
+    if (m.dot(direction) > maxDot)
+    {
+      maxDot = m.dot(direction);
+      y.setY(m.getY());
+    }
+  }
+
+  return BoundingRectangle{x.getX(), x.getY(), y.getX(), y.getY()};
 }
