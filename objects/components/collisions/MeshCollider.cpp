@@ -13,7 +13,7 @@ Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction)
   auto mesh = transform->getMesh();
 
   float furthestDistance = -FLT_MAX;
-  Vec3<float> furthestVertex{ 0, 0, 0 };
+  Vec3<float> furthestVertex;
 
   float distance;
   Vec3<float> vert;
