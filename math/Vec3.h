@@ -2,6 +2,7 @@
 #define PLATFORMER_VEC3_H
 
 #include <cmath>
+#include "Vec2.h"
 
 template<typename T>
 class Vec3
@@ -9,6 +10,7 @@ class Vec3
 public:
   Vec3();
   Vec3(T x, T y, T z);
+  Vec3(Vec2<T> xy, T z);
 
   T getX() const;
   T getY() const;
@@ -43,6 +45,11 @@ Vec3<T>::Vec3()
 template<typename T>
 Vec3<T>::Vec3(T x, T y, T z)
   : x{x}, y{y}, z{z}
+{}
+
+template<typename T>
+Vec3<T>::Vec3(Vec2<T> xy, T z)
+  : x{xy.getX()}, y{xy.getY()}, z{z}
 {}
 
 template<typename T>
