@@ -49,7 +49,6 @@ sf::RenderWindow* GameObjectManager::getWindow() const
   return window;
 }
 
-
 void GameObjectManager::variableUpdate(float dt)
 {
   for (auto& object : objects)
