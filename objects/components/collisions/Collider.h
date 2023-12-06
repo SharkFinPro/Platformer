@@ -5,6 +5,7 @@
 #include "../../../math/Vec2.h"
 #include "../../../math/Vec3.h"
 #include <vector>
+#include "Simplex.h"
 
 class GameObject;
 
@@ -20,10 +21,10 @@ private:
 
   static Vec3<float> getSupport(Collider* a, Collider* b, Vec3<float> direction);
 
-  static bool nextSimplex(std::vector<Vec3<float>>& simplex, Vec3<float>& direction);
+  static bool nextSimplex(Simplex& simplex, Vec3<float>& direction);
 
-  static bool line(std::vector<Vec3<float>>& simplex, Vec3<float>& direction);
-  static bool triangle(std::vector<Vec3<float>>& simplex, Vec3<float>& direction);
+  static bool line(Simplex& simplex, Vec3<float>& direction);
+  static bool triangle(Simplex& simplex, Vec3<float>& direction);
 };
 
 
