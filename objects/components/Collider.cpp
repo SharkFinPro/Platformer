@@ -11,13 +11,13 @@ bool Collider::collidesWith(GameObject* other)
   auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
   auto otherTransform = dynamic_cast<Transform*>(other->getComponent(ComponentType::transform));
   auto otherCollider = dynamic_cast<Collider*>(other->getComponent(ComponentType::collider));
-  
+
   if (!transform || !otherTransform || !otherCollider)
     return false;
 
   std::vector<Vec3<float>> simplex;
-  auto d_ = transform->getPosition() - otherTransform->getPosition();
-  Vec3<float> direction = { d_.getX(), d_.getY(), 0 };
+  auto initialDirection = transform->getPosition() - otherTransform->getPosition();
+  Vec3<float> direction = { initialDirection.getX(), initialDirection.getY(), 0 };
 
   Vec3<float> support = getSupport(this, otherCollider, direction);
 
