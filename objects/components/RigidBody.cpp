@@ -51,7 +51,7 @@ void RigidBody::handleCollision(Vec2<float> penetrationVector)
     handleXCollision();
 
   if (penetrationVector.getY() != 0)
-    handleYCollision();
+    handleYCollision(penetrationVector.getY());
 
   transform->move({-penetrationVector.getX(), -penetrationVector.getY()});
 }
@@ -61,9 +61,9 @@ void RigidBody::handleXCollision()
   velocity.setX(0);
 }
 
-void RigidBody::handleYCollision()
+void RigidBody::handleYCollision(float penetration)
 {
-  if (velocity.getY() > 0)
+  if (penetration > 0)
     falling = false;
 
   velocity.setY(0);

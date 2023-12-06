@@ -32,7 +32,7 @@ private:
   void limitMovement();
 
   void handleXCollision();
-  void handleYCollision();
+  void handleYCollision(float penetration);
 };
 
 
