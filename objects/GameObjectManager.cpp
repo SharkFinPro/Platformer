@@ -1,9 +1,9 @@
 #include "GameObjectManager.h"
 #include "GameObject.h"
-#include "components/collisions/BoxCollider.h"
 #include "components/RigidBody.h"
 #include "components/Transform.h"
 #include "components/collisions/MeshCollider.h"
+#include "components/collisions/BoxCollider.h"
 
 GameObjectManager::GameObjectManager()
   : window{nullptr}, fixedUpdateDt{1.0f / 60.0f}, timeAccumulator{0.0f}, ticks{0}
@@ -76,7 +76,7 @@ void GameObjectManager::checkCollisions()
 {
   for (auto& object1 : objects)
   {
-    auto collider = dynamic_cast<BoxCollider*>(object1->getComponent(ComponentType::boxCollider));
+    auto collider = dynamic_cast<Collider*>(object1->getComponent(ComponentType::collider));
     if (!collider)
       continue;
 
@@ -84,40 +84,29 @@ void GameObjectManager::checkCollisions()
     if (!rb)
       continue;
 
-    auto meshCollider = dynamic_cast<Collider*>(object1->getComponent(ComponentType::collider));
-
     std::vector<GameObject*> collisions;
     for (auto& object2 : objects)
     {
       if (object1 == object2)
         continue;
 
-      if (!dynamic_cast<BoxCollider*>(object2->getComponent(ComponentType::boxCollider)))
+      if (!dynamic_cast<Collider*>(object2->getComponent(ComponentType::collider)))
         continue;
 
       auto otherTransform = dynamic_cast<Transform*>(object2->getComponent(ComponentType::transform));
       if (!otherTransform)
         continue;
 
-      auto otherMeshCollider = dynamic_cast<Collider*>(object2->getComponent(ComponentType::collider));
-
-      if (meshCollider && otherMeshCollider)
-      {
-        if (!meshCollider->collidesWith(object2))
-          continue;
-      }
-      else
-      {
-        if (!collider->collidesWith(BoxCollider::getBoundingRectangle(otherTransform->getMesh())))
-          continue;
-      }
+      if (!collider->collidesWith(object2))
+        continue;
 
       collisions.push_back(object2);
     }
 
     if (!collisions.empty())
     {
-      auto penetrationVector = collider->getPenetrationVector(collisions);
+      auto boxCollider = dynamic_cast<BoxCollider*>(object1->getComponent(ComponentType::boxCollider));
+      auto penetrationVector = boxCollider->getPenetrationVector(collisions);
 
       rb->handleCollision(penetrationVector);
     }
