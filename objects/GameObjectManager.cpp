@@ -1,11 +1,9 @@
-#include <iostream>
 #include "GameObjectManager.h"
 #include "GameObject.h"
 #include "components/BoxCollider.h"
 #include "components/RigidBody.h"
 #include "components/Transform.h"
 #include "components/MeshCollider.h"
-#include "components/SpriteRenderer.h"
 
 GameObjectManager::GameObjectManager()
   : window{nullptr}, fixedUpdateDt{1.0f / 60.0f}, timeAccumulator{0.0f}, ticks{0}
@@ -105,26 +103,11 @@ void GameObjectManager::checkCollisions()
 
       if (meshCollider && otherMeshCollider)
       {
-        bool collides = meshCollider->collidesWith(object2);
-        auto sr = dynamic_cast<SpriteRenderer*>(object1->getComponent(ComponentType::spriteRenderer));
-
-        auto regularCollision = collider->collidesWith(BoxCollider::getBoundingRectangle(otherTransform->getMesh()));
-        if (collides && !regularCollision)
-          std::cout << "False Positive" << std::endl;
-        else if (!collides && regularCollision)
-          std::cout << "False Negative" << std::endl;
-
-        if (collides)
-        {
-          sr->setColor({0, 255, 0});
-        }
-        else
-        {
-          sr->setColor({255, 0, 0});
+        if (!meshCollider->collidesWith(object2))
           continue;
-        }
       }
-      else {
+      else
+      {
         if (!collider->collidesWith(BoxCollider::getBoundingRectangle(otherTransform->getMesh())))
           continue;
       }

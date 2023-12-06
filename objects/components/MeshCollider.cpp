@@ -3,10 +3,6 @@
 #include "Transform.h"
 #include <cfloat>
 
-MeshCollider::MeshCollider(bool debug)
-  : Collider(debug)
-{}
-
 Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction)
 {
   auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));

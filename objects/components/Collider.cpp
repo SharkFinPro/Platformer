@@ -2,10 +2,8 @@
 #include "../GameObject.h"
 #include "Transform.h"
 
-#include "../GameObjectManager.h"
-
-Collider::Collider(bool debug)
-  : Component{ComponentType::collider}, debug{debug}
+Collider::Collider()
+  : Component{ComponentType::collider}
 {}
 
 bool Collider::collidesWith(GameObject* other)
@@ -32,13 +30,8 @@ bool Collider::collidesWith(GameObject* other)
 
   direction = support * -1.0f;
 
-  int iterations = 0;
   while (true)
   {
-    iterations++;
-    if (iterations > 50)
-      return false;
-
     support = getSupport(this, otherCollider, direction);
 
 
@@ -46,25 +39,6 @@ bool Collider::collidesWith(GameObject* other)
       return false;
 
     simplex.insert(simplex.begin(), support);
-
-    if (debug)
-    {
-      sf::ConvexShape shape;
-      shape.setPointCount(simplex.size());
-      for (int i = 0; i < simplex.size(); i++)
-      {
-        shape.setPoint(i, sf::Vector2f(simplex[i].getX() + 500, simplex[i].getY() + 500));
-      }
-      shape.setFillColor(sf::Color::Blue);
-
-      getOwner()->getOwner()->getWindow()->draw(shape);
-
-      sf::CircleShape origin;
-      origin.setPosition(500, 500);
-      origin.setRadius(3);
-      origin.setFillColor(sf::Color::Red);
-      getOwner()->getOwner()->getWindow()->draw(origin);
-    }
 
     if (nextSimplex(simplex, direction))
       return true;
