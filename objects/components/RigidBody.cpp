@@ -17,7 +17,7 @@ void RigidBody::fixedUpdate(float dt)
   falling = true;
 
   if (doGravity)
-    velocity += { 0.0f, gravity };
+    applyForce({ 0.0f, gravity });
 
   limitMovement();
 
