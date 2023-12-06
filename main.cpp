@@ -22,7 +22,7 @@ std::vector<Vec2<float>> createQuadMesh(float width, float height)
   return mesh;
 }
 
-GameObject* createPlayer(float x, float y, float width, float height, PlayerControlType controlType, sf::Color color, bool debug)
+GameObject* createPlayer(float x, float y, float width, float height, PlayerControlType controlType, sf::Color color)
 {
   auto player = new GameObject;
   player->addComponent(new Transform{x, y, createQuadMesh(width, height)});
@@ -65,8 +65,8 @@ int main()
   // Create Entities
   GameObjectManager gameObjectManager;
 
-  gameObjectManager.addObject(createPlayer(200, 200, 50, 50, PlayerControlType::WASD, sf::Color{42, 139, 200}, true));
-  gameObjectManager.addObject(createPlayer(400, 400, 50, 50, PlayerControlType::ARROW, sf::Color{175, 75, 150}, false));
+  gameObjectManager.addObject(createPlayer(200, 200, 50, 50, PlayerControlType::WASD, sf::Color{42, 139, 200}));
+  gameObjectManager.addObject(createPlayer(400, 400, 50, 50, PlayerControlType::ARROW, sf::Color{175, 75, 150}));
   gameObjectManager.addObject(createBlock(0, 1030, 1920, 50));
 
   gameObjectManager.addObject(createRigidBlock(300, 200, 50, 50, sf::Color{240, 139, 100}));
