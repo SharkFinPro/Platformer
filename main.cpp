@@ -27,7 +27,7 @@ GameObject* createPlayer(float x, float y, float width, float height, PlayerCont
   auto player = new GameObject;
   player->addComponent(new Transform{x, y, createQuadMesh(width, height)});
   player->addComponent(new RigidBody);
-  player->addComponent(new Player(controlType));
+  player->addComponent(new Player{controlType});
   player->addComponent(new SpriteRenderer{color});
   player->addComponent(new MeshCollider);
   player->addComponent(new BoxCollider);
