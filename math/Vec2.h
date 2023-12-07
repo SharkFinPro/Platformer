@@ -81,24 +81,25 @@ T Vec2<T>::length() const
 
 template<typename T>
 Vec2<T> Vec2<T>::operator+(const Vec2<T> &other)
-  {
+{
   return { x + other.x, y + other.y };
 }
 
 template<typename T>
 Vec2<T> Vec2<T>::operator-(const Vec2<T> &other)
-  {
+{
   return { x - other.x, y - other.y };
 }
 
 template<typename T>
 Vec2<T> Vec2<T>::operator*(const float scalar)
-  {
+{
   return { x * scalar, y * scalar };
 }
 
 template<typename T>
-Vec2<T> Vec2<T>::operator+=(const Vec2<T>& other) {
+Vec2<T> Vec2<T>::operator+=(const Vec2<T>& other)
+{
   auto newVector = *this + other;
   x = newVector.x;
   y = newVector.y;
@@ -107,7 +108,8 @@ Vec2<T> Vec2<T>::operator+=(const Vec2<T>& other) {
 }
 
 template<typename T>
-Vec2<T> Vec2<T>::operator-=(const Vec2<T>& other) {
+Vec2<T> Vec2<T>::operator-=(const Vec2<T>& other)
+{
   auto newVector = *this - other;
   x = newVector.x;
   y = newVector.y;
@@ -116,7 +118,8 @@ Vec2<T> Vec2<T>::operator-=(const Vec2<T>& other) {
 }
 
 template<typename T>
-Vec2<T> Vec2<T>::operator*=(float scalar) {
+Vec2<T> Vec2<T>::operator*=(float scalar)
+{
   auto newVector = *this * scalar;
   x = newVector.x;
   y = newVector.y;
