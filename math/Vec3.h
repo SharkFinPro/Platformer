@@ -99,7 +99,8 @@ T Vec3<T>::dot(Vec3<T> other) const
 }
 
 template<typename T>
-Vec3<T> Vec3<T>::cross(Vec3<T> other) const {
+Vec3<T> Vec3<T>::cross(Vec3<T> other) const
+{
   return {
     y * other.z - z * other.y,
     z * other.x - x * other.z,
@@ -123,24 +124,25 @@ Vec3<T> Vec3<T>::normalized() const
 
 template<typename T>
 Vec3<T> Vec3<T>::operator+(const Vec3<T> &other)
-  {
+{
   return { x + other.x, y + other.y, z + other.z };
 }
 
 template<typename T>
 Vec3<T> Vec3<T>::operator-(const Vec3<T> &other)
-  {
+{
   return { x - other.x, y - other.y, z - other.z };
 }
 
 template<typename T>
 Vec3<T> Vec3<T>::operator*(const float scalar)
-  {
+{
   return { x * scalar, y * scalar, z * scalar };
 }
 
 template<typename T>
-Vec3<T> Vec3<T>::operator+=(const Vec3<T>& other) {
+Vec3<T> Vec3<T>::operator+=(const Vec3<T>& other)
+{
   auto newVector = *this + other;
   x = newVector.x;
   y = newVector.y;
@@ -150,7 +152,8 @@ Vec3<T> Vec3<T>::operator+=(const Vec3<T>& other) {
 }
 
 template<typename T>
-Vec3<T> Vec3<T>::operator-=(const Vec3<T>& other) {
+Vec3<T> Vec3<T>::operator-=(const Vec3<T>& other)
+{
   auto newVector = *this - other;
   x = newVector.x;
   y = newVector.y;
@@ -160,7 +163,8 @@ Vec3<T> Vec3<T>::operator-=(const Vec3<T>& other) {
 }
 
 template<typename T>
-Vec3<T> Vec3<T>::operator*=(float scalar) {
+Vec3<T> Vec3<T>::operator*=(float scalar)
+{
   auto newVector = *this * scalar;
   x = newVector.x;
   y = newVector.y;
