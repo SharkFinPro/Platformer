@@ -19,7 +19,7 @@ public:
 private:
   virtual Vec3<float> findFurthestPoint(Vec3<float> direction) = 0;
 
-  static Vec3<float> getSupport(Collider* a, Collider* b, Vec3<float> direction);
+  static Vec3<float> getSupport(Collider* a, Collider* b, Vec3<float>& direction);
 
   static bool nextSimplex(Simplex& simplex, Vec3<float>& direction);
 

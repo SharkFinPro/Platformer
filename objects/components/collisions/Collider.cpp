@@ -36,7 +36,7 @@ bool Collider::collidesWith(GameObject* other)
   return true;
 }
 
-Vec3<float> Collider::getSupport(Collider* a, Collider* b, Vec3<float> direction)
+Vec3<float> Collider::getSupport(Collider* a, Collider* b, Vec3<float>& direction)
 {
   return a->findFurthestPoint(direction) - b->findFurthestPoint(direction * -1.0f);
 }
