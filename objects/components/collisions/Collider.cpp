@@ -58,11 +58,8 @@ bool Collider::nextSimplex(Simplex& simplex, Vec3<float>& direction) {
 
 bool Collider::line(Simplex& simplex, Vec3<float>& direction)
 {
-  auto a = simplex.getA();
-  auto b = simplex.getB();
-
-  auto ab = b - a;
-  auto ao = a * -1.0f;
+  auto ab = simplex.getB() - simplex.getA();
+  auto ao = simplex.getA() * -1.0f;
 
   direction = ab.cross(ao).cross(ab);
 
@@ -71,13 +68,9 @@ bool Collider::line(Simplex& simplex, Vec3<float>& direction)
 
 bool Collider::triangle(Simplex& simplex, Vec3<float>& direction)
 {
-  auto a = simplex.getA();
-  auto b = simplex.getB();
-  auto c = simplex.getC();
-
-  auto ab = b - a;
-  auto ac = c - a;
-  auto ao = a * -1.0f;
+  auto ab = simplex.getB() - simplex.getA();
+  auto ac = simplex.getC() - simplex.getA();
+  auto ao = simplex.getA() * -1.0f;
 
   auto ABperp = ac.cross(ab).cross(ab);
   auto ACperp = ab.cross(ac).cross(ac);

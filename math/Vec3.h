@@ -27,9 +27,9 @@ public:
 
   Vec3<T> normalized() const;
 
-  Vec3<T> operator+(Vec3<T> const& other);
-  Vec3<T> operator-(Vec3<T> const& other);
-  Vec3<T> operator*(float scalar);
+  Vec3<T> operator+(Vec3<T> const& other) const;
+  Vec3<T> operator-(Vec3<T> const& other) const;
+  Vec3<T> operator*(float scalar) const;
 
   Vec3<T> operator+=(Vec3<T> const& other);
   Vec3<T> operator-=(Vec3<T> const& other);
@@ -123,19 +123,19 @@ Vec3<T> Vec3<T>::normalized() const
 }
 
 template<typename T>
-Vec3<T> Vec3<T>::operator+(const Vec3<T> &other)
+Vec3<T> Vec3<T>::operator+(const Vec3<T> &other) const
 {
   return { x + other.x, y + other.y, z + other.z };
 }
 
 template<typename T>
-Vec3<T> Vec3<T>::operator-(const Vec3<T> &other)
+Vec3<T> Vec3<T>::operator-(const Vec3<T> &other) const
 {
   return { x - other.x, y - other.y, z - other.z };
 }
 
 template<typename T>
-Vec3<T> Vec3<T>::operator*(const float scalar)
+Vec3<T> Vec3<T>::operator*(const float scalar) const
 {
   return { x * scalar, y * scalar, z * scalar };
 }
