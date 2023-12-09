@@ -3,22 +3,24 @@
 #include "../Transform.h"
 #include <cfloat>
 
+MeshCollider::MeshCollider()
+  : transform(nullptr)
+{}
+
 Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction)
 {
-  auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
-
   if (!transform)
-    return { 0, 0, 0 };
+  {
+    transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
-  auto mesh = transform->getMesh();
+    if (!transform)
+      return { 0, 0, 0 };
+  }
 
-  float furthestDistance = -FLT_MAX;
-  Vec3<float> furthestVertex;
+  float furthestDistance = -FLT_MAX, distance;
+  Vec3<float> furthestVertex, vert;
 
-  float distance;
-  Vec3<float> vert;
-
-  for (auto& vertex : mesh)
+  for (auto& vertex : transform->getMesh())
   {
     vert = {vertex, 0};
     distance = vert.dot(direction);
