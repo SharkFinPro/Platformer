@@ -3,10 +3,6 @@
 #include "../Transform.h"
 #include <cfloat>
 
-MeshCollider::MeshCollider()
-  : transform(nullptr)
-{}
-
 Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction)
 {
   if (!transform)

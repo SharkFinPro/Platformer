@@ -3,17 +3,10 @@
 
 #include "Collider.h"
 
-class Transform;
-
 class MeshCollider : public Collider
 {
-public:
-  MeshCollider();
-
 private:
   Vec3<float> findFurthestPoint(Vec3<float> direction) override;
-
-  Transform* transform;
 };
 
 

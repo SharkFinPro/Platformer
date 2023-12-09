@@ -3,16 +3,22 @@
 #include "../Transform.h"
 
 Collider::Collider()
-  : Component{ComponentType::collider}
+  : Component{ComponentType::collider}, transform{nullptr}
 {}
 
 bool Collider::collidesWith(GameObject* other)
 {
-  auto transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+  if (!transform)
+  {
+    transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+
+    if (!transform)
+      return false;
+  }
+
   auto otherTransform = dynamic_cast<Transform*>(other->getComponent(ComponentType::transform));
   auto otherCollider = dynamic_cast<Collider*>(other->getComponent(ComponentType::collider));
-
-  if (!transform || !otherTransform || !otherCollider)
+  if (!otherTransform || !otherCollider)
     return false;
 
   Simplex simplex;

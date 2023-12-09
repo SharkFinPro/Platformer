@@ -8,6 +8,7 @@
 #include "Simplex.h"
 
 class GameObject;
+class Transform;
 
 class Collider : public Component
 {
@@ -15,6 +16,9 @@ public:
   Collider();
 
   bool collidesWith(GameObject* other);
+
+protected:
+  Transform* transform;
 
 private:
   virtual Vec3<float> findFurthestPoint(Vec3<float> direction) = 0;
