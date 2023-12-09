@@ -89,11 +89,10 @@ void GameObjectManager::checkCollisions()
       if (object1 == object2)
         continue;
 
-      if (!dynamic_cast<Collider*>(object2->getComponent(ComponentType::collider)))
+      if (!object2->getComponent(ComponentType::collider))
         continue;
 
-      auto otherTransform = dynamic_cast<Transform*>(object2->getComponent(ComponentType::transform));
-      if (!otherTransform)
+      if (!object2->getComponent(ComponentType::transform))
         continue;
 
       if (!collider->collidesWith(object2))
