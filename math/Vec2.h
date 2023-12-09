@@ -20,9 +20,9 @@ public:
 
   T length() const;
 
-  Vec2<T> operator+(Vec2<T> const& other);
-  Vec2<T> operator-(Vec2<T> const& other);
-  Vec2<T> operator*(float scalar);
+  Vec2<T> operator+(Vec2<T> const& other) const;
+  Vec2<T> operator-(Vec2<T> const& other) const;
+  Vec2<T> operator*(float scalar) const;
 
   Vec2<T> operator+=(Vec2<T> const& other);
   Vec2<T> operator-=(Vec2<T> const& other);
@@ -80,19 +80,19 @@ T Vec2<T>::length() const
 }
 
 template<typename T>
-Vec2<T> Vec2<T>::operator+(const Vec2<T> &other)
+Vec2<T> Vec2<T>::operator+(const Vec2<T> &other) const
 {
   return { x + other.x, y + other.y };
 }
 
 template<typename T>
-Vec2<T> Vec2<T>::operator-(const Vec2<T> &other)
+Vec2<T> Vec2<T>::operator-(const Vec2<T> &other) const
 {
   return { x - other.x, y - other.y };
 }
 
 template<typename T>
-Vec2<T> Vec2<T>::operator*(const float scalar)
+Vec2<T> Vec2<T>::operator*(const float scalar) const
 {
   return { x * scalar, y * scalar };
 }
