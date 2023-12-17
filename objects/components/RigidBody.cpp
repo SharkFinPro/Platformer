@@ -9,10 +9,13 @@ RigidBody::RigidBody()
 void RigidBody::fixedUpdate(float dt)
 {
   if (!transform)
+  {
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
-  if (!transform)
-    return;
+    if (!transform)
+      return;
+  }
+
 
   falling = true;
 
@@ -42,10 +45,13 @@ bool RigidBody::isFalling() const
 void RigidBody::handleCollision(Vec2<float> penetrationVector)
 {
   if (!transform)
+  {
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
-  if (!transform)
-    return;
+    if (!transform)
+      return;
+  }
+
 
   if (penetrationVector.getX() != 0)
     handleXCollision();
