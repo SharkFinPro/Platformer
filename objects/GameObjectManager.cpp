@@ -6,7 +6,7 @@
 #include "components/collisions/BoxCollider.h"
 
 GameObjectManager::GameObjectManager()
-  : window{nullptr}, fixedUpdateDt{1.0f / 60.0f}, timeAccumulator{0.0f}, ticks{0}
+  : window{nullptr}, fixedUpdateDt{1.0f / 60.0f * 1000000.0f}, timeAccumulator{0.0f}, ticks{0}
 {}
 
 GameObjectManager::~GameObjectManager()
@@ -62,7 +62,7 @@ void GameObjectManager::fixedUpdate(float dt)
   while (timeAccumulator >= fixedUpdateDt)
   {
     for (auto& object : objects)
-      object->fixedUpdate(fixedUpdateDt);
+      object->fixedUpdate(1.0f / 60.0f);
 
     checkCollisions();
 
@@ -77,10 +77,6 @@ void GameObjectManager::checkCollisions()
   {
     auto collider = dynamic_cast<Collider*>(object1->getComponent(ComponentType::collider));
     if (!collider)
-      continue;
-
-    auto rb = dynamic_cast<RigidBody*>(object1->getComponent(ComponentType::rigidBody));
-    if (!rb)
       continue;
 
     std::vector<GameObject*> collisions;
@@ -106,7 +102,9 @@ void GameObjectManager::checkCollisions()
       auto boxCollider = dynamic_cast<BoxCollider*>(object1->getComponent(ComponentType::boxCollider));
       auto penetrationVector = boxCollider->getPenetrationVector(collisions);
 
-      rb->handleCollision(penetrationVector);
+      auto rb = dynamic_cast<RigidBody*>(object1->getComponent(ComponentType::rigidBody));
+      if (rb)
+        rb->handleCollision(penetrationVector);
     }
   }
 }

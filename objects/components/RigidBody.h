@@ -13,7 +13,7 @@ public:
 
   void fixedUpdate(float dt) override;
 
-  void applyForce(Vec2<float> force);
+  void applyForce(const Vec2<float>& force);
 
   bool isFalling() const;
 
@@ -23,7 +23,7 @@ private:
   Vec2<float> velocity;
 
   bool doGravity;
-  float gravity;
+  Vec2<float> gravity;
 
   bool falling;
 
