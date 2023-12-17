@@ -31,7 +31,7 @@ void RigidBody::applyForce(const Vec2<float>& force)
 
 void RigidBody::limitMovement()
 {
-  velocity.setX(velocity.getX() / 1.4f);
+  applyForce({-velocity.getX() * 0.2f, 0});
 }
 
 bool RigidBody::isFalling() const
