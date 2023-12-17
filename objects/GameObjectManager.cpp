@@ -6,7 +6,7 @@
 #include "components/collisions/BoxCollider.h"
 
 GameObjectManager::GameObjectManager()
-  : window{nullptr}, fixedUpdateDt{1.0f / 60.0f * 1000000.0f}, timeAccumulator{0.0f}, ticks{0}
+  : window{nullptr}, fixedUpdateDt{1.0f / 50.0f * 1000000.0f}, timeAccumulator{0.0f}, ticks{0}
 {}
 
 GameObjectManager::~GameObjectManager()
@@ -62,7 +62,7 @@ void GameObjectManager::fixedUpdate(float dt)
   while (timeAccumulator >= fixedUpdateDt)
   {
     for (auto& object : objects)
-      object->fixedUpdate(1.0f / 60.0f);
+      object->fixedUpdate(1.0f / 50.0f);
 
     checkCollisions();
 
