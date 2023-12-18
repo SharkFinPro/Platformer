@@ -103,13 +103,14 @@ void GameObjectManager::checkCollisions()
 
     if (!collisions.empty())
     {
-      auto pv = collider->EPA(collisions[0].second, collisions[0].first);
+      auto penetrationVector = collider->getPenetrationVector(collisions);
+//      auto pv = collider->EPA(collisions[0].second, collisions[0].first);
 //      auto boxCollider = dynamic_cast<BoxCollider*>(object1->getComponent(ComponentType::boxCollider));
 //      auto penetrationVector = boxCollider->getPenetrationVector(collisions);
 //
       auto rb = dynamic_cast<RigidBody*>(object1->getComponent(ComponentType::rigidBody));
       if (rb)
-        rb->handleCollision({pv.getX(), pv.getY()});
+        rb->handleCollision({penetrationVector.getX(), penetrationVector.getY()});
     }
   }
 }

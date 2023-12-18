@@ -47,6 +47,104 @@ bool Collider::collidesWith(GameObject* other, std::vector<Vec3<float>>& polytop
   return true;
 }
 
+Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, std::vector<Vec3<float>>>>& collisions) {
+  Vec2<float> finalPenetrationVector = {0, 0};
+  float xCollisions = 0;
+  float yCollisions = 0;
+
+  for (auto& collision : collisions)
+  {
+    auto penetrationVector = EPA(collision.second, collision.first);
+
+    if (penetrationVector.getX() != 0)
+    {
+      xCollisions++;
+      finalPenetrationVector.setX(finalPenetrationVector.getX() + penetrationVector.getX());
+    }
+
+    if (penetrationVector.getY() != 0)
+    {
+      yCollisions++;
+      finalPenetrationVector.setY(finalPenetrationVector.getY() + penetrationVector.getY());
+    }
+  }
+
+  //
+
+  // todo: theoretical collisions
+
+  //
+
+  if (xCollisions != 0)
+    finalPenetrationVector.setX(finalPenetrationVector.getX() / xCollisions);
+
+  if (yCollisions != 0)
+    finalPenetrationVector.setY(finalPenetrationVector.getY() / yCollisions);
+
+  return finalPenetrationVector;
+}
+
+Vec3<float> Collider::getSupport(Collider* a, Collider* b, Vec3<float>& direction)
+{
+  return a->findFurthestPoint(direction) - b->findFurthestPoint(direction * -1.0f);
+}
+
+bool Collider::nextSimplex(Simplex& simplex, Vec3<float>& direction) {
+  if (simplex.size() == 2)
+    return line(simplex, direction);
+  else if (simplex.size() == 3)
+    return triangle(simplex, direction);
+}
+
+bool Collider::line(Simplex& simplex, Vec3<float>& direction)
+{
+  auto ab = simplex.getB() - simplex.getA();
+  auto ao = simplex.getA() * -1.0f;
+
+  direction = ab.cross(ao).cross(ab);
+
+  return false;
+}
+
+bool Collider::triangle(Simplex& simplex, Vec3<float>& direction)
+{
+  auto ab = simplex.getB() - simplex.getA();
+  auto ac = simplex.getC() - simplex.getA();
+  auto ao = simplex.getA() * -1.0f;
+
+  auto ABperp = ac.cross(ab).cross(ab);
+  auto ACperp = ab.cross(ac).cross(ac);
+
+  if (ABperp.dot(ao) > 0)
+  {
+    simplex.removeC();
+    direction = ABperp;
+    return false;
+  }
+
+  if (ACperp.dot(ao) > 0)
+  {
+    simplex.removeB();
+    direction = ACperp;
+    return false;
+  }
+
+  return true;
+}
+
+Vec3<float> Collider::getClosestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<float> c) {
+  auto AB = b - a;
+
+  auto dp = (c - a).dot(AB) / AB.dot(AB);
+
+  if (dp < 0)
+    dp = 0;
+  else if (dp > 1)
+    dp = 1;
+
+  return a + (AB * dp);
+}
+
 Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other) {
   auto origin = Vec3{0.0f, 0.0f, 0.0f};
 
@@ -109,65 +207,4 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other)
   }
 
   return v;
-}
-
-Vec3<float> Collider::getSupport(Collider* a, Collider* b, Vec3<float>& direction)
-{
-  return a->findFurthestPoint(direction) - b->findFurthestPoint(direction * -1.0f);
-}
-
-bool Collider::nextSimplex(Simplex& simplex, Vec3<float>& direction) {
-  if (simplex.size() == 2)
-    return line(simplex, direction);
-  else if (simplex.size() == 3)
-    return triangle(simplex, direction);
-}
-
-bool Collider::line(Simplex& simplex, Vec3<float>& direction)
-{
-  auto ab = simplex.getB() - simplex.getA();
-  auto ao = simplex.getA() * -1.0f;
-
-  direction = ab.cross(ao).cross(ab);
-
-  return false;
-}
-
-bool Collider::triangle(Simplex& simplex, Vec3<float>& direction)
-{
-  auto ab = simplex.getB() - simplex.getA();
-  auto ac = simplex.getC() - simplex.getA();
-  auto ao = simplex.getA() * -1.0f;
-
-  auto ABperp = ac.cross(ab).cross(ab);
-  auto ACperp = ab.cross(ac).cross(ac);
-
-  if (ABperp.dot(ao) > 0)
-  {
-    simplex.removeC();
-    direction = ABperp;
-    return false;
-  }
-
-  if (ACperp.dot(ao) > 0)
-  {
-    simplex.removeB();
-    direction = ACperp;
-    return false;
-  }
-
-  return true;
-}
-
-Vec3<float> Collider::getClosestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<float> c) {
-  auto AB = b - a;
-
-  auto dp = (c - a).dot(AB) / AB.dot(AB);
-
-  if (dp < 0)
-    dp = 0;
-  else if (dp > 1)
-    dp = 1;
-
-  return a + (AB * dp);
 }
