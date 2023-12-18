@@ -72,7 +72,55 @@ Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, st
   //
 
   // todo: theoretical collisions
+  if (finalPenetrationVector.getX() != 0 && finalPenetrationVector.getY() != 0)
+  {
+    if (std::fabs(finalPenetrationVector.getX()) > std::fabs(finalPenetrationVector.getY()))
+    {
+      auto theoreticalTransform = Vec2<float>{ finalPenetrationVector.getX(), 0.0f };
 
+      finalPenetrationVector.setY(0);
+
+      yCollisions = 0;
+      for (auto& collision : collisions)
+      {
+        std::vector<Vec3<float>> polytope;
+        collidesWith(collision.first, polytope, theoreticalTransform);
+
+        if (polytope.empty())
+          continue;
+
+        auto penetrationVector = EPA(polytope, collision.first);
+
+        if (penetrationVector.getY() != 0)
+        {
+          yCollisions++;
+          finalPenetrationVector.setY(finalPenetrationVector.getY() + penetrationVector.getY());
+        }
+      }
+    }
+    else
+    {
+      auto theoreticalTransform = Vec2<float>{ 0.0f, finalPenetrationVector.getY() };
+
+      finalPenetrationVector.setX(0);
+
+      xCollisions = 0;
+      for (auto& collision : collisions) {
+        std::vector<Vec3<float>> polytope;
+        collidesWith(collision.first, polytope, theoreticalTransform);
+
+        if (polytope.empty())
+          continue;
+
+        auto penetrationVector = EPA(polytope, collision.first);
+
+        if (penetrationVector.getX() != 0) {
+          xCollisions++;
+          finalPenetrationVector.setX(finalPenetrationVector.getX() + penetrationVector.getX());
+        }
+      }
+    }
+  }
   //
 
   if (xCollisions != 0)
@@ -202,7 +250,7 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other)
   if (sqrtf(
       (proj.getX() - v.getX()) * (proj.getX() - v.getX()) +
       (proj.getY() - v.getY()) * (proj.getY() - v.getY())
-  ) > 0.01f)
+  ) > 0.0001f)
   {
     polytope.insert(polytope.begin() + closestA + 1, w);
     return EPA(polytope, other);
