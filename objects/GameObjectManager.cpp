@@ -81,7 +81,6 @@ void GameObjectManager::checkCollisions()
       continue;
 
     std::vector<std::pair<GameObject*, std::vector<Vec3<float>>>> collisions;
-//    std::vector<GameObject*> collisions;
     for (auto& object2 : objects)
     {
       if (object1 == object2)
@@ -98,19 +97,16 @@ void GameObjectManager::checkCollisions()
         continue;
 
       collisions.emplace_back(object2, polytope);
-//      collisions.push_back(object2);
     }
 
     if (!collisions.empty())
     {
-      auto penetrationVector = collider->getPenetrationVector(collisions);
-//      auto pv = collider->EPA(collisions[0].second, collisions[0].first);
-//      auto boxCollider = dynamic_cast<BoxCollider*>(object1->getComponent(ComponentType::boxCollider));
-//      auto penetrationVector = boxCollider->getPenetrationVector(collisions);
-//
       auto rb = dynamic_cast<RigidBody*>(object1->getComponent(ComponentType::rigidBody));
       if (rb)
-        rb->handleCollision({penetrationVector.getX(), penetrationVector.getY()});
+      {
+        auto penetrationVector = collider->getPenetrationVector(collisions);
+        rb->handleCollision(penetrationVector);
+      }
     }
   }
 }
