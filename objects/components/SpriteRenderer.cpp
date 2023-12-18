@@ -10,10 +10,12 @@ SpriteRenderer::SpriteRenderer(sf::Color color)
 void SpriteRenderer::update([[maybe_unused]] float dt)
 {
   if (!transform)
+  {
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
-  if (!transform)
-    return;
+    if (!transform)
+      return;
+  }
 
   auto mesh = transform->getMesh();
   sf::ConvexShape shape;

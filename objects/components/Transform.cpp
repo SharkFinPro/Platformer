@@ -27,10 +27,10 @@ void Transform::reset()
 }
 
 std::vector<Vec2<float>> Transform::getMesh() const {
-  std::vector<Vec2<float>> newMesh;
+  std::vector<Vec2<float>> transformedMesh;
 
   for (auto& m : mesh)
-    newMesh.emplace_back(m.getX() + position.getX(), m.getY() + position.getY());
+    transformedMesh.emplace_back(m.getX() + position.getX(), m.getY() + position.getY());
 
-  return newMesh;
+  return transformedMesh;
 }

@@ -16,19 +16,24 @@ void Player::update([[maybe_unused]] float dt)
 void Player::fixedUpdate([[maybe_unused]] float dt)
 {
   if (!transform)
+  {
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
-  if (!transform)
-    return;
+    if (!transform)
+      return;
+  }
+
 
   if (transform->getPosition().getY() > 2000)
     transform->reset();
 
   if (!rigidBody)
+  {
     rigidBody = dynamic_cast<RigidBody*>(getOwner()->getComponent(ComponentType::rigidBody));
 
-  if (!rigidBody)
-    return;
+    if (!rigidBody)
+      return;
+  }
 
   rigidBody->applyForce(appliedForce);
   appliedForce.setX(0);
@@ -38,10 +43,12 @@ void Player::fixedUpdate([[maybe_unused]] float dt)
 void Player::handleInput()
 {
   if (!rigidBody)
+  {
     rigidBody = dynamic_cast<RigidBody*>(getOwner()->getComponent(ComponentType::rigidBody));
 
-  if (!rigidBody)
-    return;
+    if (!rigidBody)
+      return;
+  }
 
   float xForce = 0;
   if ((sf::Keyboard::isKeyPressed(sf::Keyboard::A) && controlType == PlayerControlType::WASD)
