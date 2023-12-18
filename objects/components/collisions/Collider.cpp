@@ -1,6 +1,7 @@
 #include "Collider.h"
 #include "../../GameObject.h"
 #include "../Transform.h"
+#include <cfloat>
 
 Collider::Collider()
   : Component{ComponentType::collider}, transform{nullptr}
@@ -88,4 +89,81 @@ bool Collider::triangle(Simplex& simplex, Vec3<float>& direction)
   }
 
   return true;
+}
+
+Vec3<float> Collider::getClosestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<float> c) {
+  auto AB = b - a;
+
+  auto dp = (c - a).dot(AB) / AB.dot(AB);
+
+  if (dp < 0)
+    dp = 0;
+  else if (dp > 1)
+    dp = 1;
+
+  return a + (AB * dp);
+}
+
+Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other) {
+  auto origin = Vec3{0.0f, 0.0f, 0.0f};
+
+  // Todo: throw errors
+  if (!transform)
+  {
+    transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+
+    if (!transform)
+      return origin;
+  }
+
+  auto otherTransform = dynamic_cast<Transform*>(other->getComponent(ComponentType::transform));
+  auto otherCollider = dynamic_cast<Collider*>(other->getComponent(ComponentType::collider));
+  if (!otherTransform || !otherCollider)
+    return origin;
+
+  ///
+  if (polytope.size() > 50)
+    return origin;
+
+  int closestA = 0;
+  float minDist = FLT_MAX;
+
+  for (int i = 0; i < polytope.size(); i++)
+  {
+    auto closest = getClosestPointOnLine(polytope[i], polytope[(i + 1) % polytope.size()], origin);
+
+    float dist = (origin.getX() - closest.getX()) * (origin.getX() - closest.getX()) +
+      (origin.getY() - closest.getY()) * (origin.getY() - closest.getY());
+
+    if (dist < minDist)
+    {
+      minDist = dist;
+      closestA = i;
+    }
+  }
+
+  // closest face
+  auto a = polytope[closestA];
+  auto b = polytope[(closestA + 1) % polytope.size()];
+
+  //v
+  auto v = getClosestPointOnLine(a, b, origin);
+
+  //w
+  auto w = getSupport(this, otherCollider, v);
+
+  // project w -> v
+  auto proj = v * (w.dot(v) / v.dot(v));
+
+  //
+  if (sqrtf(
+    (proj.getX() - v.getX()) * (proj.getX() - v.getX()) +
+    (proj.getY() - v.getY()) * (proj.getY() - v.getY())
+    ) > 0.01f)
+  {
+    polytope.insert(polytope.begin() + closestA + 1, w);
+    return EPA(polytope, other);
+  }
+
+  return v;
 }

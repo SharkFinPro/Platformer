@@ -29,6 +29,10 @@ private:
 
   static bool line(Simplex& simplex, Vec3<float>& direction);
   static bool triangle(Simplex& simplex, Vec3<float>& direction);
+
+  static Vec3<float> getClosestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<float> c);
+
+  Vec3<float> EPA(std::vector<Vec3<float>>& polytope, GameObject* other);
 };
 
 
