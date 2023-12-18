@@ -6,7 +6,7 @@
 class MeshCollider : public Collider
 {
 private:
-  Vec3<float> findFurthestPoint(Vec3<float> direction) override;
+  Vec3<float> findFurthestPoint(Vec3<float> direction, Vec2<float>& translation) override;
 };
 
 

@@ -7,7 +7,7 @@ Collider::Collider()
   : Component{ComponentType::collider}, transform{nullptr}
 {}
 
-bool Collider::collidesWith(GameObject* other, std::vector<Vec3<float>>& polytope)
+bool Collider::collidesWith(GameObject* other, std::vector<Vec3<float>>& polytope, Vec2<float> translation)
 {
   if (!transform)
   {
@@ -23,16 +23,16 @@ bool Collider::collidesWith(GameObject* other, std::vector<Vec3<float>>& polytop
     return false;
 
   Simplex simplex;
-  Vec3<float> direction = { transform->getPosition() - otherTransform->getPosition(), 0 };
+  Vec3<float> direction = { transform->getPosition() + translation - otherTransform->getPosition(), 0 };
 
-  Vec3<float> support = getSupport(this, otherCollider, direction);
+  Vec3<float> support = getSupport(this, otherCollider, direction, translation);
 
   simplex.addVertex(support);
   direction *= -1.0f;
 
   do
   {
-    support = getSupport(this, otherCollider, direction);
+    support = getSupport(this, otherCollider, direction, translation);
 
     if (support.dot(direction) < 0)
       return false;
@@ -84,9 +84,10 @@ Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, st
   return finalPenetrationVector;
 }
 
-Vec3<float> Collider::getSupport(Collider* a, Collider* b, Vec3<float>& direction)
+Vec3<float> Collider::getSupport(Collider* a, Collider* b, Vec3<float>& direction, Vec2<float>& translation)
 {
-  return a->findFurthestPoint(direction) - b->findFurthestPoint(direction * -1.0f);
+  auto o = Vec2{0.0f, 0.0f};
+  return a->findFurthestPoint(direction, translation) - b->findFurthestPoint(direction * -1.0f, o);
 }
 
 bool Collider::nextSimplex(Simplex& simplex, Vec3<float>& direction) {
@@ -191,7 +192,8 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other)
   auto v = getClosestPointOnLine(a, b, origin);
 
   //w
-  auto w = getSupport(this, otherCollider, v);
+  auto o = Vec2<float>(0.0f, 0.0f);
+  auto w = getSupport(this, otherCollider, v, o);
 
   // project w -> v
   auto proj = v * (w.dot(v) / v.dot(v));
