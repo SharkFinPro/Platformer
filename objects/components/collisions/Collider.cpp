@@ -52,8 +52,6 @@ bool Collider::nextSimplex(Simplex& simplex, Vec3<float>& direction) {
     return line(simplex, direction);
   else if (simplex.size() == 3)
     return triangle(simplex, direction);
-
-  return false;
 }
 
 bool Collider::line(Simplex& simplex, Vec3<float>& direction)
