@@ -4,6 +4,7 @@
 #include "components/Transform.h"
 #include "components/collisions/MeshCollider.h"
 #include "components/collisions/BoxCollider.h"
+#include "../math/Vec3.h"
 
 GameObjectManager::GameObjectManager()
   : window{nullptr}, fixedUpdateDt{1.0f / 50.0f}, timeAccumulator{0.0f}, ticks{0}
@@ -79,7 +80,8 @@ void GameObjectManager::checkCollisions()
     if (!collider)
       continue;
 
-    std::vector<GameObject*> collisions;
+    std::vector<std::pair<GameObject*, std::vector<Vec3<float>>>> collisions;
+//    std::vector<GameObject*> collisions;
     for (auto& object2 : objects)
     {
       if (object1 == object2)
@@ -91,20 +93,23 @@ void GameObjectManager::checkCollisions()
       if (!object2->getComponent(ComponentType::transform))
         continue;
 
-      if (!collider->collidesWith(object2))
+      std::vector<Vec3<float>> polytope;
+      if (!collider->collidesWith(object2, polytope))
         continue;
 
-      collisions.push_back(object2);
+      collisions.emplace_back(object2, polytope);
+//      collisions.push_back(object2);
     }
 
     if (!collisions.empty())
     {
-      auto boxCollider = dynamic_cast<BoxCollider*>(object1->getComponent(ComponentType::boxCollider));
-      auto penetrationVector = boxCollider->getPenetrationVector(collisions);
-
+      auto pv = collider->EPA(collisions[0].second, collisions[0].first);
+//      auto boxCollider = dynamic_cast<BoxCollider*>(object1->getComponent(ComponentType::boxCollider));
+//      auto penetrationVector = boxCollider->getPenetrationVector(collisions);
+//
       auto rb = dynamic_cast<RigidBody*>(object1->getComponent(ComponentType::rigidBody));
       if (rb)
-        rb->handleCollision(penetrationVector);
+        rb->handleCollision({pv.getX(), pv.getY()});
     }
   }
 }
