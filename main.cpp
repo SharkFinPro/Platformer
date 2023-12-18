@@ -104,7 +104,7 @@ int main()
 
     // Delta Time
     std::chrono::steady_clock::time_point current = std::chrono::steady_clock::now();
-    float dt = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(current - previous).count());
+    float dt = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(current - previous).count()) / 1000000.0f;
     previous = current;
 
     // clear the window with black color
