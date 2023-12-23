@@ -243,7 +243,8 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
       // Find search direction
       auto searchDirection = closestPoint;
 
-      if (fabs(searchDirection.getX()) < 0.0001f && fabs(searchDirection.getY()) < 0.0001f)
+      float threshold = 0.0001f;
+      if (fabs(searchDirection.getX()) < threshold && fabs(searchDirection.getY()) < threshold)
       {
         auto AB = b - a;
 
