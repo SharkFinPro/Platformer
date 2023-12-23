@@ -7,7 +7,7 @@ Collider::Collider()
   : Component{ComponentType::collider}, transform{nullptr}
 {}
 
-bool Collider::collidesWith(GameObject* other, std::vector<Vec3<float>>& polytope, Vec2<float> translation)
+bool Collider::collidesWith(GameObject* other, std::vector<Vec3<float>>& polytope, Vec3<float> translation)
 {
   if (!transform)
   {
@@ -23,7 +23,7 @@ bool Collider::collidesWith(GameObject* other, std::vector<Vec3<float>>& polytop
     return false;
 
   Simplex simplex;
-  Vec3<float> direction = { transform->getPosition() + translation - otherTransform->getPosition(), 0 };
+  auto direction = Vec3<float>{ transform->getPosition() - otherTransform->getPosition(), 0 } + translation;
 
   Vec3<float> support = getSupport(this, otherCollider, direction, translation);
 
@@ -54,7 +54,7 @@ Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, st
 
   for (auto& collision : collisions)
   {
-    auto penetrationVector = EPA(collision.second, collision.first);
+    auto penetrationVector = EPA(collision.second, collision.first, {0, 0, 0});
 
     if (penetrationVector.getX() != 0)
     {
@@ -76,7 +76,7 @@ Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, st
   {
     if (std::fabs(finalPenetrationVector.getX()) > std::fabs(finalPenetrationVector.getY()))
     {
-      auto theoreticalTransform = Vec2<float>{ finalPenetrationVector.getX(), 0.0f };
+      auto theoreticalTransform = Vec3<float>{ finalPenetrationVector.getX(), 0.0f, 0.0f };
 
       finalPenetrationVector.setY(0);
 
@@ -89,7 +89,7 @@ Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, st
         if (polytope.empty())
           continue;
 
-        auto penetrationVector = EPA(polytope, collision.first);
+        auto penetrationVector = EPA(polytope, collision.first, theoreticalTransform);
 
         if (penetrationVector.getY() != 0)
         {
@@ -100,7 +100,7 @@ Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, st
     }
     else
     {
-      auto theoreticalTransform = Vec2<float>{ 0.0f, finalPenetrationVector.getY() };
+      auto theoreticalTransform = Vec3<float>{ 0.0f, finalPenetrationVector.getY(), 0.0f };
 
       finalPenetrationVector.setX(0);
 
@@ -112,7 +112,7 @@ Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, st
         if (polytope.empty())
           continue;
 
-        auto penetrationVector = EPA(polytope, collision.first);
+        auto penetrationVector = EPA(polytope, collision.first, theoreticalTransform);
 
         if (penetrationVector.getX() != 0) {
           xCollisions++;
@@ -121,7 +121,7 @@ Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, st
       }
     }
   }
-  //
+
 
   if (xCollisions != 0)
     finalPenetrationVector.setX(finalPenetrationVector.getX() / xCollisions);
@@ -132,10 +132,9 @@ Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, st
   return finalPenetrationVector;
 }
 
-Vec3<float> Collider::getSupport(Collider* a, Collider* b, Vec3<float>& direction, Vec2<float>& translation)
+Vec3<float> Collider::getSupport(Collider* a, Collider* b, Vec3<float> direction, Vec3<float> translation)
 {
-  auto o = Vec2{0.0f, 0.0f};
-  return a->findFurthestPoint(direction, translation) - b->findFurthestPoint(direction * -1.0f, o);
+  return a->findFurthestPoint(direction, translation) - b->findFurthestPoint(direction * -1.0f, {0, 0, 0});
 }
 
 bool Collider::nextSimplex(Simplex& simplex, Vec3<float>& direction) {
@@ -143,6 +142,8 @@ bool Collider::nextSimplex(Simplex& simplex, Vec3<float>& direction) {
     return line(simplex, direction);
   else if (simplex.size() == 3)
     return triangle(simplex, direction);
+
+  return false;
 }
 
 bool Collider::line(Simplex& simplex, Vec3<float>& direction)
@@ -151,6 +152,9 @@ bool Collider::line(Simplex& simplex, Vec3<float>& direction)
   auto ao = simplex.getA() * -1.0f;
 
   direction = ab.cross(ao).cross(ab);
+
+  if (direction.dot(ao) == 0)
+    return true;
 
   return false;
 }
@@ -194,67 +198,89 @@ Vec3<float> Collider::getClosestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<f
   return a + (AB * dp);
 }
 
-Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other) {
-  auto origin = Vec3{0.0f, 0.0f, 0.0f};
-
+Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other, Vec3<float> translation) {
   // Todo: throw errors
   if (!transform)
   {
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
     if (!transform)
-      return origin;
+      return { 0.0f, 0.0f, 0.0f };
   }
 
   auto otherTransform = dynamic_cast<Transform*>(other->getComponent(ComponentType::transform));
   auto otherCollider = dynamic_cast<Collider*>(other->getComponent(ComponentType::collider));
   if (!otherTransform || !otherCollider)
-    return origin;
+    return { 0.0f, 0.0f, 0.0f };
 
-  ///
-  if (polytope.size() > 50)
-    return origin;
 
-  int closestA = 0;
+  Vec3<float> closestPoint, a, b;
+  int closestA;
+
+  // Find closest point on polytope
   float minDist = FLT_MAX;
-
   for (int i = 0; i < polytope.size(); i++)
   {
-    auto closest = getClosestPointOnLine(polytope[i], polytope[(i + 1) % polytope.size()], origin);
+    Vec3<float> closest = getClosestPointOnLine(polytope.at(i), polytope.at((i + 1) % polytope.size()), {0.0f, 0.0f, 0.0f});
 
-    float dist = (origin.getX() - closest.getX()) * (origin.getX() - closest.getX()) +
-                 (origin.getY() - closest.getY()) * (origin.getY() - closest.getY());
+    float dist = sqrtf(
+      closest.getX() * closest.getX() +
+      closest.getY() * closest.getY() +
+      closest.getZ() * closest.getZ()
+    );
 
     if (dist < minDist)
     {
       minDist = dist;
+      closestPoint = closest;
       closestA = i;
+      a = polytope.at(i);
+      b = polytope.at((i + 1) % polytope.size());
+    }
+
+    if (polytope.size() < 15)
+    {
+      // Find search direction
+      auto searchDirection = closestPoint;
+
+      if (fabs(searchDirection.getX()) < 0.0001f && fabs(searchDirection.getY()) < 0.0001f)
+      {
+        auto AB = b - a;
+
+        searchDirection = {AB.getY(), AB.getX() * -1.0f, 0};
+
+        for (auto j : polytope)
+        {
+          if (searchDirection.dot(j) > 0)
+          {
+            searchDirection = searchDirection * -1;
+            break;
+          }
+        }
+      }
+
+      // Get & Insert new point
+      Vec3<float> testPoint = getSupport(this, otherCollider, searchDirection.normalized(), translation);
+
+      if (testPoint.dot(searchDirection) > 0)
+      {
+        polytope.insert(polytope.begin() + closestA + 1, testPoint);
+
+        if (polytope.size() == 3)
+        {
+          searchDirection *= -1;
+          testPoint = getSupport(this, otherCollider, searchDirection.normalized(), translation);
+
+          if (testPoint.dot(searchDirection) > 0)
+          {
+            polytope.insert(polytope.begin() + closestA, testPoint);
+          }
+        }
+
+        return EPA(polytope, other, translation);
+      }
     }
   }
 
-  // closest face
-  auto a = polytope[closestA];
-  auto b = polytope[(closestA + 1) % polytope.size()];
-
-  //v
-  auto v = getClosestPointOnLine(a, b, origin);
-
-  //w
-  auto o = Vec2<float>(0.0f, 0.0f);
-  auto w = getSupport(this, otherCollider, v, o);
-
-  // project w -> v
-  auto proj = v * (w.dot(v) / v.dot(v));
-
-  //
-  if (sqrtf(
-      (proj.getX() - v.getX()) * (proj.getX() - v.getX()) +
-      (proj.getY() - v.getY()) * (proj.getY() - v.getY())
-  ) > 0.0001f)
-  {
-    polytope.insert(polytope.begin() + closestA + 1, w);
-    return EPA(polytope, other);
-  }
-
-  return v;
+  return closestPoint;
 }
