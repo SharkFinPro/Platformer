@@ -2,6 +2,7 @@
 #include "../../GameObject.h"
 #include "../Transform.h"
 #include <cfloat>
+#include <iostream>
 
 Collider::Collider()
   : Component{ComponentType::collider}, transform{nullptr}
@@ -238,8 +239,9 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
       b = polytope.at((i + 1) % polytope.size());
     }
 
-    if (polytope.size() < 15)
+    if (polytope.size() < 150)
     {
+//      std::cout << polytope.size() << std::endl;
       // Find search direction
       auto searchDirection = closestPoint;
 
@@ -265,23 +267,52 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
 
       if (testPoint.dot(searchDirection) > 0)
       {
-        polytope.insert(polytope.begin() + closestA + 1, testPoint);
-
-        if (polytope.size() == 3)
-        {
-          searchDirection *= -1;
-          testPoint = getSupport(this, otherCollider, searchDirection.normalized(), translation);
-
-          if (testPoint.dot(searchDirection) > 0)
+        bool dupe = false;
+        for (auto v : polytope) {
+          if (v.getX() == testPoint.getX() && v.getY() == testPoint.getY())
           {
-            polytope.insert(polytope.begin() + closestA, testPoint);
+            dupe = true;
+            break;
           }
         }
 
-        return EPA(polytope, other, translation);
+        if (!dupe)
+        {
+          polytope.insert(polytope.begin() + closestA + 2, testPoint);
+
+          if (polytope.size() == 3)
+          {
+            searchDirection *= -1;
+            testPoint = getSupport(this, otherCollider, searchDirection.normalized(), translation);
+
+            if (testPoint.dot(searchDirection) > 0)
+            {
+              for (auto v : polytope) {
+                if (v.getX() == testPoint.getX() && v.getY() == testPoint.getY())
+                {
+                  dupe = true;
+                  break;
+                }
+              }
+
+              if (!dupe)
+              {
+                polytope.insert(polytope.begin() + closestA + 1, testPoint);
+              }
+            }
+          }
+
+          return EPA(polytope, other, translation);
+        }
       }
     }
   }
+
+  if (fabs(closestPoint.getX()) < 0.001f)
+    closestPoint.setX(0);
+
+  if (fabs(closestPoint.getY()) < 0.001f)
+    closestPoint.setY(0);
 
   return closestPoint;
 }
