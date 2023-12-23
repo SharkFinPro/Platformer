@@ -1,3 +1,4 @@
+#include <iostream>
 #include "GameObjectManager.h"
 #include "GameObject.h"
 #include "components/RigidBody.h"
@@ -81,6 +82,7 @@ void GameObjectManager::checkCollisions()
       continue;
 
     std::vector<std::pair<GameObject*, std::vector<Vec3<float>>>> collisions;
+    std::vector<GameObject*> cols;
     for (auto& object2 : objects)
     {
       if (object1 == object2)
@@ -97,6 +99,7 @@ void GameObjectManager::checkCollisions()
         continue;
 
       collisions.emplace_back(object2, polytope);
+      cols.push_back(object2);
     }
 
     if (!collisions.empty())
@@ -104,7 +107,15 @@ void GameObjectManager::checkCollisions()
       auto rb = dynamic_cast<RigidBody*>(object1->getComponent(ComponentType::rigidBody));
       if (rb)
       {
+        auto boxColl = dynamic_cast<BoxCollider*>(object1->getComponent(ComponentType::boxCollider));
+        auto pv = boxColl->getPenetrationVector(cols);
+
         auto penetrationVector = collider->getPenetrationVector(collisions);
+
+        if (pv.getX() != penetrationVector.getX() || pv.getY() != penetrationVector.getY())
+          std::cout << "-------------\nboxX: " << pv.getX() << ", boxY: " << pv.getY() << "\n" <<
+          "mtvX: " << penetrationVector.getX() << ", mtvY: " << penetrationVector.getY() << "\n";
+
         rb->handleCollision(penetrationVector);
       }
     }
