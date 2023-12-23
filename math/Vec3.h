@@ -16,6 +16,8 @@ public:
   T getY() const;
   T getZ() const;
 
+  Vec2<T> xy() const;
+
   void setX(T x);
   void setY(T y);
   void setZ(T z);
@@ -72,6 +74,12 @@ template<typename T>
 T Vec3<T>::getZ() const
 {
   return z;
+}
+
+template<typename T>
+Vec2<T> Vec3<T>::xy() const
+{
+  return { x, y };
 }
 
 template<typename T>

@@ -2,7 +2,6 @@
 #include "../../GameObject.h"
 #include "../Transform.h"
 #include <cfloat>
-#include <iostream>
 
 Collider::Collider()
   : Component{ComponentType::collider}, transform{nullptr}
@@ -48,7 +47,8 @@ bool Collider::collidesWith(GameObject* other, std::vector<Vec3<float>>& polytop
   return true;
 }
 
-Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, std::vector<Vec3<float>>>>& collisions) {
+Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, std::vector<Vec3<float>>>>& collisions)
+{
   Vec2<float> finalPenetrationVector = {0, 0};
   float xCollisions = 0;
   float yCollisions = 0;
@@ -57,71 +57,67 @@ Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, st
   {
     auto penetrationVector = EPA(collision.second, collision.first, {0, 0, 0});
 
+    finalPenetrationVector += penetrationVector.xy();
+
     if (penetrationVector.getX() != 0)
-    {
       xCollisions++;
-      finalPenetrationVector.setX(finalPenetrationVector.getX() + penetrationVector.getX());
-    }
 
     if (penetrationVector.getY() != 0)
-    {
       yCollisions++;
-      finalPenetrationVector.setY(finalPenetrationVector.getY() + penetrationVector.getY());
-    }
   }
 
   //
 
   // todo: theoretical collisions
-  if (finalPenetrationVector.getX() != 0 && finalPenetrationVector.getY() != 0)
-  {
-    if (std::fabs(finalPenetrationVector.getX()) > std::fabs(finalPenetrationVector.getY()))
-    {
-      auto theoreticalTransform = Vec3<float>{ finalPenetrationVector.getX(), 0.0f, 0.0f };
-
-      finalPenetrationVector.setY(0);
-
-      yCollisions = 0;
-      for (auto& collision : collisions)
-      {
-        std::vector<Vec3<float>> polytope;
-        collidesWith(collision.first, polytope, theoreticalTransform);
-
-        if (polytope.empty())
-          continue;
-
-        auto penetrationVector = EPA(polytope, collision.first, theoreticalTransform);
-
-        if (penetrationVector.getY() != 0)
-        {
-          yCollisions++;
-          finalPenetrationVector.setY(finalPenetrationVector.getY() + penetrationVector.getY());
-        }
-      }
-    }
-    else
-    {
-      auto theoreticalTransform = Vec3<float>{ 0.0f, finalPenetrationVector.getY(), 0.0f };
-
-      finalPenetrationVector.setX(0);
-
-      xCollisions = 0;
-      for (auto& collision : collisions) {
-        std::vector<Vec3<float>> polytope;
-        collidesWith(collision.first, polytope, theoreticalTransform);
-
-        if (polytope.empty())
-          continue;
-
-        auto penetrationVector = EPA(polytope, collision.first, theoreticalTransform);
-
-        if (penetrationVector.getX() != 0) {
-          xCollisions++;
-          finalPenetrationVector.setX(finalPenetrationVector.getX() + penetrationVector.getX());
-        }
-      }
-    }
-  }
+//  if (finalPenetrationVector.getX() != 0 && finalPenetrationVector.getY() != 0)
+//  {
+//    if (std::fabs(finalPenetrationVector.getX()) > std::fabs(finalPenetrationVector.getY()))
+//    {
+//      auto theoreticalTransform = Vec3<float>{ finalPenetrationVector.getX(), 0.0f, 0.0f };
+//
+//      finalPenetrationVector.setY(0);
+//
+//      yCollisions = 0;
+//      for (auto& collision : collisions)
+//      {
+//        std::vector<Vec3<float>> polytope;
+//        collidesWith(collision.first, polytope, theoreticalTransform);
+//
+//        if (polytope.empty())
+//          continue;
+//
+//        auto penetrationVector = EPA(polytope, collision.first, theoreticalTransform);
+//
+//        if (penetrationVector.getY() != 0)
+//        {
+//          yCollisions++;
+//          finalPenetrationVector.setY(finalPenetrationVector.getY() + penetrationVector.getY());
+//        }
+//      }
+//    }
+//    else
+//    {
+//      auto theoreticalTransform = Vec3<float>{ 0.0f, finalPenetrationVector.getY(), 0.0f };
+//
+//      finalPenetrationVector.setX(0);
+//
+//      xCollisions = 0;
+//      for (auto& collision : collisions) {
+//        std::vector<Vec3<float>> polytope;
+//        collidesWith(collision.first, polytope, theoreticalTransform);
+//
+//        if (polytope.empty())
+//          continue;
+//
+//        auto penetrationVector = EPA(polytope, collision.first, theoreticalTransform);
+//
+//        if (penetrationVector.getX() != 0) {
+//          xCollisions++;
+//          finalPenetrationVector.setX(finalPenetrationVector.getX() + penetrationVector.getX());
+//        }
+//      }
+//    }
+//  }
 
 
   if (xCollisions != 0)
@@ -218,17 +214,19 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
   Vec3<float> closestPoint, a, b;
   int closestA;
 
+  Vec3<float> testPoint;
+  Vec3<float> searchDirection;
+
   // Find closest point on polytope
   float minDist = FLT_MAX;
   for (int i = 0; i < polytope.size(); i++)
   {
     Vec3<float> closest = getClosestPointOnLine(polytope.at(i), polytope.at((i + 1) % polytope.size()), {0.0f, 0.0f, 0.0f});
 
-    float dist = sqrtf(
+    float dist =
       closest.getX() * closest.getX() +
       closest.getY() * closest.getY() +
-      closest.getZ() * closest.getZ()
-    );
+      closest.getZ() * closest.getZ();
 
     if (dist < minDist)
     {
@@ -239,11 +237,10 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
       b = polytope.at((i + 1) % polytope.size());
     }
 
-    if (polytope.size() < 150)
+    if (polytope.size() < 50)
     {
-//      std::cout << polytope.size() << std::endl;
       // Find search direction
-      auto searchDirection = closestPoint;
+      searchDirection = closestPoint;
 
       float threshold = 0.0001f;
       if (fabs(searchDirection.getX()) < threshold && fabs(searchDirection.getY()) < threshold)
@@ -263,7 +260,7 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
       }
 
       // Get & Insert new point
-      Vec3<float> testPoint = getSupport(this, otherCollider, searchDirection.normalized(), translation);
+      testPoint = getSupport(this, otherCollider, searchDirection.normalized(), translation);
 
       if (testPoint.dot(searchDirection) > 0)
       {
@@ -278,7 +275,7 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
 
         if (!dupe)
         {
-          polytope.insert(polytope.begin() + closestA + 2, testPoint);
+          polytope.insert(polytope.begin() + closestA + 1, testPoint);
 
           if (polytope.size() == 3)
           {
@@ -297,7 +294,7 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
 
               if (!dupe)
               {
-                polytope.insert(polytope.begin() + closestA + 1, testPoint);
+                polytope.insert(polytope.begin() + closestA, testPoint);
               }
             }
           }
@@ -308,10 +305,10 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
     }
   }
 
-  if (fabs(closestPoint.getX()) < 0.001f)
+  if (fabs(closestPoint.getX()) < 0.001f && closestPoint.getX() != 0)
     closestPoint.setX(0);
 
-  if (fabs(closestPoint.getY()) < 0.001f)
+  if (fabs(closestPoint.getY()) < 0.001f && closestPoint.getY() != 0)
     closestPoint.setY(0);
 
   return closestPoint;
