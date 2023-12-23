@@ -42,7 +42,8 @@ bool Collider::collidesWith(GameObject* other, std::vector<Vec3<float>>& polytop
 
   polytope.push_back(simplex.getA());
   polytope.push_back(simplex.getB());
-  polytope.push_back(simplex.getC());
+  if (polytope.size() == 3)
+    polytope.push_back(simplex.getC());
 
   return true;
 }
@@ -66,59 +67,55 @@ Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, st
       yCollisions++;
   }
 
-  //
+  if (finalPenetrationVector.getX() != 0 && finalPenetrationVector.getY() != 0)
+  {
+    if (std::fabs(finalPenetrationVector.getX()) > std::fabs(finalPenetrationVector.getY()))
+    {
+      auto theoreticalTransform = Vec3<float>{ -finalPenetrationVector.getX(), 0.0f, 0.0f };
 
-  // todo: theoretical collisions
-//  if (finalPenetrationVector.getX() != 0 && finalPenetrationVector.getY() != 0)
-//  {
-//    if (std::fabs(finalPenetrationVector.getX()) > std::fabs(finalPenetrationVector.getY()))
-//    {
-//      auto theoreticalTransform = Vec3<float>{ finalPenetrationVector.getX(), 0.0f, 0.0f };
-//
-//      finalPenetrationVector.setY(0);
-//
-//      yCollisions = 0;
-//      for (auto& collision : collisions)
-//      {
-//        std::vector<Vec3<float>> polytope;
-//        collidesWith(collision.first, polytope, theoreticalTransform);
-//
-//        if (polytope.empty())
-//          continue;
-//
-//        auto penetrationVector = EPA(polytope, collision.first, theoreticalTransform);
-//
-//        if (penetrationVector.getY() != 0)
-//        {
-//          yCollisions++;
-//          finalPenetrationVector.setY(finalPenetrationVector.getY() + penetrationVector.getY());
-//        }
-//      }
-//    }
-//    else
-//    {
-//      auto theoreticalTransform = Vec3<float>{ 0.0f, finalPenetrationVector.getY(), 0.0f };
-//
-//      finalPenetrationVector.setX(0);
-//
-//      xCollisions = 0;
-//      for (auto& collision : collisions) {
-//        std::vector<Vec3<float>> polytope;
-//        collidesWith(collision.first, polytope, theoreticalTransform);
-//
-//        if (polytope.empty())
-//          continue;
-//
-//        auto penetrationVector = EPA(polytope, collision.first, theoreticalTransform);
-//
-//        if (penetrationVector.getX() != 0) {
-//          xCollisions++;
-//          finalPenetrationVector.setX(finalPenetrationVector.getX() + penetrationVector.getX());
-//        }
-//      }
-//    }
-//  }
+      finalPenetrationVector.setY(0);
 
+      yCollisions = 0;
+      for (auto& collision : collisions)
+      {
+        std::vector<Vec3<float>> polytope;
+        collidesWith(collision.first, polytope, theoreticalTransform);
+
+        if (polytope.empty())
+          continue;
+
+        auto penetrationVector = EPA(polytope, collision.first, theoreticalTransform);
+
+        if (penetrationVector.getY() != 0)
+        {
+          yCollisions++;
+          finalPenetrationVector.setY(finalPenetrationVector.getY() + penetrationVector.getY());
+        }
+      }
+    }
+    else
+    {
+      auto theoreticalTransform = Vec3<float>{ 0.0f, -finalPenetrationVector.getY(), 0.0f };
+
+      finalPenetrationVector.setX(0);
+
+      xCollisions = 0;
+      for (auto& collision : collisions) {
+        std::vector<Vec3<float>> polytope;
+        collidesWith(collision.first, polytope, theoreticalTransform);
+
+        if (polytope.empty())
+          continue;
+
+        auto penetrationVector = EPA(polytope, collision.first, theoreticalTransform);
+
+        if (penetrationVector.getX() != 0) {
+          xCollisions++;
+          finalPenetrationVector.setX(finalPenetrationVector.getX() + penetrationVector.getX());
+        }
+      }
+    }
+  }
 
   if (xCollisions != 0)
     finalPenetrationVector.setX(finalPenetrationVector.getX() / xCollisions);
@@ -305,10 +302,10 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
     }
   }
 
-  if (fabs(closestPoint.getX()) < 0.001f && closestPoint.getX() != 0)
+  if (fabs(closestPoint.getX()) < 0.0001f && closestPoint.getX() != 0)
     closestPoint.setX(0);
 
-  if (fabs(closestPoint.getY()) < 0.001f && closestPoint.getY() != 0)
+  if (fabs(closestPoint.getY()) < 0.0001f && closestPoint.getY() != 0)
     closestPoint.setY(0);
 
   return closestPoint;
