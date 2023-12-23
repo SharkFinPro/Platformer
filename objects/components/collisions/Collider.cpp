@@ -2,6 +2,7 @@
 #include "../../GameObject.h"
 #include "../Transform.h"
 #include <cfloat>
+#include <iostream>
 
 Collider::Collider()
   : Component{ComponentType::collider}, transform{nullptr}
@@ -42,7 +43,7 @@ bool Collider::collidesWith(GameObject* other, std::vector<Vec3<float>>& polytop
 
   polytope.push_back(simplex.getA());
   polytope.push_back(simplex.getB());
-  if (polytope.size() == 3)
+  if (simplex.size() == 3)
     polytope.push_back(simplex.getC());
 
   return true;
@@ -207,6 +208,7 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
   if (!otherTransform || !otherCollider)
     return { 0.0f, 0.0f, 0.0f };
 
+  float threshold = 0.0001f;
 
   Vec3<float> closestPoint, a, b;
   int closestA;
@@ -225,87 +227,85 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
       closest.getY() * closest.getY() +
       closest.getZ() * closest.getZ();
 
-    if (dist < minDist)
-    {
+    if (dist < minDist) {
       minDist = dist;
       closestPoint = closest;
       closestA = i;
       a = polytope.at(i);
       b = polytope.at((i + 1) % polytope.size());
     }
+  }
 
-    if (polytope.size() < 50)
+  if (polytope.size() < 50)
+  {
+    // Find search direction
+    searchDirection = closestPoint;
+
+    if (fabs(searchDirection.getX()) < threshold && fabs(searchDirection.getY()) < threshold)
     {
-      // Find search direction
-      searchDirection = closestPoint;
+      auto AB = b - a;
 
-      float threshold = 0.0001f;
-      if (fabs(searchDirection.getX()) < threshold && fabs(searchDirection.getY()) < threshold)
+      searchDirection = {AB.getY(), AB.getX() * -1.0f, 0};
+
+      for (auto j : polytope)
       {
-        auto AB = b - a;
-
-        searchDirection = {AB.getY(), AB.getX() * -1.0f, 0};
-
-        for (auto j : polytope)
+        if (searchDirection.dot(j) > 0)
         {
-          if (searchDirection.dot(j) > 0)
-          {
-            searchDirection = searchDirection * -1;
-            break;
-          }
+          searchDirection = searchDirection * -1;
+          break;
+        }
+      }
+    }
+
+    // Get & Insert new point
+    testPoint = getSupport(this, otherCollider, searchDirection.normalized(), translation);
+
+    if (testPoint.dot(searchDirection) > 0)
+    {
+      bool dupe = false;
+      for (auto v : polytope) {
+        if (v.getX() == testPoint.getX() && v.getY() == testPoint.getY())
+        {
+          dupe = true;
+          break;
         }
       }
 
-      // Get & Insert new point
-      testPoint = getSupport(this, otherCollider, searchDirection.normalized(), translation);
-
-      if (testPoint.dot(searchDirection) > 0)
+      if (!dupe)
       {
-        bool dupe = false;
-        for (auto v : polytope) {
-          if (v.getX() == testPoint.getX() && v.getY() == testPoint.getY())
-          {
-            dupe = true;
-            break;
-          }
-        }
+        polytope.insert(polytope.begin() + closestA + 1, testPoint);
 
-        if (!dupe)
+        if (polytope.size() == 3)
         {
-          polytope.insert(polytope.begin() + closestA + 1, testPoint);
+          searchDirection *= -1;
+          testPoint = getSupport(this, otherCollider, searchDirection.normalized(), translation);
 
-          if (polytope.size() == 3)
+          if (testPoint.dot(searchDirection) > 0)
           {
-            searchDirection *= -1;
-            testPoint = getSupport(this, otherCollider, searchDirection.normalized(), translation);
-
-            if (testPoint.dot(searchDirection) > 0)
-            {
-              for (auto v : polytope) {
-                if (v.getX() == testPoint.getX() && v.getY() == testPoint.getY())
-                {
-                  dupe = true;
-                  break;
-                }
-              }
-
-              if (!dupe)
+            for (auto v : polytope) {
+              if (v.getX() == testPoint.getX() && v.getY() == testPoint.getY())
               {
-                polytope.insert(polytope.begin() + closestA, testPoint);
+                dupe = true;
+                break;
               }
             }
-          }
 
-          return EPA(polytope, other, translation);
+            if (!dupe)
+            {
+              polytope.insert(polytope.begin() + closestA, testPoint);
+            }
+          }
         }
+
+        return EPA(polytope, other, translation);
       }
     }
   }
 
-  if (fabs(closestPoint.getX()) < 0.0001f && closestPoint.getX() != 0)
+  if (fabs(closestPoint.getX()) < threshold && closestPoint.getX() != 0)
     closestPoint.setX(0);
 
-  if (fabs(closestPoint.getY()) < 0.0001f && closestPoint.getY() != 0)
+  if (fabs(closestPoint.getY()) < threshold && closestPoint.getY() != 0)
     closestPoint.setY(0);
 
   return closestPoint;
