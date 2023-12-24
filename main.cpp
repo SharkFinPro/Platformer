@@ -8,8 +8,6 @@
 #include "objects/components/collisions/MeshCollider.h"
 #include <chrono>
 
-constexpr auto FULLSCREEN = false;
-
 std::vector<Vec2<float>> createQuadMesh(float width, float height)
 {
   auto mesh = std::vector<Vec2<float>>{};
@@ -76,11 +74,7 @@ int main()
 
 
   // Create the window
-  sf::ContextSettings settings;
-  settings.majorVersion = 4;
-  settings.minorVersion = 6;
-  settings.antialiasingLevel = 16;
-  sf::RenderWindow window(sf::VideoMode{1920, 1080}, "Platformer", FULLSCREEN ? sf::Style::Fullscreen : sf::Style::None, settings);
+  sf::RenderWindow window(sf::VideoMode{1920, 1080}, "Platformer", sf::Style::None);
   window.setMouseCursorVisible(false);
   gameObjectManager.setWindow(&window);
 
