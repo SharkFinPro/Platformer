@@ -1,13 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include "objects/GameObjectManager.h"
 #include "objects/GameObject.h"
-#include "objects/components/BoxCollider.h"
 #include "objects/components/RigidBody.h"
 #include "objects/components/Player.h"
 #include "objects/components/Transform.h"
 #include "objects/components/SpriteRenderer.h"
+#include "objects/components/collisions/MeshCollider.h"
 #include <chrono>
-#include "objects/components/MeshCollider.h"
 
 constexpr auto FULLSCREEN = false;
 
@@ -26,9 +25,8 @@ GameObject* createPlayer(float x, float y, float width, float height, PlayerCont
 {
   auto player = new GameObject;
   player->addComponent(new Transform{x, y, createQuadMesh(width, height)});
-  player->addComponent(new BoxCollider);
   player->addComponent(new RigidBody);
-  player->addComponent(new Player(controlType));
+  player->addComponent(new Player{controlType});
   player->addComponent(new SpriteRenderer{color});
   player->addComponent(new MeshCollider);
 
@@ -40,7 +38,7 @@ GameObject* createBlock(float x, float y, float width, float height, sf::Color c
   auto obj = new GameObject;
 
   obj->addComponent(new Transform{x, y, createQuadMesh(width, height)});
-  obj->addComponent(new BoxCollider);
+  obj->addComponent(new MeshCollider);
   obj->addComponent(new SpriteRenderer{color});
 
   return obj;
@@ -51,7 +49,7 @@ GameObject* createRigidBlock(float x, float y, float width, float height, sf::Co
   auto obj = new GameObject;
 
   obj->addComponent(new Transform{x, y, createQuadMesh(width, height)});
-  obj->addComponent(new BoxCollider);
+  obj->addComponent(new MeshCollider);
   obj->addComponent(new RigidBody);
   obj->addComponent(new SpriteRenderer{color});
 
@@ -64,9 +62,10 @@ int main()
   GameObjectManager gameObjectManager;
 
   gameObjectManager.addObject(createPlayer(200, 200, 50, 50, PlayerControlType::WASD, sf::Color{42, 139, 200}));
-  gameObjectManager.addObject(createRigidBlock(300, 200, 50, 50, sf::Color{240, 139, 100}));
-
+  gameObjectManager.addObject(createPlayer(400, 400, 50, 50, PlayerControlType::ARROW, sf::Color{175, 75, 150}));
   gameObjectManager.addObject(createBlock(0, 1030, 1920, 50));
+
+  gameObjectManager.addObject(createRigidBlock(300, 200, 50, 50, sf::Color{240, 139, 100}));
   gameObjectManager.addObject(createBlock(800, 980, 250, 50));
 
   for (int i = 0; i < 9; i++)
@@ -75,7 +74,6 @@ int main()
   for (int i = 0; i < 30; i++)
     gameObjectManager.addObject(createBlock(100, static_cast<float>(i) * 50.0f + 75.0f, 50, 50));
 
-  gameObjectManager.addObject(createPlayer(400, 400, 50, 50, PlayerControlType::ARROW, sf::Color{175, 75, 150}));
 
   // Create the window
   sf::ContextSettings settings;
@@ -102,7 +100,7 @@ int main()
 
     // Delta Time
     std::chrono::steady_clock::time_point current = std::chrono::steady_clock::now();
-    float dt = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(current - previous).count()) / 100000.0f;
+    float dt = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(current - previous).count()) / 1000000.0f;
     previous = current;
 
     // clear the window with black color

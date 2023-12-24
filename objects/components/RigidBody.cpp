@@ -3,35 +3,38 @@
 #include "Transform.h"
 
 RigidBody::RigidBody()
-  : Component{ComponentType::rigidBody}, velocity{0, 0}, doGravity{true}, gravity{0.4f}, falling{true}, transform{nullptr}
+  : Component{ComponentType::rigidBody}, velocity{0, 0}, doGravity{true}, gravity{0.0f, 9.81f}, falling{true}, transform{nullptr}
 {}
 
 void RigidBody::fixedUpdate(float dt)
 {
   if (!transform)
+  {
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
-  if (!transform)
-    return;
+    if (!transform)
+      return;
+  }
+
 
   falling = true;
 
   if (doGravity)
-    velocity.setY(velocity.getY() + gravity);
+    applyForce(gravity);
 
   limitMovement();
 
   transform->move({velocity.getX() * dt, velocity.getY() * dt});
 }
 
-void RigidBody::applyForce(Vec2<float> force)
+void RigidBody::applyForce(const Vec2<float>& force)
 {
-  velocity = velocity + force;
+  velocity += force;
 }
 
 void RigidBody::limitMovement()
 {
-  velocity.setX(velocity.getX() / 1.4f);
+  applyForce({-velocity.getX() * 0.2f, 0});
 }
 
 bool RigidBody::isFalling() const
@@ -42,16 +45,19 @@ bool RigidBody::isFalling() const
 void RigidBody::handleCollision(Vec2<float> penetrationVector)
 {
   if (!transform)
+  {
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
-  if (!transform)
-    return;
+    if (!transform)
+      return;
+  }
+
 
   if (penetrationVector.getX() != 0)
     handleXCollision();
 
   if (penetrationVector.getY() != 0)
-    handleYCollision();
+    handleYCollision(penetrationVector.getY());
 
   transform->move({-penetrationVector.getX(), -penetrationVector.getY()});
 }
@@ -61,9 +67,9 @@ void RigidBody::handleXCollision()
   velocity.setX(0);
 }
 
-void RigidBody::handleYCollision()
+void RigidBody::handleYCollision(float penetration)
 {
-  if (velocity.getY() > 0)
+  if (penetration > 0)
     falling = false;
 
   velocity.setY(0);

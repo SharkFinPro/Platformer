@@ -1,12 +1,11 @@
 #include "GameObjectManager.h"
 #include "GameObject.h"
-#include "components/BoxCollider.h"
 #include "components/RigidBody.h"
 #include "components/Transform.h"
-#include "components/MeshCollider.h"
+#include "components/collisions/MeshCollider.h"
 
 GameObjectManager::GameObjectManager()
-  : window{nullptr}, fixedUpdateDt{1.0f / 60.0f}, timeAccumulator{0.0f}, ticks{0}
+  : window{nullptr}, fixedUpdateDt{1.0f / 50.0f}, timeAccumulator{0.0f}, ticks{0}
 {}
 
 GameObjectManager::~GameObjectManager()
@@ -49,7 +48,6 @@ sf::RenderWindow* GameObjectManager::getWindow() const
   return window;
 }
 
-
 void GameObjectManager::variableUpdate(float dt)
 {
   for (auto& object : objects)
@@ -76,47 +74,38 @@ void GameObjectManager::checkCollisions()
 {
   for (auto& object1 : objects)
   {
-    auto collider = dynamic_cast<BoxCollider*>(object1->getComponent(ComponentType::boxCollider));
+    auto collider = dynamic_cast<Collider*>(object1->getComponent(ComponentType::collider));
     if (!collider)
       continue;
 
-    auto rb = dynamic_cast<RigidBody*>(object1->getComponent(ComponentType::rigidBody));
-    if (!rb)
-      continue;
-
-    auto meshCollider = dynamic_cast<Collider*>(object1->getComponent(ComponentType::collider));
-
-    std::vector<GameObject*> collisions;
+    std::vector<std::pair<GameObject*, std::vector<Vec3<float>>>> collisions;
     for (auto& object2 : objects)
     {
       if (object1 == object2)
         continue;
 
-      if (!dynamic_cast<BoxCollider*>(object2->getComponent(ComponentType::boxCollider)))
+      if (!object2->getComponent(ComponentType::collider))
         continue;
 
-      auto otherTransform = dynamic_cast<Transform*>(object2->getComponent(ComponentType::transform));
-      if (!otherTransform)
+      if (!object2->getComponent(ComponentType::transform))
         continue;
 
-      auto otherMeshCollider = dynamic_cast<Collider*>(object2->getComponent(ComponentType::collider));
-
-      if (meshCollider && otherMeshCollider)
-      {
-        bool collides = meshCollider->collidesWith(object2);
-      }
-
-      if (!collider->collidesWith(BoxCollider::getBoundingRectangle(otherTransform->getMesh())))
+      std::vector<Vec3<float>> polytope;
+      if (!collider->collidesWith(object2, polytope))
         continue;
 
-      collisions.push_back(object2);
+      collisions.emplace_back(object2, polytope);
     }
 
     if (!collisions.empty())
     {
-      auto penetrationVector = collider->getPenetrationVector(collisions);
+      auto rb = dynamic_cast<RigidBody*>(object1->getComponent(ComponentType::rigidBody));
+      if (rb)
+      {
+        auto penetrationVector = collider->getPenetrationVector(collisions);
 
-      rb->handleCollision(penetrationVector);
+        rb->handleCollision(penetrationVector);
+      }
     }
   }
 }

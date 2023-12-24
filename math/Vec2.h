@@ -7,6 +7,7 @@ template<typename T>
 class Vec2
 {
 public:
+  Vec2();
   Vec2(T x, T y);
 
   T getX() const;
@@ -19,14 +20,23 @@ public:
 
   T length() const;
 
-  Vec2<T> operator+(Vec2<T> const& other);
-  Vec2<T> operator-(Vec2<T> const& other);
-  Vec2<T> operator*(float scalar);
+  Vec2<T> operator+(Vec2<T> const& other) const;
+  Vec2<T> operator-(Vec2<T> const& other) const;
+  Vec2<T> operator*(float scalar) const;
+
+  Vec2<T> operator+=(Vec2<T> const& other);
+  Vec2<T> operator-=(Vec2<T> const& other);
+  Vec2<T> operator*=(float scalar);
 
 private:
   T x;
   T y;
 };
+
+template<typename T>
+Vec2<T>::Vec2()
+  : x{0}, y{0}
+{}
 
 template<typename T>
 Vec2<T>::Vec2(T x, T y)
@@ -70,21 +80,51 @@ T Vec2<T>::length() const
 }
 
 template<typename T>
-Vec2<T> Vec2<T>::operator+(const Vec2<T> &other)
-  {
+Vec2<T> Vec2<T>::operator+(const Vec2<T> &other) const
+{
   return { x + other.x, y + other.y };
 }
 
 template<typename T>
-Vec2<T> Vec2<T>::operator-(const Vec2<T> &other)
-  {
+Vec2<T> Vec2<T>::operator-(const Vec2<T> &other) const
+{
   return { x - other.x, y - other.y };
 }
 
 template<typename T>
-Vec2<T> Vec2<T>::operator*(const float scalar)
-  {
+Vec2<T> Vec2<T>::operator*(const float scalar) const
+{
   return { x * scalar, y * scalar };
+}
+
+template<typename T>
+Vec2<T> Vec2<T>::operator+=(const Vec2<T>& other)
+{
+  auto newVector = *this + other;
+  x = newVector.x;
+  y = newVector.y;
+
+  return *this;
+}
+
+template<typename T>
+Vec2<T> Vec2<T>::operator-=(const Vec2<T>& other)
+{
+  auto newVector = *this - other;
+  x = newVector.x;
+  y = newVector.y;
+
+  return *this;
+}
+
+template<typename T>
+Vec2<T> Vec2<T>::operator*=(float scalar)
+{
+  auto newVector = *this * scalar;
+  x = newVector.x;
+  y = newVector.y;
+
+  return *this;
 }
 
 #endif //PLATFORMER_VEC2_H
