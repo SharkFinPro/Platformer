@@ -11,10 +11,10 @@ public:
   explicit Component(ComponentType type);
   virtual ~Component() = default;
 
-  ComponentType getType() const;
+  [[nodiscard]] ComponentType getType() const;
 
   void setOwner(Object* componentOwner);
-  Object* getOwner() const;
+  [[nodiscard]] Object* getOwner() const;
 
   virtual void update(float dt);
   virtual void fixedUpdate(float dt);

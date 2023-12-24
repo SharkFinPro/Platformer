@@ -15,7 +15,7 @@ public:
 
   void applyForce(const Vec2<float>& force);
 
-  bool isFalling() const;
+  [[nodiscard]] bool isFalling() const;
 
   void handleCollision(Vec2<float> minimumTranslationVector);
 

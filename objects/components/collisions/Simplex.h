@@ -8,7 +8,7 @@ class Simplex
 public:
   Simplex();
 
-  size_t size() const;
+  [[nodiscard]] size_t size() const;
 
   const Vec3<float>& getA();
   const Vec3<float>& getB();
