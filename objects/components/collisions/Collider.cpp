@@ -51,6 +51,9 @@ bool Collider::collidesWith(Object* other, std::vector<Vec3<float>>& polytope, V
 
 Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<Object*, std::vector<Vec3<float>>>>& collisions)
 {
+  if (collisions.size() == 1)
+    return EPA(collisions.at(0).second, collisions.at(0).first, {0, 0, 0}).xy();
+
   Vec2<float> finalPenetrationVector = {0, 0};
   float xCollisions = 0;
   float yCollisions = 0;
