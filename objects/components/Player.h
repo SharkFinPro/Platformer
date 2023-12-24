@@ -4,7 +4,7 @@
 #include "Component.h"
 #include "../../math/Vec2.h"
 
-class GameObject;
+class Object;
 class Transform;
 class RigidBody;
 

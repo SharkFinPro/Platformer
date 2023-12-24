@@ -1,5 +1,5 @@
 #include "Collider.h"
-#include "../../GameObject.h"
+#include "../../Object.h"
 #include "../Transform.h"
 #include <cfloat>
 #include <iostream>
@@ -8,7 +8,7 @@ Collider::Collider()
   : Component{ComponentType::collider}, transform{nullptr}
 {}
 
-bool Collider::collidesWith(GameObject* other, std::vector<Vec3<float>>& polytope, Vec3<float> translation)
+bool Collider::collidesWith(Object* other, std::vector<Vec3<float>>& polytope, Vec3<float> translation)
 {
   if (!transform)
   {
@@ -49,7 +49,7 @@ bool Collider::collidesWith(GameObject* other, std::vector<Vec3<float>>& polytop
   return true;
 }
 
-Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, std::vector<Vec3<float>>>>& collisions)
+Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<Object*, std::vector<Vec3<float>>>>& collisions)
 {
   Vec2<float> finalPenetrationVector = {0, 0};
   float xCollisions = 0;
@@ -194,7 +194,7 @@ Vec3<float> Collider::getClosestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<f
   return a + (AB * dp);
 }
 
-Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other, Vec3<float> translation)
+Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, Object* other, Vec3<float> translation)
 {
   if (!transform)
   {

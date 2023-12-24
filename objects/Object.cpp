@@ -1,7 +1,7 @@
-#include "GameObject.h"
+#include "Object.h"
 #include "components/Component.h"
 
-GameObject::~GameObject()
+Object::~Object()
 {
   for (auto [componentType, component] : components)
   {
@@ -10,25 +10,25 @@ GameObject::~GameObject()
   }
 }
 
-void GameObject::update(float dt)
+void Object::update(float dt)
 {
   for (auto [componentType, component] : components)
     component->update(dt);
 }
 
-void GameObject::fixedUpdate(float dt)
+void Object::fixedUpdate(float dt)
 {
   for (auto [componentType, component] : components)
     component->fixedUpdate(dt);
 }
 
-void GameObject::addComponent(Component* component)
+void Object::addComponent(Component* component)
 {
   component->setOwner(this);
   components.insert({ component->getType(), component });
 }
 
-Component* GameObject::getComponent(const ComponentType type) const
+Component* Object::getComponent(const ComponentType type) const
 {
   for (auto [componentType, component] : components)
     if (componentType == type)
@@ -37,12 +37,12 @@ Component* GameObject::getComponent(const ComponentType type) const
   return nullptr;
 }
 
-void GameObject::setOwner(GameObjectManager* objectOwner)
+void Object::setOwner(ObjectManager* objectOwner)
 {
   owner = objectOwner;
 }
 
-GameObjectManager* GameObject::getOwner() const
+ObjectManager* Object::getOwner() const
 {
   return owner;
 }

@@ -1,5 +1,5 @@
 #include "MeshCollider.h"
-#include "../../GameObject.h"
+#include "../../Object.h"
 #include "../Transform.h"
 #include <cfloat>
 

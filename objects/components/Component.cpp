@@ -1,5 +1,5 @@
 #include "Component.h"
-#include "../GameObject.h"
+#include "../Object.h"
 
 Component::Component(ComponentType type)
   : type{type}, owner{nullptr}
@@ -10,12 +10,12 @@ ComponentType Component::getType() const
   return type;
 }
 
-void Component::setOwner(GameObject* componentOwner)
+void Component::setOwner(Object* componentOwner)
 {
   owner = componentOwner;
 }
 
-GameObject* Component::getOwner() const
+Object* Component::getOwner() const
 {
   return owner;
 }

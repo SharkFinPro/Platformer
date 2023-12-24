@@ -1,7 +1,7 @@
 #include "SpriteRenderer.h"
 #include "Transform.h"
-#include "../GameObject.h"
-#include "../GameObjectManager.h"
+#include "../Object.h"
+#include "../ObjectManager.h"
 
 SpriteRenderer::SpriteRenderer(sf::Color color)
   : Component{ComponentType::spriteRenderer}, color{color}, transform{nullptr}

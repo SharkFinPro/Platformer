@@ -1,32 +1,32 @@
-#include "GameObjectManager.h"
-#include "GameObject.h"
+#include "ObjectManager.h"
+#include "Object.h"
 #include "components/RigidBody.h"
 #include "components/Transform.h"
 #include "components/collisions/MeshCollider.h"
 
-GameObjectManager::GameObjectManager()
+ObjectManager::ObjectManager()
   : window{nullptr}, fixedUpdateDt{1.0f / 50.0f}, timeAccumulator{0.0f}, ticks{0}
 {}
 
-GameObjectManager::~GameObjectManager()
+ObjectManager::~ObjectManager()
 {
   for (auto& object : objects)
     delete object;
 }
 
-void GameObjectManager::update(float dt)
+void ObjectManager::update(float dt)
 {
   fixedUpdate(dt);
   variableUpdate(dt);
 }
 
-void GameObjectManager::addObject(GameObject* object)
+void ObjectManager::addObject(Object* object)
 {
   object->setOwner(this);
   objects.push_back(object);
 }
 
-void GameObjectManager::removeObject(GameObject* object)
+void ObjectManager::removeObject(Object* object)
 {
   for (int i = 0; i < static_cast<int>(objects.size()); i++)
     if (objects[i] == object)
@@ -38,23 +38,23 @@ void GameObjectManager::removeObject(GameObject* object)
     }
 }
 
-void GameObjectManager::setWindow(sf::RenderWindow* window)
+void ObjectManager::setWindow(sf::RenderWindow* window)
 {
   this->window = window;
 }
 
-sf::RenderWindow* GameObjectManager::getWindow() const
+sf::RenderWindow* ObjectManager::getWindow() const
 {
   return window;
 }
 
-void GameObjectManager::variableUpdate(float dt)
+void ObjectManager::variableUpdate(float dt)
 {
   for (auto& object : objects)
     object->update(dt);
 }
 
-void GameObjectManager::fixedUpdate(float dt)
+void ObjectManager::fixedUpdate(float dt)
 {
   timeAccumulator += dt;
 
@@ -70,7 +70,7 @@ void GameObjectManager::fixedUpdate(float dt)
   }
 }
 
-void GameObjectManager::checkCollisions()
+void ObjectManager::checkCollisions()
 {
   for (auto& object1 : objects)
   {
@@ -78,7 +78,7 @@ void GameObjectManager::checkCollisions()
     if (!collider)
       continue;
 
-    std::vector<std::pair<GameObject*, std::vector<Vec3<float>>>> collisions;
+    std::vector<std::pair<Object*, std::vector<Vec3<float>>>> collisions;
     for (auto& object2 : objects)
     {
       if (object1 == object2)
