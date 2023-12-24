@@ -68,7 +68,7 @@ int main()
   objectManager.addObject(createBlock(900, 1005, 250, 50));
 
   for (int i = 0; i < 9; i++)
-    objectManager.addObject(createBlock(static_cast<float>(i) * 50.0f + 75.0f, 900, 50, 50));
+    objectManager.addObject(createBlock(static_cast<float>(i) * 50.0f + 75.0f, 925, 50, 50));
 
   for (int i = 0; i < 30; i++)
     objectManager.addObject(createBlock(100, static_cast<float>(i) * 50.0f + 75.0f, 50, 50));
