@@ -185,7 +185,8 @@ bool Collider::triangle(Simplex& simplex, Vec3<float>& direction)
   return true;
 }
 
-Vec3<float> Collider::getClosestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<float> c) {
+Vec3<float> Collider::getClosestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<float> c)
+{
   auto AB = b - a;
 
   auto dp = (c - a).dot(AB) / AB.dot(AB);
@@ -198,20 +199,20 @@ Vec3<float> Collider::getClosestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<f
   return a + (AB * dp);
 }
 
-Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other, Vec3<float> translation) {
-  // Todo: throw errors
+Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other, Vec3<float> translation)
+{
   if (!transform)
   {
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
     if (!transform)
-      return { 0.0f, 0.0f, 0.0f };
+      throw std::runtime_error("Collider::EPA::Missing Transform");
   }
 
   auto otherTransform = dynamic_cast<Transform*>(other->getComponent(ComponentType::transform));
   auto otherCollider = dynamic_cast<Collider*>(other->getComponent(ComponentType::collider));
   if (!otherTransform || !otherCollider)
-    return { 0.0f, 0.0f, 0.0f };
+    throw std::runtime_error("Collider::EPA::Missing Transform/Collider");
 
   float threshold = 0.0001f;
 
@@ -246,8 +247,6 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
     // Find search direction
     searchDirection = closestPoint * 100000.0f;
 
-//    if (searchDirection.getX() < threshold && searchDirection.getY() < threshold)
-//    if (searchDirection.getX() == 0 || searchDirection.getY() == 0)
     if ((a.getX() == 0 && b.getX() == 0) || (a.getY() == 0 && b.getY() == 0))
     {
       auto AB = b - a;
@@ -274,7 +273,7 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
       }
     }
 
-    // Get & Insert new point
+    // Find and insert new point
     testPoint = getSupport(this, otherCollider, searchDirection.normalized(), translation);
 
     if (testPoint.dot(searchDirection) > 0)
