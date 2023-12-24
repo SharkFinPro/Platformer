@@ -212,7 +212,7 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, Object* other, Vec
   if (!otherTransform || !otherCollider)
     throw std::runtime_error("Collider::EPA::Missing Transform/Collider");
 
-  float threshold = 0.0001f;
+  float threshold = 0.01f;
 
   Vec3<float> closestPoint, a, b;
   unsigned int closestA = 0;
