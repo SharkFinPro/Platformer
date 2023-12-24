@@ -57,12 +57,7 @@ Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, st
 
   for (auto& collision : collisions)
   {
-    std::vector<Vec3<float>> cols;
-    for (auto col : collision.second)
-      cols.push_back(col);
-
-//    auto penetrationVector = EPA(collision.second, collision.first, {0, 0, 0});
-    auto penetrationVector = EPA(cols, collision.first, {0, 0, 0});
+    auto penetrationVector = EPA(collision.second, collision.first, {0, 0, 0});
 
     finalPenetrationVector += penetrationVector.xy();
 
