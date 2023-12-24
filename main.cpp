@@ -6,7 +6,6 @@
 #include "objects/components/Transform.h"
 #include "objects/components/SpriteRenderer.h"
 #include "objects/components/collisions/MeshCollider.h"
-#include "objects/components/collisions/BoxCollider.h"
 #include <chrono>
 
 constexpr auto FULLSCREEN = false;
@@ -30,7 +29,6 @@ GameObject* createPlayer(float x, float y, float width, float height, PlayerCont
   player->addComponent(new Player{controlType});
   player->addComponent(new SpriteRenderer{color});
   player->addComponent(new MeshCollider);
-  player->addComponent(new BoxCollider);
 
   return player;
 }
@@ -41,7 +39,6 @@ GameObject* createBlock(float x, float y, float width, float height, sf::Color c
 
   obj->addComponent(new Transform{x, y, createQuadMesh(width, height)});
   obj->addComponent(new MeshCollider);
-  obj->addComponent(new BoxCollider);
   obj->addComponent(new SpriteRenderer{color});
 
   return obj;
@@ -53,7 +50,6 @@ GameObject* createRigidBlock(float x, float y, float width, float height, sf::Co
 
   obj->addComponent(new Transform{x, y, createQuadMesh(width, height)});
   obj->addComponent(new MeshCollider);
-  obj->addComponent(new BoxCollider);
   obj->addComponent(new RigidBody);
   obj->addComponent(new SpriteRenderer{color});
 
