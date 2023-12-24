@@ -42,7 +42,7 @@ bool RigidBody::isFalling() const
   return falling;
 }
 
-void RigidBody::handleCollision(Vec2<float> penetrationVector)
+void RigidBody::handleCollision(Vec2<float> minimumTranslationVector)
 {
   if (!transform)
   {
@@ -52,14 +52,13 @@ void RigidBody::handleCollision(Vec2<float> penetrationVector)
       return;
   }
 
-
-  if (penetrationVector.getX() != 0)
+  if (minimumTranslationVector.getX() != 0)
     handleXCollision();
 
-  if (penetrationVector.getY() != 0)
-    handleYCollision(penetrationVector.getY());
+  if (minimumTranslationVector.getY() != 0)
+    handleYCollision(minimumTranslationVector.getY());
 
-  transform->move({-penetrationVector.getX(), -penetrationVector.getY()});
+  transform->move(minimumTranslationVector);
 }
 
 void RigidBody::handleXCollision()
@@ -67,9 +66,9 @@ void RigidBody::handleXCollision()
   velocity.setX(0);
 }
 
-void RigidBody::handleYCollision(float penetration)
+void RigidBody::handleYCollision(float minimumTranslationVector)
 {
-  if (penetration > 0)
+  if (minimumTranslationVector < 0)
     falling = false;
 
   velocity.setY(0);

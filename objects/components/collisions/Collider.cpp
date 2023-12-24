@@ -52,7 +52,7 @@ bool Collider::collidesWith(Object* other, std::vector<Vec3<float>>& polytope, V
 Vec2<float> Collider::minimumTranslationVector(std::vector<std::pair<Object*, std::vector<Vec3<float>>>>& collisions)
 {
   if (collisions.size() == 1)
-    return EPA(collisions.at(0).second, collisions.at(0).first, {0, 0, 0}).xy();
+    return EPA(collisions.at(0).second, collisions.at(0).first, {0, 0, 0}).xy() * -1.0f;
 
   Vec2<float> finalMinimumTranslationVector = {0, 0};
   float xCollisions = 0;
@@ -127,7 +127,7 @@ Vec2<float> Collider::minimumTranslationVector(std::vector<std::pair<Object*, st
   if (yCollisions != 0)
     finalMinimumTranslationVector.setY(finalMinimumTranslationVector.getY() / yCollisions);
 
-  return finalMinimumTranslationVector;
+  return finalMinimumTranslationVector * -1.0f;
 }
 
 Vec3<float> Collider::getSupport(Collider* a, Collider* b, Vec3<float> direction, Vec3<float> translation)

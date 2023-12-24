@@ -17,7 +17,7 @@ public:
 
   bool isFalling() const;
 
-  void handleCollision(Vec2<float> penetrationVector);
+  void handleCollision(Vec2<float> minimumTranslationVector);
 
 private:
   Vec2<float> velocity;
@@ -32,7 +32,7 @@ private:
   void limitMovement();
 
   void handleXCollision();
-  void handleYCollision(float penetration);
+  void handleYCollision(float minimumTranslationVector);
 };
 
 
