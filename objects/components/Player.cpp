@@ -23,7 +23,6 @@ void Player::fixedUpdate([[maybe_unused]] float dt)
       return;
   }
 
-
   if (transform->getPosition().getY() > 2000)
     transform->reset();
 

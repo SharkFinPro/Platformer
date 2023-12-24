@@ -101,11 +101,7 @@ void ObjectManager::checkCollisions()
     {
       auto rb = dynamic_cast<RigidBody*>(object1->getComponent(ComponentType::rigidBody));
       if (rb)
-      {
-        auto penetrationVector = collider->getPenetrationVector(collisions);
-
-        rb->handleCollision(penetrationVector);
-      }
+        rb->handleCollision(collider->minimumTranslationVector(collisions));
     }
   }
 }

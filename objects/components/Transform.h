@@ -12,11 +12,11 @@ public:
 
   void fixedUpdate(float dt) override;
 
-  Vec2<float> getPosition() const;
+  [[nodiscard]] Vec2<float> getPosition() const;
 
   void move(Vec2<float> vector);
 
-  std::vector<Vec2<float>> getMesh() const;
+  [[nodiscard]] std::vector<Vec2<float>> getMesh() const;
 
   void reset();
 

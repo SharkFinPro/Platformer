@@ -17,7 +17,7 @@ public:
 
   bool collidesWith(Object* other, std::vector<Vec3<float>>& polytope, Vec3<float> translation = {0, 0, 0});
 
-  Vec2<float> getPenetrationVector(std::vector<std::pair<Object*, std::vector<Vec3<float>>>>& collisions);
+  Vec2<float> minimumTranslationVector(std::vector<std::pair<Object*, std::vector<Vec3<float>>>>& collisions);
 
 protected:
 

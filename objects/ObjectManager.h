@@ -17,7 +17,7 @@ public:
   void removeObject(Object* object);
 
   void setWindow(sf::RenderWindow* window);
-  sf::RenderWindow* getWindow() const;
+  [[nodiscard]] sf::RenderWindow* getWindow() const;
 
 private:
   std::vector<Object*> objects;

@@ -49,35 +49,35 @@ bool Collider::collidesWith(Object* other, std::vector<Vec3<float>>& polytope, V
   return true;
 }
 
-Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<Object*, std::vector<Vec3<float>>>>& collisions)
+Vec2<float> Collider::minimumTranslationVector(std::vector<std::pair<Object*, std::vector<Vec3<float>>>>& collisions)
 {
   if (collisions.size() == 1)
-    return EPA(collisions.at(0).second, collisions.at(0).first, {0, 0, 0}).xy();
+    return EPA(collisions.at(0).second, collisions.at(0).first, {0, 0, 0}).xy() * -1.0f;
 
-  Vec2<float> finalPenetrationVector = {0, 0};
+  Vec2<float> finalMinimumTranslationVector = {0, 0};
   float xCollisions = 0;
   float yCollisions = 0;
 
   for (auto& collision : collisions)
   {
-    auto penetrationVector = EPA(collision.second, collision.first, {0, 0, 0});
+    auto minimumTranslationVector = EPA(collision.second, collision.first, {0, 0, 0});
 
-    finalPenetrationVector += penetrationVector.xy();
+    finalMinimumTranslationVector += minimumTranslationVector.xy();
 
-    if (penetrationVector.getX() != 0)
+    if (minimumTranslationVector.getX() != 0)
       xCollisions++;
 
-    if (penetrationVector.getY() != 0)
+    if (minimumTranslationVector.getY() != 0)
       yCollisions++;
   }
 
-  if (finalPenetrationVector.getX() != 0 && finalPenetrationVector.getY() != 0)
+  if (finalMinimumTranslationVector.getX() != 0 && finalMinimumTranslationVector.getY() != 0)
   {
-    if (std::fabs(finalPenetrationVector.getX()) > std::fabs(finalPenetrationVector.getY()))
+    if (std::fabs(finalMinimumTranslationVector.getX()) > std::fabs(finalMinimumTranslationVector.getY()))
     {
-      auto theoreticalTransform = Vec3<float>{ -finalPenetrationVector.getX(), 0.0f, 0.0f };
+      auto theoreticalTransform = Vec3<float>{ -finalMinimumTranslationVector.getX(), 0.0f, 0.0f };
 
-      finalPenetrationVector.setY(0);
+      finalMinimumTranslationVector.setY(0);
 
       yCollisions = 0;
       for (auto& collision : collisions)
@@ -88,20 +88,20 @@ Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<Object*, std::v
         if (polytope.empty())
           continue;
 
-        auto penetrationVector = EPA(polytope, collision.first, theoreticalTransform);
+        auto minimumTranslationVector = EPA(polytope, collision.first, theoreticalTransform);
 
-        if (penetrationVector.getY() != 0)
+        if (minimumTranslationVector.getY() != 0)
         {
           yCollisions++;
-          finalPenetrationVector.setY(finalPenetrationVector.getY() + penetrationVector.getY());
+          finalMinimumTranslationVector.setY(finalMinimumTranslationVector.getY() + minimumTranslationVector.getY());
         }
       }
     }
     else
     {
-      auto theoreticalTransform = Vec3<float>{ 0.0f, -finalPenetrationVector.getY(), 0.0f };
+      auto theoreticalTransform = Vec3<float>{ 0.0f, -finalMinimumTranslationVector.getY(), 0.0f };
 
-      finalPenetrationVector.setX(0);
+      finalMinimumTranslationVector.setX(0);
 
       xCollisions = 0;
       for (auto& collision : collisions) {
@@ -111,23 +111,23 @@ Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<Object*, std::v
         if (polytope.empty())
           continue;
 
-        auto penetrationVector = EPA(polytope, collision.first, theoreticalTransform);
+        auto minimumTranslationVector = EPA(polytope, collision.first, theoreticalTransform);
 
-        if (penetrationVector.getX() != 0) {
+        if (minimumTranslationVector.getX() != 0) {
           xCollisions++;
-          finalPenetrationVector.setX(finalPenetrationVector.getX() + penetrationVector.getX());
+          finalMinimumTranslationVector.setX(finalMinimumTranslationVector.getX() + minimumTranslationVector.getX());
         }
       }
     }
   }
 
   if (xCollisions != 0)
-    finalPenetrationVector.setX(finalPenetrationVector.getX() / xCollisions);
+    finalMinimumTranslationVector.setX(finalMinimumTranslationVector.getX() / xCollisions);
 
   if (yCollisions != 0)
-    finalPenetrationVector.setY(finalPenetrationVector.getY() / yCollisions);
+    finalMinimumTranslationVector.setY(finalMinimumTranslationVector.getY() / yCollisions);
 
-  return finalPenetrationVector;
+  return finalMinimumTranslationVector * -1.0f;
 }
 
 Vec3<float> Collider::getSupport(Collider* a, Collider* b, Vec3<float> direction, Vec3<float> translation)
@@ -212,7 +212,7 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, Object* other, Vec
   if (!otherTransform || !otherCollider)
     throw std::runtime_error("Collider::EPA::Missing Transform/Collider");
 
-  float threshold = 0.0001f;
+  float threshold = 0.01f;
 
   Vec3<float> closestPoint, a, b;
   unsigned int closestA = 0;
