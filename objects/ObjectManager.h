@@ -1,26 +1,26 @@
-#ifndef PLATFORMER_GAMEOBJECTMANAGER_H
-#define PLATFORMER_GAMEOBJECTMANAGER_H
+#ifndef PLATFORMER_OBJECTMANAGER_H
+#define PLATFORMER_OBJECTMANAGER_H
 
 #include <SFML/Graphics.hpp>
 #include <vector>
-class GameObject;
+class Object;
 
-class GameObjectManager
+class ObjectManager
 {
 public:
-  GameObjectManager();
-  ~GameObjectManager();
+  ObjectManager();
+  ~ObjectManager();
 
   void update(float dt);
 
-  void addObject(GameObject* object);
-  void removeObject(GameObject* object);
+  void addObject(Object* object);
+  void removeObject(Object* object);
 
   void setWindow(sf::RenderWindow* window);
   sf::RenderWindow* getWindow() const;
 
 private:
-  std::vector<GameObject*> objects;
+  std::vector<Object*> objects;
   sf::RenderWindow* window;
 
   const float fixedUpdateDt;
@@ -33,4 +33,4 @@ private:
   void checkCollisions();
 };
 
-#endif //PLATFORMER_GAMEOBJECTMANAGER_H
+#endif //PLATFORMER_OBJECTMANAGER_H

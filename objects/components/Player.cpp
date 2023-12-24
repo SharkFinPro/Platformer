@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "RigidBody.h"
 #include "Transform.h"
-#include "../GameObject.h"
+#include "../Object.h"
 #include <SFML/Window/Keyboard.hpp>
 
 Player::Player(PlayerControlType controlType)

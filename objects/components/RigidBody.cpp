@@ -1,5 +1,5 @@
 #include "RigidBody.h"
-#include "../GameObject.h"
+#include "../Object.h"
 #include "Transform.h"
 
 RigidBody::RigidBody()

@@ -1,18 +1,18 @@
-#ifndef PLATFORMER_GAMEOBJECT_H
-#define PLATFORMER_GAMEOBJECT_H
+#ifndef PLATFORMER_OBJECT_H
+#define PLATFORMER_OBJECT_H
 
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <unordered_map>
 
-class GameObjectManager;
+class ObjectManager;
 enum class ComponentType;
 class Component;
 
-class GameObject
+class Object
 {
 public:
-  ~GameObject();
+  ~Object();
 
   void update(float dt);
   void fixedUpdate(float dt);
@@ -20,12 +20,12 @@ public:
   void addComponent(Component* component);
   Component* getComponent(ComponentType type) const;
 
-  void setOwner(GameObjectManager* objectOwner);
-  GameObjectManager* getOwner() const;
+  void setOwner(ObjectManager* objectOwner);
+  ObjectManager* getOwner() const;
 
 protected:
   std::unordered_map<ComponentType, Component*> components;
-  GameObjectManager* owner;
+  ObjectManager* owner;
 };
 
-#endif //PLATFORMER_GAMEOBJECT_H
+#endif //PLATFORMER_OBJECT_H

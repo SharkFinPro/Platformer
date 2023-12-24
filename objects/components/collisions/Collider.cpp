@@ -1,5 +1,5 @@
 #include "Collider.h"
-#include "../../GameObject.h"
+#include "../../Object.h"
 #include "../Transform.h"
 #include <cfloat>
 #include <iostream>
@@ -8,7 +8,7 @@ Collider::Collider()
   : Component{ComponentType::collider}, transform{nullptr}
 {}
 
-bool Collider::collidesWith(GameObject* other, std::vector<Vec3<float>>& polytope, Vec3<float> translation)
+bool Collider::collidesWith(Object* other, std::vector<Vec3<float>>& polytope, Vec3<float> translation)
 {
   if (!transform)
   {
@@ -49,8 +49,11 @@ bool Collider::collidesWith(GameObject* other, std::vector<Vec3<float>>& polytop
   return true;
 }
 
-Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, std::vector<Vec3<float>>>>& collisions)
+Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<Object*, std::vector<Vec3<float>>>>& collisions)
 {
+  if (collisions.size() == 1)
+    return EPA(collisions.at(0).second, collisions.at(0).first, {0, 0, 0}).xy();
+
   Vec2<float> finalPenetrationVector = {0, 0};
   float xCollisions = 0;
   float yCollisions = 0;
@@ -194,7 +197,7 @@ Vec3<float> Collider::getClosestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<f
   return a + (AB * dp);
 }
 
-Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other, Vec3<float> translation)
+Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, Object* other, Vec3<float> translation)
 {
   if (!transform)
   {
@@ -212,14 +215,14 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
   float threshold = 0.0001f;
 
   Vec3<float> closestPoint, a, b;
-  int closestA;
+  unsigned int closestA = 0;
 
   Vec3<float> testPoint;
   Vec3<float> searchDirection;
 
   // Find closest point on polytope
   float minDist = FLT_MAX;
-  for (int i = 0; i < polytope.size(); i++)
+  for (size_t i = 0; i < polytope.size(); i++)
   {
     Vec3<float> closest = getClosestPointOnLine(polytope.at(i), polytope.at((i + 1) % polytope.size()), {0.0f, 0.0f, 0.0f});
 
@@ -231,7 +234,7 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
     if (dist < minDist) {
       minDist = dist;
       closestPoint = closest;
-      closestA = i;
+      closestA = static_cast<unsigned int>(i);
       a = polytope.at(i);
       b = polytope.at((i + 1) % polytope.size());
     }

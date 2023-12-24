@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
-#include "objects/GameObjectManager.h"
-#include "objects/GameObject.h"
+#include "objects/ObjectManager.h"
+#include "objects/Object.h"
 #include "objects/components/RigidBody.h"
 #include "objects/components/Player.h"
 #include "objects/components/Transform.h"
@@ -19,9 +19,9 @@ std::vector<Vec2<float>> createQuadMesh(float width, float height)
   return mesh;
 }
 
-GameObject* createPlayer(float x, float y, float width, float height, PlayerControlType controlType, sf::Color color)
+Object* createPlayer(float x, float y, float width, float height, PlayerControlType controlType, sf::Color color)
 {
-  auto player = new GameObject;
+  auto player = new Object;
   player->addComponent(new Transform{x, y, createQuadMesh(width, height)});
   player->addComponent(new RigidBody);
   player->addComponent(new Player{controlType});
@@ -31,9 +31,9 @@ GameObject* createPlayer(float x, float y, float width, float height, PlayerCont
   return player;
 }
 
-GameObject* createBlock(float x, float y, float width, float height, sf::Color color = sf::Color{125, 125, 125})
+Object* createBlock(float x, float y, float width, float height, sf::Color color = sf::Color{125, 125, 125})
 {
-  auto obj = new GameObject;
+  auto obj = new Object;
 
   obj->addComponent(new Transform{x, y, createQuadMesh(width, height)});
   obj->addComponent(new MeshCollider);
@@ -42,9 +42,9 @@ GameObject* createBlock(float x, float y, float width, float height, sf::Color c
   return obj;
 }
 
-GameObject* createRigidBlock(float x, float y, float width, float height, sf::Color color)
+Object* createRigidBlock(float x, float y, float width, float height, sf::Color color)
 {
-  auto obj = new GameObject;
+  auto obj = new Object;
 
   obj->addComponent(new Transform{x, y, createQuadMesh(width, height)});
   obj->addComponent(new MeshCollider);
@@ -57,26 +57,26 @@ GameObject* createRigidBlock(float x, float y, float width, float height, sf::Co
 int main()
 {
   // Create Entities
-  GameObjectManager gameObjectManager;
+  ObjectManager objectManager;
 
-  gameObjectManager.addObject(createPlayer(200, 200, 50, 50, PlayerControlType::WASD, sf::Color{42, 139, 200}));
-  gameObjectManager.addObject(createPlayer(400, 400, 50, 50, PlayerControlType::ARROW, sf::Color{175, 75, 150}));
-  gameObjectManager.addObject(createBlock(0, 1030, 1920, 50));
+  objectManager.addObject(createPlayer(200, 200, 50, 50, PlayerControlType::WASD, sf::Color{42, 139, 200}));
+  objectManager.addObject(createPlayer(400, 400, 50, 50, PlayerControlType::ARROW, sf::Color{175, 75, 150}));
+  objectManager.addObject(createBlock(0, 1030, 1920, 50));
 
-  gameObjectManager.addObject(createRigidBlock(300, 200, 50, 50, sf::Color{240, 139, 100}));
-  gameObjectManager.addObject(createBlock(800, 980, 250, 50));
+  objectManager.addObject(createRigidBlock(300, 200, 50, 50, sf::Color{240, 139, 100}));
+  objectManager.addObject(createBlock(800, 980, 250, 50));
 
   for (int i = 0; i < 9; i++)
-    gameObjectManager.addObject(createBlock(static_cast<float>(i) * 50.0f + 75.0f, 900, 50, 50));
+    objectManager.addObject(createBlock(static_cast<float>(i) * 50.0f + 75.0f, 900, 50, 50));
 
   for (int i = 0; i < 30; i++)
-    gameObjectManager.addObject(createBlock(100, static_cast<float>(i) * 50.0f + 75.0f, 50, 50));
+    objectManager.addObject(createBlock(100, static_cast<float>(i) * 50.0f + 75.0f, 50, 50));
 
 
   // Create the window
   sf::RenderWindow window(sf::VideoMode{1920, 1080}, "Platformer", sf::Style::None);
   window.setMouseCursorVisible(false);
-  gameObjectManager.setWindow(&window);
+  objectManager.setWindow(&window);
 
   std::chrono::steady_clock::time_point previous = std::chrono::steady_clock::now();
 
@@ -100,7 +100,7 @@ int main()
     // clear the window with black color
     window.clear(sf::Color{200, 200, 200});
 
-    gameObjectManager.update(dt);
+    objectManager.update(dt);
 
     // end the current frame
     window.display();
