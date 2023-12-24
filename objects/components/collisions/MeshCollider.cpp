@@ -10,16 +10,16 @@ Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction, Vec3<float> t
     transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
 
     if (!transform)
-      throw std::runtime_error("Cannot use a collider without a transform");
+      throw std::runtime_error("MeshCollider::findFurthestPoint::Missing transform component");
   }
 
-  float furthestDistance = -FLT_MAX, distance;
-  Vec3<float> furthestVertex, vert;
+  float furthestDistance = -FLT_MAX;
+  Vec3<float> furthestVertex;
 
   for (auto& vertex : transform->getMesh())
   {
-    vert = Vec3<float>(vertex, 0) + translation;
-    distance = vert.dot(direction);
+    auto vert = Vec3<float>(vertex, 0) + translation;
+    float distance = vert.dot(direction);
 
     if (distance > furthestDistance)
     {
