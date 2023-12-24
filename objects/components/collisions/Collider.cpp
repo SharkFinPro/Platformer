@@ -57,7 +57,12 @@ Vec2<float> Collider::getPenetrationVector(std::vector<std::pair<GameObject*, st
 
   for (auto& collision : collisions)
   {
-    auto penetrationVector = EPA(collision.second, collision.first, {0, 0, 0});
+    std::vector<Vec3<float>> cols;
+    for (auto col : collision.second)
+      cols.push_back(col);
+
+//    auto penetrationVector = EPA(collision.second, collision.first, {0, 0, 0});
+    auto penetrationVector = EPA(cols, collision.first, {0, 0, 0});
 
     finalPenetrationVector += penetrationVector.xy();
 
@@ -241,18 +246,30 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, GameObject* other,
     // Find search direction
     searchDirection = closestPoint * 100000.0f;
 
-    if (searchDirection.getX() == 0 && searchDirection.getY() == 0)
+//    if (searchDirection.getX() < threshold && searchDirection.getY() < threshold)
+//    if (searchDirection.getX() == 0 || searchDirection.getY() == 0)
+    if ((a.getX() == 0 && b.getX() == 0) || (a.getY() == 0 && b.getY() == 0))
     {
       auto AB = b - a;
 
       searchDirection = {AB.getY(), AB.getX() * -1.0f, 0};
 
-      for (auto j : polytope)
+      if (searchDirection.dot(a * -1) > 0)
       {
-        if (searchDirection.dot(j) > 0)
+        searchDirection *= -1;
+      }
+      else
+      {
+        for (auto j : polytope)
         {
-          searchDirection = searchDirection * -1;
-          break;
+          if (searchDirection.dot(j) > 0 && !(
+              (j.getX() == a.getX() && j.getY() == a.getY()) ||
+              (j.getX() == b.getX() && j.getY() == b.getY())
+          ))
+          {
+            searchDirection = searchDirection * -1;
+            break;
+          }
         }
       }
     }
