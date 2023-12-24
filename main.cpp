@@ -11,10 +11,10 @@
 std::vector<Vec2<float>> createQuadMesh(float width, float height)
 {
   auto mesh = std::vector<Vec2<float>>{};
-  mesh.emplace_back(0, 0);
-  mesh.emplace_back(width, 0);
-  mesh.emplace_back(width, height);
-  mesh.emplace_back(0, height);
+  mesh.emplace_back(-width / 2, -height / 2);
+  mesh.emplace_back(width / 2, -height / 2);
+  mesh.emplace_back(width / 2, height / 2);
+  mesh.emplace_back(-width / 2, height / 2);
 
   return mesh;
 }
@@ -61,10 +61,11 @@ int main()
 
   objectManager.addObject(createPlayer(200, 200, 50, 50, PlayerControlType::WASD, sf::Color{42, 139, 200}));
   objectManager.addObject(createPlayer(400, 400, 50, 50, PlayerControlType::ARROW, sf::Color{175, 75, 150}));
-  objectManager.addObject(createBlock(0, 1030, 1920, 50));
 
   objectManager.addObject(createRigidBlock(300, 200, 50, 50, sf::Color{240, 139, 100}));
-  objectManager.addObject(createBlock(800, 980, 250, 50));
+
+  objectManager.addObject(createBlock(960, 1055, 1920, 50));
+  objectManager.addObject(createBlock(900, 1005, 250, 50));
 
   for (int i = 0; i < 9; i++)
     objectManager.addObject(createBlock(static_cast<float>(i) * 50.0f + 75.0f, 900, 50, 50));
