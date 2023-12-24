@@ -212,14 +212,14 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, Object* other, Vec
   float threshold = 0.0001f;
 
   Vec3<float> closestPoint, a, b;
-  int closestA;
+  unsigned int closestA = 0;
 
   Vec3<float> testPoint;
   Vec3<float> searchDirection;
 
   // Find closest point on polytope
   float minDist = FLT_MAX;
-  for (int i = 0; i < polytope.size(); i++)
+  for (size_t i = 0; i < polytope.size(); i++)
   {
     Vec3<float> closest = getClosestPointOnLine(polytope.at(i), polytope.at((i + 1) % polytope.size()), {0.0f, 0.0f, 0.0f});
 
@@ -231,7 +231,7 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, Object* other, Vec
     if (dist < minDist) {
       minDist = dist;
       closestPoint = closest;
-      closestA = i;
+      closestA = static_cast<unsigned int>(i);
       a = polytope.at(i);
       b = polytope.at((i + 1) % polytope.size());
     }
