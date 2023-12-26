@@ -24,7 +24,7 @@ bool Collider::collidesWith(Object* other, std::vector<Vec3<float>>& polytope, V
     return false;
 
   Simplex simplex;
-  auto direction = Vec3<float>{ transform->getPosition() - otherTransform->getPosition(), 0 } + translation;
+  auto direction = Vec3<float>{ (transform->getPosition() - otherTransform->getPosition()).xy(), 0 } + translation;
 
   Vec3<float> support = getSupport(this, otherCollider, direction, translation);
 
@@ -49,20 +49,20 @@ bool Collider::collidesWith(Object* other, std::vector<Vec3<float>>& polytope, V
   return true;
 }
 
-Vec2<float> Collider::minimumTranslationVector(std::vector<std::pair<Object*, std::vector<Vec3<float>>>>& collisions)
+Vec3<float> Collider::minimumTranslationVector(std::vector<std::pair<Object*, std::vector<Vec3<float>>>>& collisions)
 {
   if (collisions.size() == 1)
-    return EPA(collisions.at(0).second, collisions.at(0).first, {0, 0, 0}).xy() * -1.0f;
+    return EPA(collisions.at(0).second, collisions.at(0).first, {0}) * -1.0f;
 
-  Vec2<float> finalMinimumTranslationVector = {0, 0};
+  Vec3<float> finalMinimumTranslationVector = {0};
   float xCollisions = 0;
   float yCollisions = 0;
 
   for (auto& collision : collisions)
   {
-    auto minimumTranslationVector = EPA(collision.second, collision.first, {0, 0, 0});
+    auto minimumTranslationVector = EPA(collision.second, collision.first, {0});
 
-    finalMinimumTranslationVector += minimumTranslationVector.xy();
+    finalMinimumTranslationVector += minimumTranslationVector;
 
     if (minimumTranslationVector.getX() != 0)
       xCollisions++;
@@ -132,7 +132,7 @@ Vec2<float> Collider::minimumTranslationVector(std::vector<std::pair<Object*, st
 
 Vec3<float> Collider::getSupport(Collider* a, Collider* b, Vec3<float> direction, Vec3<float> translation)
 {
-  return a->findFurthestPoint(direction, translation) - b->findFurthestPoint(direction * -1.0f, {0, 0, 0});
+  return a->findFurthestPoint(direction, translation) - b->findFurthestPoint(direction * -1.0f, {0});
 }
 
 bool Collider::nextSimplex(Simplex& simplex, Vec3<float>& direction) {

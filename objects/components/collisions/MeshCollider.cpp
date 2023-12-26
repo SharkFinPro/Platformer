@@ -2,6 +2,7 @@
 #include "../../Object.h"
 #include "../Transform.h"
 #include <cfloat>
+#include <iostream>
 
 Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction, Vec3<float> translation)
 {
@@ -18,7 +19,7 @@ Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction, Vec3<float> t
 
   for (auto& vertex : transform->getMesh())
   {
-    auto vert = Vec3<float>(vertex, 0) + translation;
+    auto vert = vertex + translation;
     float distance = vert.dot(direction);
 
     if (distance > furthestDistance)

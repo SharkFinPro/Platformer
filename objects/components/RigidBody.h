@@ -2,7 +2,7 @@
 #define PLATFORMER_RIGIDBODY_H
 
 #include "Component.h"
-#include "../../math/Vec2.h"
+#include "../../math/Vec3.h"
 
 class Transform;
 
@@ -13,17 +13,17 @@ public:
 
   void fixedUpdate(float dt) override;
 
-  void applyForce(const Vec2<float>& force);
+  void applyForce(const Vec3<float>& force);
 
   [[nodiscard]] bool isFalling() const;
 
-  void handleCollision(Vec2<float> minimumTranslationVector);
+  void handleCollision(Vec3<float> minimumTranslationVector);
 
 private:
-  Vec2<float> velocity;
+  Vec3<float> velocity;
 
   bool doGravity;
-  Vec2<float> gravity;
+  Vec3<float> gravity;
 
   bool falling;
 
