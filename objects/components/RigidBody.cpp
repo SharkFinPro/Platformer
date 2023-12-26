@@ -16,7 +16,6 @@ void RigidBody::fixedUpdate(float dt)
       return;
   }
 
-
   falling = true;
 
   if (doGravity)
