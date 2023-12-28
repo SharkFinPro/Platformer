@@ -1,11 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "objects/ObjectManager.h"
 #include "objects/Object.h"
-#include "objects/components/RigidBody.h"
-#include "objects/components/Player.h"
-#include "objects/components/Transform.h"
-#include "objects/components/SpriteRenderer.h"
-#include "objects/components/collisions/MeshCollider.h"
+#include "objects/Components.h"
 #include <chrono>
 
 std::vector<Vec3<float>> createQuadMesh(float width, float height)
