@@ -11,6 +11,7 @@ public:
   Vec3();
   Vec3(T x, T y, T z);
   Vec3(Vec2<T> xy, T z);
+  Vec3(T xyz);
 
   T getX() const;
   T getY() const;
@@ -56,6 +57,11 @@ Vec3<T>::Vec3(T x, T y, T z)
 template<typename T>
 Vec3<T>::Vec3(Vec2<T> xy, T z)
   : x{xy.getX()}, y{xy.getY()}, z{z}
+{}
+
+template<typename T>
+Vec3<T>::Vec3(T xyz)
+    : x{xyz}, y{xyz}, z{xyz}
 {}
 
 template<typename T>

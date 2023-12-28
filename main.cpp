@@ -1,20 +1,16 @@
 #include <SFML/Graphics.hpp>
 #include "objects/ObjectManager.h"
 #include "objects/Object.h"
-#include "objects/components/RigidBody.h"
-#include "objects/components/Player.h"
-#include "objects/components/Transform.h"
-#include "objects/components/SpriteRenderer.h"
-#include "objects/components/collisions/MeshCollider.h"
+#include "objects/Components.h"
 #include <chrono>
 
-std::vector<Vec2<float>> createQuadMesh(float width, float height)
+std::vector<Vec3<float>> createQuadMesh(float width, float height)
 {
-  auto mesh = std::vector<Vec2<float>>{};
-  mesh.emplace_back(-width / 2, -height / 2);
-  mesh.emplace_back(width / 2, -height / 2);
-  mesh.emplace_back(width / 2, height / 2);
-  mesh.emplace_back(-width / 2, height / 2);
+  auto mesh = std::vector<Vec3<float>>{};
+  mesh.emplace_back(-width / 2, -height / 2, 0);
+  mesh.emplace_back(width / 2, -height / 2, 0);
+  mesh.emplace_back(width / 2, height / 2, 0);
+  mesh.emplace_back(-width / 2, height / 2, 0);
 
   return mesh;
 }

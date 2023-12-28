@@ -2,7 +2,6 @@
 #define PLATFORMER_COLLIDER_H
 
 #include "../Component.h"
-#include "../../../math/Vec2.h"
 #include "../../../math/Vec3.h"
 #include <vector>
 #include "Simplex.h"
@@ -15,9 +14,9 @@ class Collider : public Component
 public:
   Collider();
 
-  bool collidesWith(Object* other, std::vector<Vec3<float>>& polytope, Vec3<float> translation = {0, 0, 0});
+  bool collidesWith(Object* other, std::vector<Vec3<float>>& polytope, Vec3<float> translation = {0});
 
-  Vec2<float> minimumTranslationVector(std::vector<std::pair<Object*, std::vector<Vec3<float>>>>& collisions);
+  Vec3<float> minimumTranslationVector(std::vector<std::pair<Object*, std::vector<Vec3<float>>>>& collisions);
 
 protected:
 

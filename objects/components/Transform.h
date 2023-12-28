@@ -2,30 +2,30 @@
 #define PLATFORMER_TRANSFORM_H
 
 #include "Component.h"
-#include "../../math/Vec2.h"
+#include "../../math/Vec3.h"
 #include <vector>
 
 class Transform : public Component
 {
 public:
-  Transform(float xPos, float yPos, std::vector<Vec2<float>> mesh);
+  Transform(float xPos, float yPos, std::vector<Vec3<float>> mesh);
 
   void fixedUpdate(float dt) override;
 
-  [[nodiscard]] Vec2<float> getPosition() const;
+  [[nodiscard]] Vec3<float> getPosition() const;
 
-  void move(Vec2<float> vector);
+  void move(Vec3<float> vector);
 
-  [[nodiscard]] std::vector<Vec2<float>> getMesh() const;
+  [[nodiscard]] std::vector<Vec3<float>> getMesh() const;
 
   void reset();
 
 private:
-  Vec2<float> initialPosition;
-  Vec2<float> position;
-  Vec2<float> newPosition;
+  Vec3<float> initialPosition;
+  Vec3<float> position;
+  Vec3<float> newPosition;
 
-  std::vector<Vec2<float>> mesh;
+  std::vector<Vec3<float>> mesh;
 };
 
 

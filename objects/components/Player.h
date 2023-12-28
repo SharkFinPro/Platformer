@@ -2,7 +2,7 @@
 #define PLATFORMER_PLAYER_H
 
 #include "Component.h"
-#include "../../math/Vec2.h"
+#include "../../math/Vec3.h"
 
 class Object;
 class Transform;
@@ -27,7 +27,7 @@ private:
   Transform* transform;
   RigidBody* rigidBody;
 
-  Vec2<float> appliedForce;
+  Vec3<float> appliedForce;
 
   void handleInput();
 };
