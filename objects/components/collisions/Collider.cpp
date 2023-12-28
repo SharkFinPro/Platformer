@@ -251,22 +251,14 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, Object* other, Vec
 
       searchDirection = {AB.getY(), AB.getX() * -1.0f, 0};
 
-      if (searchDirection.dot(a * -1) > 0)
+      for (auto j : polytope)
       {
-        searchDirection *= -1;
-      }
-      else
-      {
-        for (auto j : polytope)
+        if (searchDirection.dot(j) > 0 && !(
+            (j.getX() == a.getX() && j.getY() == a.getY()) ||
+            (j.getX() == b.getX() && j.getY() == b.getY())))
         {
-          if (searchDirection.dot(j) > 0 && !(
-              (j.getX() == a.getX() && j.getY() == a.getY()) ||
-              (j.getX() == b.getX() && j.getY() == b.getY())
-          ))
-          {
-            searchDirection = searchDirection * -1;
-            break;
-          }
+          searchDirection *= -1;
+          break;
         }
       }
     }
