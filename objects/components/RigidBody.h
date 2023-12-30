@@ -28,7 +28,7 @@ private:
 
   bool falling;
 
-  std::shared_ptr<Transform> transform;
+  std::weak_ptr<Transform> transform_ptr;
 
   void limitMovement();
 

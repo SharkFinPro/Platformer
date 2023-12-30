@@ -25,8 +25,8 @@ private:
 
   PlayerControlType controlType;
 
-  std::shared_ptr<Transform> transform;
-  std::shared_ptr<RigidBody> rigidBody;
+  std::weak_ptr<Transform> transform_ptr;
+  std::weak_ptr<RigidBody> rigidBody_ptr;
 
   Vec3<float> appliedForce;
 

@@ -20,7 +20,7 @@ public:
   Vec3<float> minimumTranslationVector(std::vector<std::pair<std::shared_ptr<Object>, std::vector<Vec3<float>>>>& collisions);
 
 protected:
-  std::shared_ptr<Transform> transform;
+  std::weak_ptr<Transform> transform_ptr;
 
 private:
 

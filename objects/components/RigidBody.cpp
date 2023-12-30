@@ -3,27 +3,30 @@
 #include "Transform.h"
 
 RigidBody::RigidBody()
-  : Component{ComponentType::rigidBody}, velocity{0}, doGravity{true}, gravity{0.0f, 9.81f, 0.0f}, falling{true}, transform{nullptr}
+  : Component{ComponentType::rigidBody}, velocity{0}, doGravity{true}, gravity{0.0f, 9.81f, 0.0f}, falling{true}
 {}
 
 void RigidBody::fixedUpdate(float dt)
 {
-  if (!transform)
+  if (transform_ptr.expired())
   {
-    transform = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
+    transform_ptr = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
-    if (!transform)
+    if (transform_ptr.expired())
       return;
   }
 
-  falling = true;
+  if (std::shared_ptr<Transform> transform = transform_ptr.lock())
+  {
+    falling = true;
 
-  if (doGravity)
-    applyForce(gravity);
+    if (doGravity)
+      applyForce(gravity);
 
-  limitMovement();
+    limitMovement();
 
-  transform->move(velocity * dt);
+    transform->move(velocity * dt);
+  }
 }
 
 void RigidBody::applyForce(const Vec3<float>& force)
@@ -43,21 +46,24 @@ bool RigidBody::isFalling() const
 
 void RigidBody::handleCollision(Vec3<float> minimumTranslationVector)
 {
-  if (!transform)
+  if (transform_ptr.expired())
   {
-    transform = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
+    transform_ptr = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
-    if (!transform)
+    if (transform_ptr.expired())
       return;
   }
 
-  if (minimumTranslationVector.getX() != 0)
-    handleXCollision();
+  if (std::shared_ptr<Transform> transform = transform_ptr.lock())
+  {
+    if (minimumTranslationVector.getX() != 0)
+      handleXCollision();
 
-  if (minimumTranslationVector.getY() != 0)
-    handleYCollision(minimumTranslationVector.getY());
+    if (minimumTranslationVector.getY() != 0)
+      handleYCollision(minimumTranslationVector.getY());
 
-  transform->move(minimumTranslationVector);
+    transform->move(minimumTranslationVector);
+  }
 }
 
 void RigidBody::handleXCollision()

@@ -5,17 +5,17 @@
 #include <iostream>
 
 Collider::Collider()
-  : Component{ComponentType::collider}, transform{nullptr}
+  : Component{ComponentType::collider}
 {}
 
 bool Collider::collidesWith(std::shared_ptr<Object> other, std::vector<Vec3<float>>& polytope, Vec3<float> translation)
 {
-  if (!transform)
+  if (transform_ptr.expired())
   {
-    transform = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
+    transform_ptr = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
-    if (!transform)
-      return false;
+    if (transform_ptr.expired())
+      throw std::runtime_error("Collider::EPA::Missing Transform");
   }
 
   auto otherTransform = dynamic_pointer_cast<Transform>(other->getComponent(ComponentType::transform));
@@ -24,8 +24,12 @@ bool Collider::collidesWith(std::shared_ptr<Object> other, std::vector<Vec3<floa
     return false;
 
   Simplex simplex;
-  auto direction = Vec3<float>{ (transform->getPosition() - otherTransform->getPosition()).xy(), 0 } + translation;
+  Vec3<float> direction;
 
+  if (std::shared_ptr<Transform> transform = transform_ptr.lock())
+  {
+    direction = Vec3<float>{ (transform->getPosition() - otherTransform->getPosition()).xy(), 0 } + translation;
+  }
   Vec3<float> support = getSupport(otherCollider, direction, translation);
 
   simplex.addVertex(support);
@@ -199,11 +203,11 @@ Vec3<float> Collider::getClosestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<f
 
 Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, std::shared_ptr<Object> other, Vec3<float> translation)
 {
-  if (!transform)
+  if (transform_ptr.expired())
   {
-    transform = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
+    transform_ptr = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
-    if (!transform)
+    if (transform_ptr.expired())
       throw std::runtime_error("Collider::EPA::Missing Transform");
   }
 

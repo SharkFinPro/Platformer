@@ -18,7 +18,7 @@ public:
 
 private:
   sf::Color color;
-  std::shared_ptr<Transform> transform;
+  std::weak_ptr<Transform> transform_ptr;
 };
 
 
