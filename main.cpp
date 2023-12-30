@@ -3,6 +3,7 @@
 #include "objects/Object.h"
 #include "objects/Components.h"
 #include <chrono>
+#include <memory>
 
 std::vector<Vec3<float>> createQuadMesh(float width, float height)
 {
@@ -15,9 +16,10 @@ std::vector<Vec3<float>> createQuadMesh(float width, float height)
   return mesh;
 }
 
-Object* createPlayer(float x, float y, float width, float height, PlayerControlType controlType, sf::Color color)
+std::shared_ptr<Object> createPlayer(float x, float y, float width, float height, PlayerControlType controlType, sf::Color color)
 {
-  auto player = new Object;
+  auto player = std::make_shared<Object>();
+
   player->addComponent(new Transform{x, y, createQuadMesh(width, height)});
   player->addComponent(new RigidBody);
   player->addComponent(new Player{controlType});
@@ -27,9 +29,9 @@ Object* createPlayer(float x, float y, float width, float height, PlayerControlT
   return player;
 }
 
-Object* createBlock(float x, float y, float width, float height, sf::Color color = sf::Color{125, 125, 125})
+std::shared_ptr<Object> createBlock(float x, float y, float width, float height, sf::Color color = sf::Color{125, 125, 125})
 {
-  auto obj = new Object;
+  auto obj = std::make_shared<Object>();
 
   obj->addComponent(new Transform{x, y, createQuadMesh(width, height)});
   obj->addComponent(new MeshCollider);
@@ -38,9 +40,9 @@ Object* createBlock(float x, float y, float width, float height, sf::Color color
   return obj;
 }
 
-Object* createRigidBlock(float x, float y, float width, float height, sf::Color color)
+std::shared_ptr<Object> createRigidBlock(float x, float y, float width, float height, sf::Color color)
 {
-  auto obj = new Object;
+  auto obj = std::make_shared<Object>();
 
   obj->addComponent(new Transform{x, y, createQuadMesh(width, height)});
   obj->addComponent(new MeshCollider);

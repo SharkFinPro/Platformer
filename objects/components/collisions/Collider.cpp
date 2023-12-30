@@ -8,7 +8,7 @@ Collider::Collider()
   : Component{ComponentType::collider}, transform{nullptr}
 {}
 
-bool Collider::collidesWith(Object* other, std::vector<Vec3<float>>& polytope, Vec3<float> translation)
+bool Collider::collidesWith(std::shared_ptr<Object> other, std::vector<Vec3<float>>& polytope, Vec3<float> translation)
 {
   if (!transform)
   {
@@ -49,7 +49,7 @@ bool Collider::collidesWith(Object* other, std::vector<Vec3<float>>& polytope, V
   return true;
 }
 
-Vec3<float> Collider::minimumTranslationVector(std::vector<std::pair<Object*, std::vector<Vec3<float>>>>& collisions)
+Vec3<float> Collider::minimumTranslationVector(std::vector<std::pair<std::shared_ptr<Object>, std::vector<Vec3<float>>>>& collisions)
 {
   if (collisions.size() == 1)
     return EPA(collisions.at(0).second, collisions.at(0).first, {0}) * -1.0f;
@@ -197,7 +197,7 @@ Vec3<float> Collider::getClosestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<f
   return a + (AB * dp);
 }
 
-Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, Object* other, Vec3<float> translation)
+Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, std::shared_ptr<Object> other, Vec3<float> translation)
 {
   if (!transform)
   {

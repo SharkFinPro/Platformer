@@ -3,24 +3,25 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <memory>
+
 class Object;
 
 class ObjectManager
 {
 public:
   ObjectManager();
-  ~ObjectManager();
 
   void update(float dt);
 
-  void addObject(Object* object);
-  void removeObject(Object* object);
+  void addObject(std::shared_ptr<Object> object);
+  bool removeObject(const std::shared_ptr<Object>& object);
 
   void setWindow(sf::RenderWindow* window);
   [[nodiscard]] sf::RenderWindow* getWindow() const;
 
 private:
-  std::vector<Object*> objects;
+  std::vector<std::shared_ptr<Object>> objects;
   sf::RenderWindow* window;
 
   const float fixedUpdateDt;

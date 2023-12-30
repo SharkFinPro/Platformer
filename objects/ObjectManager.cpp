@@ -8,34 +8,30 @@ ObjectManager::ObjectManager()
   : window{nullptr}, fixedUpdateDt{1.0f / 50.0f}, timeAccumulator{0.0f}, ticks{0}
 {}
 
-ObjectManager::~ObjectManager()
-{
-  for (auto& object : objects)
-    delete object;
-}
-
 void ObjectManager::update(float dt)
 {
   fixedUpdate(dt);
   variableUpdate(dt);
 }
 
-void ObjectManager::addObject(Object* object)
+void ObjectManager::addObject(std::shared_ptr<Object> object)
 {
   object->setOwner(this);
-  objects.push_back(object);
+  objects.push_back(std::move(object));
 }
 
-void ObjectManager::removeObject(Object* object)
+bool ObjectManager::removeObject(const std::shared_ptr<Object>& object)
 {
   for (int i = 0; i < static_cast<int>(objects.size()); i++)
+  {
     if (objects[i] == object)
     {
-      auto tempObject = object;
       objects.erase(objects.begin() + i);
-      delete tempObject;
-      return;
+      return true;
     }
+  }
+
+  return false;
 }
 
 void ObjectManager::setWindow(sf::RenderWindow* window)
@@ -78,7 +74,7 @@ void ObjectManager::checkCollisions()
     if (!collider)
       continue;
 
-    std::vector<std::pair<Object*, std::vector<Vec3<float>>>> collisions;
+    std::vector<std::pair<std::shared_ptr<Object>, std::vector<Vec3<float>>>> collisions;
     for (auto& object2 : objects)
     {
       if (object1 == object2)
