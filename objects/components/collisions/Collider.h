@@ -20,12 +20,12 @@ public:
   Vec3<float> minimumTranslationVector(std::vector<std::pair<std::shared_ptr<Object>, std::vector<Vec3<float>>>>& collisions);
 
 protected:
+  std::shared_ptr<Transform> transform;
 
-  Transform* transform;
 private:
 
   virtual Vec3<float> findFurthestPoint(Vec3<float> direction, Vec3<float> translation) = 0;
-  static Vec3<float> getSupport(Collider* a, Collider* b, Vec3<float> direction, Vec3<float> translation);
+  Vec3<float> getSupport(std::shared_ptr<Collider> b, Vec3<float> direction, Vec3<float> translation);
 
   static bool nextSimplex(Simplex& simplex, Vec3<float>& direction);
 

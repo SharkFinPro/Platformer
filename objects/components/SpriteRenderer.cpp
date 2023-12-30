@@ -11,7 +11,7 @@ void SpriteRenderer::update([[maybe_unused]] float dt)
 {
   if (!transform)
   {
-    transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+    transform = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
     if (!transform)
       return;

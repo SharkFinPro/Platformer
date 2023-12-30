@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "../../math/Vec3.h"
+#include <memory>
 
 class Transform;
 
@@ -27,7 +28,7 @@ private:
 
   bool falling;
 
-  Transform* transform;
+  std::shared_ptr<Transform> transform;
 
   void limitMovement();
 

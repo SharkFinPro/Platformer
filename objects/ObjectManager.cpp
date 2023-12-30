@@ -70,7 +70,7 @@ void ObjectManager::checkCollisions()
 {
   for (auto& object1 : objects)
   {
-    auto collider = dynamic_cast<Collider*>(object1->getComponent(ComponentType::collider));
+    auto collider = dynamic_pointer_cast<Collider>(object1->getComponent(ComponentType::collider));
     if (!collider)
       continue;
 
@@ -95,7 +95,7 @@ void ObjectManager::checkCollisions()
 
     if (!collisions.empty())
     {
-      auto rb = dynamic_cast<RigidBody*>(object1->getComponent(ComponentType::rigidBody));
+      auto rb = dynamic_pointer_cast<RigidBody>(object1->getComponent(ComponentType::rigidBody));
       if (rb)
         rb->handleCollision(collider->minimumTranslationVector(collisions));
     }

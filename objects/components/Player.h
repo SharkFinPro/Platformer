@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "../../math/Vec3.h"
+#include <memory>
 
 class Object;
 class Transform;
@@ -24,8 +25,8 @@ private:
 
   PlayerControlType controlType;
 
-  Transform* transform;
-  RigidBody* rigidBody;
+  std::shared_ptr<Transform> transform;
+  std::shared_ptr<RigidBody> rigidBody;
 
   Vec3<float> appliedForce;
 

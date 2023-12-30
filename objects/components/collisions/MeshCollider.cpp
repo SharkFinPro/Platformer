@@ -8,7 +8,7 @@ Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction, Vec3<float> t
 {
   if (!transform)
   {
-    transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+    transform = std::dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
     if (!transform)
       throw std::runtime_error("MeshCollider::findFurthestPoint::Missing transform component");

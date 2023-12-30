@@ -20,11 +20,11 @@ std::shared_ptr<Object> createPlayer(float x, float y, float width, float height
 {
   auto player = std::make_shared<Object>();
 
-  player->addComponent(new Transform{x, y, createQuadMesh(width, height)});
-  player->addComponent(new RigidBody);
-  player->addComponent(new Player{controlType});
-  player->addComponent(new SpriteRenderer{color});
-  player->addComponent(new MeshCollider);
+  player->addComponent(std::make_shared<Transform>(x, y, createQuadMesh(width, height)));
+  player->addComponent(std::make_shared<RigidBody>());
+  player->addComponent(std::make_shared<Player>(controlType));
+  player->addComponent(std::make_shared<SpriteRenderer>(color));
+  player->addComponent(std::make_shared<MeshCollider>());
 
   return player;
 }
@@ -33,9 +33,9 @@ std::shared_ptr<Object> createBlock(float x, float y, float width, float height,
 {
   auto obj = std::make_shared<Object>();
 
-  obj->addComponent(new Transform{x, y, createQuadMesh(width, height)});
-  obj->addComponent(new MeshCollider);
-  obj->addComponent(new SpriteRenderer{color});
+  obj->addComponent(std::make_shared<Transform>(x, y, createQuadMesh(width, height)));
+  obj->addComponent(std::make_shared<MeshCollider>());
+  obj->addComponent(std::make_shared<SpriteRenderer>(color));
 
   return obj;
 }
@@ -44,10 +44,10 @@ std::shared_ptr<Object> createRigidBlock(float x, float y, float width, float he
 {
   auto obj = std::make_shared<Object>();
 
-  obj->addComponent(new Transform{x, y, createQuadMesh(width, height)});
-  obj->addComponent(new MeshCollider);
-  obj->addComponent(new RigidBody);
-  obj->addComponent(new SpriteRenderer{color});
+  obj->addComponent(std::make_shared<Transform>(x, y, createQuadMesh(width, height)));
+  obj->addComponent(std::make_shared<MeshCollider>());
+  obj->addComponent(std::make_shared<RigidBody>());
+  obj->addComponent(std::make_shared<SpriteRenderer>(color));
 
   return obj;
 }

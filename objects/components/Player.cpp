@@ -17,7 +17,7 @@ void Player::fixedUpdate([[maybe_unused]] float dt)
 {
   if (!transform)
   {
-    transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+    transform = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
     if (!transform)
       return;
@@ -28,7 +28,7 @@ void Player::fixedUpdate([[maybe_unused]] float dt)
 
   if (!rigidBody)
   {
-    rigidBody = dynamic_cast<RigidBody*>(getOwner()->getComponent(ComponentType::rigidBody));
+    rigidBody = dynamic_pointer_cast<RigidBody>(getOwner()->getComponent(ComponentType::rigidBody));
 
     if (!rigidBody)
       return;
@@ -43,7 +43,7 @@ void Player::handleInput()
 {
   if (!rigidBody)
   {
-    rigidBody = dynamic_cast<RigidBody*>(getOwner()->getComponent(ComponentType::rigidBody));
+    rigidBody = dynamic_pointer_cast<RigidBody>(getOwner()->getComponent(ComponentType::rigidBody));
 
     if (!rigidBody)
       return;
