@@ -5,52 +5,10 @@
 #include <chrono>
 #include <memory>
 
-std::vector<Vec3<float>> createQuadMesh(float width, float height)
-{
-  auto mesh = std::vector<Vec3<float>>{};
-  mesh.emplace_back(-width / 2, -height / 2, 0);
-  mesh.emplace_back(width / 2, -height / 2, 0);
-  mesh.emplace_back(width / 2, height / 2, 0);
-  mesh.emplace_back(-width / 2, height / 2, 0);
-
-  return mesh;
-}
-
-std::shared_ptr<Object> createPlayer(float x, float y, float width, float height, PlayerControlType controlType, sf::Color color)
-{
-  auto player = std::make_shared<Object>();
-
-  player->addComponent(std::make_shared<Transform>(x, y, createQuadMesh(width, height)));
-  player->addComponent(std::make_shared<RigidBody>());
-  player->addComponent(std::make_shared<Player>(controlType));
-  player->addComponent(std::make_shared<SpriteRenderer>(color));
-  player->addComponent(std::make_shared<MeshCollider>());
-
-  return player;
-}
-
-std::shared_ptr<Object> createBlock(float x, float y, float width, float height, sf::Color color = sf::Color{125, 125, 125})
-{
-  auto obj = std::make_shared<Object>();
-
-  obj->addComponent(std::make_shared<Transform>(x, y, createQuadMesh(width, height)));
-  obj->addComponent(std::make_shared<MeshCollider>());
-  obj->addComponent(std::make_shared<SpriteRenderer>(color));
-
-  return obj;
-}
-
-std::shared_ptr<Object> createRigidBlock(float x, float y, float width, float height, sf::Color color)
-{
-  auto obj = std::make_shared<Object>();
-
-  obj->addComponent(std::make_shared<Transform>(x, y, createQuadMesh(width, height)));
-  obj->addComponent(std::make_shared<MeshCollider>());
-  obj->addComponent(std::make_shared<RigidBody>());
-  obj->addComponent(std::make_shared<SpriteRenderer>(color));
-
-  return obj;
-}
+std::vector<Vec3<float>> createQuadMesh(float width, float height);
+std::shared_ptr<Object> createPlayer(float x, float y, float width, float height, PlayerControlType controlType, sf::Color color);
+std::shared_ptr<Object> createBlock(float x, float y, float width, float height, sf::Color color = sf::Color{125, 125, 125});
+std::shared_ptr<Object> createRigidBlock(float x, float y, float width, float height, sf::Color color);
 
 int main()
 {
@@ -104,4 +62,51 @@ int main()
     // end the current frame
     window.display();
   }
+}
+
+std::vector<Vec3<float>> createQuadMesh(float width, float height)
+{
+  auto mesh = std::vector<Vec3<float>>{};
+  mesh.emplace_back(-width / 2, -height / 2, 0);
+  mesh.emplace_back(width / 2, -height / 2, 0);
+  mesh.emplace_back(width / 2, height / 2, 0);
+  mesh.emplace_back(-width / 2, height / 2, 0);
+
+  return mesh;
+}
+
+std::shared_ptr<Object> createPlayer(float x, float y, float width, float height, PlayerControlType controlType, sf::Color color)
+{
+  auto player = std::make_shared<Object>();
+
+  player->addComponent(std::make_shared<Transform>(x, y, createQuadMesh(width, height)));
+  player->addComponent(std::make_shared<RigidBody>());
+  player->addComponent(std::make_shared<Player>(controlType));
+  player->addComponent(std::make_shared<SpriteRenderer>(color));
+  player->addComponent(std::make_shared<MeshCollider>());
+
+  return player;
+}
+
+std::shared_ptr<Object> createBlock(float x, float y, float width, float height, sf::Color color)
+{
+  auto obj = std::make_shared<Object>();
+
+  obj->addComponent(std::make_shared<Transform>(x, y, createQuadMesh(width, height)));
+  obj->addComponent(std::make_shared<MeshCollider>());
+  obj->addComponent(std::make_shared<SpriteRenderer>(color));
+
+  return obj;
+}
+
+std::shared_ptr<Object> createRigidBlock(float x, float y, float width, float height, sf::Color color)
+{
+  auto obj = std::make_shared<Object>();
+
+  obj->addComponent(std::make_shared<Transform>(x, y, createQuadMesh(width, height)));
+  obj->addComponent(std::make_shared<MeshCollider>());
+  obj->addComponent(std::make_shared<RigidBody>());
+  obj->addComponent(std::make_shared<SpriteRenderer>(color));
+
+  return obj;
 }
