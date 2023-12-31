@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include <SFML/Graphics.hpp>
+#include <memory>
 
 class Transform;
 
@@ -17,7 +18,7 @@ public:
 
 private:
   sf::Color color;
-  Transform* transform;
+  std::weak_ptr<Transform> transform_ptr;
 };
 
 

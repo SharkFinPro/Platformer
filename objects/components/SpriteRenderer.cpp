@@ -4,28 +4,31 @@
 #include "../ObjectManager.h"
 
 SpriteRenderer::SpriteRenderer(sf::Color color)
-  : Component{ComponentType::spriteRenderer}, color{color}, transform{nullptr}
+  : Component{ComponentType::spriteRenderer}, color{color}
 {}
 
 void SpriteRenderer::update([[maybe_unused]] float dt)
 {
-  if (!transform)
+  if (transform_ptr.expired())
   {
-    transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+    transform_ptr = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
-    if (!transform)
+    if (transform_ptr.expired())
       return;
   }
 
-  auto mesh = transform->getMesh();
-  sf::ConvexShape shape;
-  shape.setPointCount(mesh.size());
-  for (int i = 0; i < static_cast<int>(mesh.size()); i++)
-    shape.setPoint(i, sf::Vector2f(mesh[i].getX(), mesh[i].getY()));
+  if (std::shared_ptr<Transform> transform = transform_ptr.lock())
+  {
+    auto mesh = transform->getMesh();
+    sf::ConvexShape shape;
+    shape.setPointCount(mesh.size());
+    for (int i = 0; i < static_cast<int>(mesh.size()); i++)
+      shape.setPoint(i, sf::Vector2f(mesh[i].getX(), mesh[i].getY()));
 
-  shape.setFillColor(color);
+    shape.setFillColor(color);
 
-  getOwner()->getOwner()->getWindow()->draw(shape);
+    getOwner()->getOwner()->getWindow()->draw(shape);
+  }
 }
 
 void SpriteRenderer::setColor(sf::Color color)

@@ -5,7 +5,7 @@
 #include <SFML/Window/Keyboard.hpp>
 
 Player::Player(PlayerControlType controlType)
-  : Component{ComponentType::player}, speed{25}, jumpHeight{550}, controlType{controlType}, transform{nullptr}, rigidBody{nullptr}, appliedForce{0}
+  : Component{ComponentType::player}, speed{25}, jumpHeight{550}, controlType{controlType}, appliedForce{0}
 {}
 
 void Player::update([[maybe_unused]] float dt)
@@ -15,37 +15,44 @@ void Player::update([[maybe_unused]] float dt)
 
 void Player::fixedUpdate([[maybe_unused]] float dt)
 {
-  if (!transform)
+  if (transform_ptr.expired())
   {
-    transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+    transform_ptr = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
-    if (!transform)
+    if (transform_ptr.expired())
       return;
   }
 
-  if (transform->getPosition().getY() > 2000)
-    transform->reset();
-
-  if (!rigidBody)
+  if (std::shared_ptr<Transform> transform = transform_ptr.lock())
   {
-    rigidBody = dynamic_cast<RigidBody*>(getOwner()->getComponent(ComponentType::rigidBody));
+    if (transform->getPosition().getY() > 2000)
+      transform->reset();
+  }
 
-    if (!rigidBody)
+  if (rigidBody_ptr.expired())
+  {
+    rigidBody_ptr = dynamic_pointer_cast<RigidBody>(getOwner()->getComponent(ComponentType::rigidBody));
+
+    if (rigidBody_ptr.expired())
       return;
   }
 
-  rigidBody->applyForce(appliedForce);
+  if (std::shared_ptr<RigidBody> rigidBody = rigidBody_ptr.lock())
+  {
+    rigidBody->applyForce(appliedForce);
+  }
+
   appliedForce.setX(0);
   appliedForce.setY(0);
 }
 
 void Player::handleInput()
 {
-  if (!rigidBody)
+  if (rigidBody_ptr.expired())
   {
-    rigidBody = dynamic_cast<RigidBody*>(getOwner()->getComponent(ComponentType::rigidBody));
+    rigidBody_ptr = dynamic_pointer_cast<RigidBody>(getOwner()->getComponent(ComponentType::rigidBody));
 
-    if (!rigidBody)
+    if (rigidBody_ptr.expired())
       return;
   }
 
@@ -64,9 +71,12 @@ void Player::handleInput()
   if (xForce != 0)
     appliedForce.setX(xForce);
 
-  if (!rigidBody->isFalling() && ((sf::Keyboard::isKeyPressed(sf::Keyboard::W) && controlType == PlayerControlType::WASD)
-    || (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && controlType == PlayerControlType::ARROW)))
+  if (std::shared_ptr<RigidBody> rigidBody = rigidBody_ptr.lock())
   {
-    appliedForce.setY(-jumpHeight);
+    if (!rigidBody->isFalling() && ((sf::Keyboard::isKeyPressed(sf::Keyboard::W) && controlType == PlayerControlType::WASD)
+                                    || (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && controlType == PlayerControlType::ARROW)))
+    {
+      appliedForce.setY(-jumpHeight);
+    }
   }
 }

@@ -5,35 +5,39 @@
 #include <iostream>
 
 Collider::Collider()
-  : Component{ComponentType::collider}, transform{nullptr}
+  : Component{ComponentType::collider}
 {}
 
-bool Collider::collidesWith(Object* other, std::vector<Vec3<float>>& polytope, Vec3<float> translation)
+bool Collider::collidesWith(std::shared_ptr<Object> other, std::vector<Vec3<float>>& polytope, Vec3<float> translation)
 {
-  if (!transform)
+  if (transform_ptr.expired())
   {
-    transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+    transform_ptr = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
-    if (!transform)
-      return false;
+    if (transform_ptr.expired())
+      throw std::runtime_error("Collider::EPA::Missing Transform");
   }
 
-  auto otherTransform = dynamic_cast<Transform*>(other->getComponent(ComponentType::transform));
-  auto otherCollider = dynamic_cast<Collider*>(other->getComponent(ComponentType::collider));
+  auto otherTransform = dynamic_pointer_cast<Transform>(other->getComponent(ComponentType::transform));
+  auto otherCollider = dynamic_pointer_cast<Collider>(other->getComponent(ComponentType::collider));
   if (!otherTransform || !otherCollider)
     return false;
 
   Simplex simplex;
-  auto direction = Vec3<float>{ (transform->getPosition() - otherTransform->getPosition()).xy(), 0 } + translation;
+  Vec3<float> direction;
 
-  Vec3<float> support = getSupport(this, otherCollider, direction, translation);
+  if (std::shared_ptr<Transform> transform = transform_ptr.lock())
+  {
+    direction = Vec3<float>{ (transform->getPosition() - otherTransform->getPosition()).xy(), 0 } + translation;
+  }
+  Vec3<float> support = getSupport(otherCollider, direction, translation);
 
   simplex.addVertex(support);
   direction *= -1.0f;
 
   do
   {
-    support = getSupport(this, otherCollider, direction, translation);
+    support = getSupport(otherCollider, direction, translation);
 
     if (support.dot(direction) < 0)
       return false;
@@ -49,7 +53,7 @@ bool Collider::collidesWith(Object* other, std::vector<Vec3<float>>& polytope, V
   return true;
 }
 
-Vec3<float> Collider::minimumTranslationVector(std::vector<std::pair<Object*, std::vector<Vec3<float>>>>& collisions)
+Vec3<float> Collider::minimumTranslationVector(std::vector<std::pair<std::shared_ptr<Object>, std::vector<Vec3<float>>>>& collisions)
 {
   if (collisions.size() == 1)
     return EPA(collisions.at(0).second, collisions.at(0).first, {0}) * -1.0f;
@@ -130,9 +134,9 @@ Vec3<float> Collider::minimumTranslationVector(std::vector<std::pair<Object*, st
   return finalMinimumTranslationVector * -1.0f;
 }
 
-Vec3<float> Collider::getSupport(Collider* a, Collider* b, Vec3<float> direction, Vec3<float> translation)
+Vec3<float> Collider::getSupport(std::shared_ptr<Collider> b, Vec3<float> direction, Vec3<float> translation)
 {
-  return a->findFurthestPoint(direction, translation) - b->findFurthestPoint(direction * -1.0f, {0});
+  return findFurthestPoint(direction, translation) - b->findFurthestPoint(direction * -1.0f, {0});
 }
 
 bool Collider::nextSimplex(Simplex& simplex, Vec3<float>& direction) {
@@ -197,18 +201,18 @@ Vec3<float> Collider::getClosestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<f
   return a + (AB * dp);
 }
 
-Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, Object* other, Vec3<float> translation)
+Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, std::shared_ptr<Object> other, Vec3<float> translation)
 {
-  if (!transform)
+  if (transform_ptr.expired())
   {
-    transform = dynamic_cast<Transform*>(owner->getComponent(ComponentType::transform));
+    transform_ptr = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
-    if (!transform)
+    if (transform_ptr.expired())
       throw std::runtime_error("Collider::EPA::Missing Transform");
   }
 
-  auto otherTransform = dynamic_cast<Transform*>(other->getComponent(ComponentType::transform));
-  auto otherCollider = dynamic_cast<Collider*>(other->getComponent(ComponentType::collider));
+  auto otherTransform = dynamic_pointer_cast<Transform>(other->getComponent(ComponentType::transform));
+  auto otherCollider = dynamic_pointer_cast<Collider>(other->getComponent(ComponentType::collider));
   if (!otherTransform || !otherCollider)
     throw std::runtime_error("Collider::EPA::Missing Transform/Collider");
 
@@ -251,28 +255,20 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, Object* other, Vec
 
       searchDirection = {AB.getY(), AB.getX() * -1.0f, 0};
 
-      if (searchDirection.dot(a * -1) > 0)
+      for (auto j : polytope)
       {
-        searchDirection *= -1;
-      }
-      else
-      {
-        for (auto j : polytope)
+        if (searchDirection.dot(j) > 0 && !(
+            (j.getX() == a.getX() && j.getY() == a.getY()) ||
+            (j.getX() == b.getX() && j.getY() == b.getY())))
         {
-          if (searchDirection.dot(j) > 0 && !(
-              (j.getX() == a.getX() && j.getY() == a.getY()) ||
-              (j.getX() == b.getX() && j.getY() == b.getY())
-          ))
-          {
-            searchDirection = searchDirection * -1;
-            break;
-          }
+          searchDirection *= -1;
+          break;
         }
       }
     }
 
     // Find and insert new point
-    testPoint = getSupport(this, otherCollider, searchDirection.normalized(), translation);
+    testPoint = getSupport(otherCollider, searchDirection.normalized(), translation);
 
     if (testPoint.dot(searchDirection) > 0
       && !(a.getX() == testPoint.getX() && a.getY() == testPoint.getY())
@@ -283,7 +279,7 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, Object* other, Vec
       if (polytope.size() == 3)
       {
         searchDirection *= -1;
-        testPoint = getSupport(this, otherCollider, searchDirection.normalized(), translation);
+        testPoint = getSupport(otherCollider, searchDirection.normalized(), translation);
 
         if (testPoint.dot(searchDirection) > 0
             && !(a.getX() == testPoint.getX() && a.getY() == testPoint.getY())

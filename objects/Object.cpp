@@ -1,15 +1,6 @@
 #include "Object.h"
 #include "components/Component.h"
 
-Object::~Object()
-{
-  for (auto [componentType, component] : components)
-  {
-    delete component;
-    component = nullptr;
-  }
-}
-
 void Object::update(float dt)
 {
   for (auto [componentType, component] : components)
@@ -22,13 +13,13 @@ void Object::fixedUpdate(float dt)
     component->fixedUpdate(dt);
 }
 
-void Object::addComponent(Component* component)
+void Object::addComponent(std::shared_ptr<Component> component)
 {
   component->setOwner(this);
-  components.insert({ component->getType(), component });
+  components.insert({ component->getType(), std::move(component) });
 }
 
-Component* Object::getComponent(const ComponentType type) const
+std::shared_ptr<Component> Object::getComponent(const ComponentType type) const
 {
   for (auto [componentType, component] : components)
     if (componentType == type)
