@@ -58,7 +58,7 @@ Vec3<float> Collider::minimumTranslationVector(std::vector<std::pair<std::shared
   if (collisions.size() == 1)
     return EPA(collisions.at(0).second, collisions.at(0).first, Vec3<float>(0)) * -1.0f;
 
-  Vec3<float> finalMinimumTranslationVector = Vec3<float>(0);
+  auto finalMinimumTranslationVector = Vec3<float>(0);
   float xCollisions = 0;
   float yCollisions = 0;
 
