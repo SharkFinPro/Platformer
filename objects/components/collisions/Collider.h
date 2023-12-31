@@ -23,7 +23,6 @@ protected:
   std::weak_ptr<Transform> transform_ptr;
 
 private:
-
   virtual Vec3<float> findFurthestPoint(Vec3<float> direction, Vec3<float> translation) = 0;
   Vec3<float> getSupport(const std::shared_ptr<Collider>& b, Vec3<float> direction, Vec3<float> translation);
 
