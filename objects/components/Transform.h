@@ -8,7 +8,7 @@
 class Transform : public Component
 {
 public:
-  Transform(float xPos, float yPos, std::vector<Vec3<float>> mesh);
+  Transform(float x, float y, std::vector<Vec3<float>> mesh);
 
   void fixedUpdate(float dt) override;
 
