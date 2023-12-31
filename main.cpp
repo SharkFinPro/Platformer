@@ -36,6 +36,7 @@ int main()
   objectManager.setWindow(&window);
 
   std::chrono::steady_clock::time_point previous = std::chrono::steady_clock::now();
+  float dt = 0;
 
   // run the program as long as the window is open
   while (window.isOpen())
@@ -49,11 +50,6 @@ int main()
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
       window.close();
 
-    // Delta Time
-    std::chrono::steady_clock::time_point current = std::chrono::steady_clock::now();
-    float dt = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(current - previous).count()) / 1000000.0f;
-    previous = current;
-
     // clear the window with black color
     window.clear(sf::Color{200, 200, 200});
 
@@ -61,6 +57,11 @@ int main()
 
     // end the current frame
     window.display();
+
+    // Delta Time based off previous frame
+    std::chrono::steady_clock::time_point current = std::chrono::steady_clock::now();
+    dt = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(current - previous).count()) / 1000000.0f;
+    previous = current;
   }
 }
 
