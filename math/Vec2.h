@@ -39,8 +39,8 @@ Vec2<T>::Vec2()
 {}
 
 template<typename T>
-Vec2<T>::Vec2(T x, T y)
-  : x{x}, y{y}
+Vec2<T>::Vec2(T x_, T y_)
+  : x{x_}, y{y_}
 {}
 
 template<typename T>
@@ -56,15 +56,15 @@ T Vec2<T>::getY() const
 }
 
 template<typename T>
-void Vec2<T>::setX(T x)
+void Vec2<T>::setX(T x_)
 {
-  this->x = x;
+  x = x_;
 }
 
 template<typename T>
-void Vec2<T>::setY(T y)
+void Vec2<T>::setY(T y_)
 {
-  this->y = y;
+  y = y_;
 }
 
 template<typename T>
@@ -80,13 +80,13 @@ T Vec2<T>::length() const
 }
 
 template<typename T>
-Vec2<T> Vec2<T>::operator+(const Vec2<T> &other) const
+Vec2<T> Vec2<T>::operator+(const Vec2<T>& other) const
 {
   return { x + other.x, y + other.y };
 }
 
 template<typename T>
-Vec2<T> Vec2<T>::operator-(const Vec2<T> &other) const
+Vec2<T> Vec2<T>::operator-(const Vec2<T>& other) const
 {
   return { x - other.x, y - other.y };
 }
