@@ -1,8 +1,8 @@
 #include "Component.h"
 #include "../Object.h"
 
-Component::Component(ComponentType type)
-  : type{type}, owner{nullptr}
+Component::Component(ComponentType type_)
+  : type{type_}, owner{nullptr}
 {}
 
 ComponentType Component::getType() const
@@ -10,9 +10,9 @@ ComponentType Component::getType() const
   return type;
 }
 
-void Component::setOwner(Object* componentOwner)
+void Component::setOwner(Object* owner_)
 {
-  owner = componentOwner;
+  owner = owner_;
 }
 
 Object* Component::getOwner() const

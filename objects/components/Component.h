@@ -13,7 +13,7 @@ public:
 
   [[nodiscard]] ComponentType getType() const;
 
-  void setOwner(Object* componentOwner);
+  void setOwner(Object* owner);
   [[nodiscard]] Object* getOwner() const;
 
   virtual void update(float dt);
