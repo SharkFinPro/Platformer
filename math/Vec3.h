@@ -137,13 +137,13 @@ Vec3<T> Vec3<T>::normalized() const
 }
 
 template<typename T>
-Vec3<T> Vec3<T>::operator+(const Vec3<T> &other) const
+Vec3<T> Vec3<T>::operator+(const Vec3<T>& other) const
 {
   return { x + other.x, y + other.y, z + other.z };
 }
 
 template<typename T>
-Vec3<T> Vec3<T>::operator-(const Vec3<T> &other) const
+Vec3<T> Vec3<T>::operator-(const Vec3<T>& other) const
 {
   return { x - other.x, y - other.y, z - other.z };
 }
