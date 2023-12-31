@@ -1,8 +1,8 @@
 #include "Transform.h"
 #include <utility>
 
-Transform::Transform(float xPos, float yPos, std::vector<Vec3<float>> mesh)
-  : Component(ComponentType::transform), initialPosition{xPos, yPos, 0}, position{initialPosition}, newPosition{initialPosition}, mesh{std::move(mesh)}
+Transform::Transform(float x, float y, std::vector<Vec3<float>> mesh)
+  : Component(ComponentType::transform), initialPosition{x, y, 0}, position{initialPosition}, newPosition{initialPosition}, mesh{std::move(mesh)}
 {}
 
 void Transform::fixedUpdate([[maybe_unused]] float dt)

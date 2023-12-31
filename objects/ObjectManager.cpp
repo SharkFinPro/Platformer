@@ -34,9 +34,9 @@ bool ObjectManager::removeObject(const std::shared_ptr<Object>& object)
   return false;
 }
 
-void ObjectManager::setWindow(sf::RenderWindow* window)
+void ObjectManager::setWindow(sf::RenderWindow* window_)
 {
-  this->window = window;
+  window = window_;
 }
 
 sf::RenderWindow* ObjectManager::getWindow() const

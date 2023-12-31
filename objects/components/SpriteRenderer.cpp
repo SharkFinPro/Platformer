@@ -3,8 +3,8 @@
 #include "../Object.h"
 #include "../ObjectManager.h"
 
-SpriteRenderer::SpriteRenderer(sf::Color color)
-  : Component{ComponentType::spriteRenderer}, color{color}
+SpriteRenderer::SpriteRenderer(sf::Color color_)
+  : Component{ComponentType::spriteRenderer}, color{color_}
 {}
 
 void SpriteRenderer::update([[maybe_unused]] float dt)
@@ -31,7 +31,7 @@ void SpriteRenderer::update([[maybe_unused]] float dt)
   }
 }
 
-void SpriteRenderer::setColor(sf::Color color)
+void SpriteRenderer::setColor(sf::Color color_)
 {
-  this->color = color;
+  this->color = color_;
 }

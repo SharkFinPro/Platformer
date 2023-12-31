@@ -3,7 +3,7 @@
 #include "Transform.h"
 
 RigidBody::RigidBody()
-  : Component{ComponentType::rigidBody}, velocity{0}, doGravity{true}, gravity{0.0f, 9.81f, 0.0f}, falling{true}
+  : Component{ComponentType::rigidBody}, velocity{0}, doGravity{true}, gravity{0, 9.81f, 0}, falling{true}
 {}
 
 void RigidBody::fixedUpdate(float dt)

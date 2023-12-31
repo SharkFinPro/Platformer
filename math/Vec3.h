@@ -11,7 +11,7 @@ public:
   Vec3();
   Vec3(T x, T y, T z);
   Vec3(Vec2<T> xy, T z);
-  Vec3(T xyz);
+  explicit Vec3(T xyz);
 
   T getX() const;
   T getY() const;
@@ -50,13 +50,13 @@ Vec3<T>::Vec3()
 {}
 
 template<typename T>
-Vec3<T>::Vec3(T x, T y, T z)
-  : x{x}, y{y}, z{z}
+Vec3<T>::Vec3(T x_, T y_, T z_)
+  : x{x_}, y{y_}, z{z_}
 {}
 
 template<typename T>
-Vec3<T>::Vec3(Vec2<T> xy, T z)
-  : x{xy.getX()}, y{xy.getY()}, z{z}
+Vec3<T>::Vec3(Vec2<T> xy, T z_)
+  : x{xy.getX()}, y{xy.getY()}, z{z_}
 {}
 
 template<typename T>
@@ -89,21 +89,21 @@ Vec2<T> Vec3<T>::xy() const
 }
 
 template<typename T>
-void Vec3<T>::setX(T x)
+void Vec3<T>::setX(T x_)
 {
-  this->x = x;
+  x = x_;
 }
 
 template<typename T>
-void Vec3<T>::setY(T y)
+void Vec3<T>::setY(T y_)
 {
-  this->y = y;
+  y = y_;
 }
 
 template<typename T>
-void Vec3<T>::setZ(T z)
+void Vec3<T>::setZ(T z_)
 {
-  this->z = z;
+  z = z_;
 }
 
 template<typename T>
@@ -137,13 +137,13 @@ Vec3<T> Vec3<T>::normalized() const
 }
 
 template<typename T>
-Vec3<T> Vec3<T>::operator+(const Vec3<T> &other) const
+Vec3<T> Vec3<T>::operator+(const Vec3<T>& other) const
 {
   return { x + other.x, y + other.y, z + other.z };
 }
 
 template<typename T>
-Vec3<T> Vec3<T>::operator-(const Vec3<T> &other) const
+Vec3<T> Vec3<T>::operator-(const Vec3<T>& other) const
 {
   return { x - other.x, y - other.y, z - other.z };
 }
