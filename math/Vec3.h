@@ -11,7 +11,7 @@ public:
   Vec3();
   Vec3(T x, T y, T z);
   Vec3(Vec2<T> xy, T z);
-  Vec3(T xyz);
+  explicit Vec3(T xyz);
 
   T getX() const;
   T getY() const;

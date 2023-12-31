@@ -15,7 +15,7 @@ class Collider : public Component
 public:
   Collider();
 
-  bool collidesWith(const std::shared_ptr<Object>& other, std::vector<Vec3<float>>& polytope, Vec3<float> translation = {0});
+  bool collidesWith(const std::shared_ptr<Object>& other, std::vector<Vec3<float>>& polytope, Vec3<float> translation = Vec3<float>(0));
 
   Vec3<float> minimumTranslationVector(std::vector<std::pair<std::shared_ptr<Object>, std::vector<Vec3<float>>>>& collisions);
 

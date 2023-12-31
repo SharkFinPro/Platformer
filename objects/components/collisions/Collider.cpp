@@ -56,15 +56,15 @@ bool Collider::collidesWith(const std::shared_ptr<Object>& other, std::vector<Ve
 Vec3<float> Collider::minimumTranslationVector(std::vector<std::pair<std::shared_ptr<Object>, std::vector<Vec3<float>>>>& collisions)
 {
   if (collisions.size() == 1)
-    return EPA(collisions.at(0).second, collisions.at(0).first, {0}) * -1.0f;
+    return EPA(collisions.at(0).second, collisions.at(0).first, Vec3<float>(0)) * -1.0f;
 
-  Vec3<float> finalMinimumTranslationVector = {0};
+  Vec3<float> finalMinimumTranslationVector = Vec3<float>(0);
   float xCollisions = 0;
   float yCollisions = 0;
 
   for (auto& collision : collisions)
   {
-    auto minimumTranslationVector = EPA(collision.second, collision.first, {0});
+    auto minimumTranslationVector = EPA(collision.second, collision.first, Vec3<float>(0));
 
     finalMinimumTranslationVector += minimumTranslationVector;
 
@@ -136,7 +136,7 @@ Vec3<float> Collider::minimumTranslationVector(std::vector<std::pair<std::shared
 
 Vec3<float> Collider::getSupport(const std::shared_ptr<Collider>& b, Vec3<float> direction, Vec3<float> translation)
 {
-  return findFurthestPoint(direction, translation) - b->findFurthestPoint(direction * -1.0f, {0});
+  return findFurthestPoint(direction, translation) - b->findFurthestPoint(direction * -1.0f, Vec3<float>(0));
 }
 
 bool Collider::nextSimplex(Simplex& simplex, Vec3<float>& direction) {
