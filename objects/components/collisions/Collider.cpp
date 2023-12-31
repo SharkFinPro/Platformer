@@ -224,28 +224,29 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, const std::shared_
   Vec3<float> testPoint;
   Vec3<float> searchDirection;
 
-  // Find the closest point on polytope
-  float minDist = FLT_MAX;
-  for (size_t i = 0; i < polytope.size(); i++)
+  do
   {
-    Vec3<float> closest = getClosestPointOnLine(polytope.at(i), polytope.at((i + 1) % polytope.size()), {0.0f, 0.0f, 0.0f});
+    // Find the closest point on polytope
+    float minDist = FLT_MAX;
+    for (size_t i = 0; i < polytope.size(); i++)
+    {
+      Vec3<float> closest = getClosestPointOnLine(polytope.at(i), polytope.at((i + 1) % polytope.size()), {0.0f, 0.0f, 0.0f});
 
-    float dist =
-      closest.getX() * closest.getX() +
-      closest.getY() * closest.getY() +
-      closest.getZ() * closest.getZ();
+      float dist = (
+        closest.getX() * closest.getX() +
+        closest.getY() * closest.getY() +
+        closest.getZ() * closest.getZ()
+      );
 
-    if (dist < minDist) {
-      minDist = dist;
-      closestPoint = closest;
-      closestA = static_cast<unsigned int>(i);
-      a = polytope.at(i);
-      b = polytope.at((i + 1) % polytope.size());
+      if (dist < minDist) {
+        minDist = dist;
+        closestPoint = closest;
+        closestA = static_cast<unsigned int>(i);
+        a = polytope.at(i);
+        b = polytope.at((i + 1) % polytope.size());
+      }
     }
-  }
 
-  if (polytope.size() < 25)
-  {
     // Find search direction
     searchDirection = closestPoint * 100000.0f;
 
@@ -288,10 +289,12 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, const std::shared_
           polytope.insert(polytope.begin() + closestA, testPoint);
         }
       }
-
-      return EPA(polytope, other, translation);
     }
-  }
+    else
+    {
+      break;
+    }
+  } while (polytope.size() < 25);
 
   if (fabs(closestPoint.getX()) < threshold && closestPoint.getX() != 0)
     closestPoint.setX(0);
