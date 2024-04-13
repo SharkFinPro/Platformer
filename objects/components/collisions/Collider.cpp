@@ -155,10 +155,7 @@ bool Collider::line(Simplex& simplex, Vec3<float>& direction)
 
   direction = ab.cross(ao).cross(ab);
 
-  if (direction.dot(ao) == 0)
-    return true;
-
-  return false;
+  return direction.dot(ao) == 0;
 }
 
 bool Collider::triangle(Simplex& simplex, Vec3<float>& direction)

@@ -30,7 +30,7 @@ std::vector<Vec3<float>> Transform::getMesh() const {
   std::vector<Vec3<float>> transformedMesh;
 
   for (auto& m : mesh)
-    transformedMesh.emplace_back(m.getX() + position.getX(), m.getY() + position.getY(), m.getZ() + position.getZ());
+    transformedMesh.emplace_back(m + position);
 
   return transformedMesh;
 }
