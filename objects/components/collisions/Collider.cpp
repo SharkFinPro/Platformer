@@ -245,7 +245,7 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, const std::shared_
     }
 
     // Find search direction
-    searchDirection = closestPoint * 100000.0f;
+    searchDirection = closestPoint;
 
     if ((a.getX() == 0 && b.getX() == 0) || (a.getY() == 0 && b.getY() == 0) || minDist == 0)
     {
