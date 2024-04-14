@@ -188,14 +188,7 @@ Vec3<float> Collider::getClosestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<f
 {
   auto AB = b - a;
 
-  auto dp = (c - a).dot(AB) / AB.dot(AB);
-
-  if (dp < 0)
-    dp = 0;
-  else if (dp > 1)
-    dp = 1;
-
-  return a + (AB * dp);
+  return a + AB * std::clamp((c - a).dot(AB) / AB.dot(AB), 0.0f, 1.0f);
 }
 
 Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, const std::shared_ptr<Object>& other, Vec3<float> translation)
