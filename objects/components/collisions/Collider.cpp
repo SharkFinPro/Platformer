@@ -56,7 +56,7 @@ bool Collider::collidesWith(const std::shared_ptr<Object>& other, std::vector<Ve
 Vec3<float> Collider::minimumTranslationVector(std::vector<std::pair<std::shared_ptr<Object>, std::vector<Vec3<float>>>>& collisions)
 {
   if (collisions.size() == 1)
-    return EPA(collisions.at(0).second, collisions.at(0).first, Vec3<float>(0)) * -1.0f;
+    return -EPA(collisions.at(0).second, collisions.at(0).first, Vec3<float>(0));
 
   auto finalMinimumTranslationVector = Vec3<float>(0);
   float xCollisions = 0;
@@ -131,12 +131,12 @@ Vec3<float> Collider::minimumTranslationVector(std::vector<std::pair<std::shared
   if (yCollisions != 0)
     finalMinimumTranslationVector.setY(finalMinimumTranslationVector.getY() / yCollisions);
 
-  return finalMinimumTranslationVector * -1.0f;
+  return -finalMinimumTranslationVector;
 }
 
 Vec3<float> Collider::getSupport(const std::shared_ptr<Collider>& b, Vec3<float> direction, Vec3<float> translation)
 {
-  return findFurthestPoint(direction, translation) - b->findFurthestPoint(direction * -1.0f, Vec3<float>(0));
+  return findFurthestPoint(direction, translation) - b->findFurthestPoint(-direction, Vec3<float>(0));
 }
 
 bool Collider::nextSimplex(Simplex& simplex, Vec3<float>& direction) {
@@ -151,7 +151,7 @@ bool Collider::nextSimplex(Simplex& simplex, Vec3<float>& direction) {
 bool Collider::line(Simplex& simplex, Vec3<float>& direction)
 {
   auto ab = simplex.getB() - simplex.getA();
-  auto ao = simplex.getA() * -1.0f;
+  auto ao = -simplex.getA();
 
   direction = ab.cross(ao).cross(ab);
 
@@ -162,7 +162,7 @@ bool Collider::triangle(Simplex& simplex, Vec3<float>& direction)
 {
   auto ab = simplex.getB() - simplex.getA();
   auto ac = simplex.getC() - simplex.getA();
-  auto ao = simplex.getA() * -1.0f;
+  auto ao = -simplex.getA();
 
   auto ABperp = ac.cross(ab).cross(ab);
   auto ACperp = ab.cross(ac).cross(ac);
@@ -244,7 +244,7 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, const std::shared_
     {
       auto AB = b - a;
 
-      searchDirection = {AB.getY(), AB.getX() * -1.0f, 0};
+      searchDirection = {AB.getY(), -AB.getX(), 0};
 
       for (auto j : polytope)
       {
