@@ -8,7 +8,7 @@ ObjectManager::ObjectManager()
   : window{nullptr}, fixedUpdateDt{1.0f / 50.0f}, timeAccumulator{0.0f}, ticks{0}
 {}
 
-void ObjectManager::update(float dt)
+void ObjectManager::update(const float& dt)
 {
   fixedUpdate(dt);
   variableUpdate(dt);
@@ -44,13 +44,13 @@ sf::RenderWindow* ObjectManager::getWindow() const
   return window;
 }
 
-void ObjectManager::variableUpdate(float dt)
+void ObjectManager::variableUpdate(const float& dt)
 {
   for (auto& object : objects)
     object->update(dt);
 }
 
-void ObjectManager::fixedUpdate(float dt)
+void ObjectManager::fixedUpdate(const float& dt)
 {
   timeAccumulator += dt;
 
