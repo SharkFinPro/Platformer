@@ -21,11 +21,11 @@ void RigidBody::fixedUpdate(float dt)
     falling = true;
 
     if (doGravity)
-      applyForce(gravity);
+      applyForce(gravity * dt);
 
     limitMovement();
 
-    transform->move(velocity * dt);
+    transform->move(velocity);
   }
 }
 
@@ -56,25 +56,11 @@ void RigidBody::handleCollision(Vec3<float> minimumTranslationVector)
 
   if (std::shared_ptr<Transform> transform = transform_ptr.lock())
   {
-    if (minimumTranslationVector.getX() != 0)
-      handleXCollision();
+    if (minimumTranslationVector.getY() < 0)
+      falling = false;
 
-    if (minimumTranslationVector.getY() != 0)
-      handleYCollision(minimumTranslationVector.getY());
+    velocity += minimumTranslationVector;
 
     transform->move(minimumTranslationVector);
   }
-}
-
-void RigidBody::handleXCollision()
-{
-  velocity.setX(0);
-}
-
-void RigidBody::handleYCollision(float minimumTranslationVector)
-{
-  if (minimumTranslationVector < 0)
-    falling = false;
-
-  velocity.setY(0);
 }

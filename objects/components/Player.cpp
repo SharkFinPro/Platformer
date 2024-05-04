@@ -39,11 +39,10 @@ void Player::fixedUpdate([[maybe_unused]] float dt)
 
   if (std::shared_ptr<RigidBody> rigidBody = rigidBody_ptr.lock())
   {
-    rigidBody->applyForce(appliedForce);
+    rigidBody->applyForce(appliedForce * dt);
   }
 
-  appliedForce.setX(0);
-  appliedForce.setY(0);
+  appliedForce *= 0;
 }
 
 void Player::handleInput()
@@ -74,7 +73,7 @@ void Player::handleInput()
   if (std::shared_ptr<RigidBody> rigidBody = rigidBody_ptr.lock())
   {
     if (!rigidBody->isFalling() && ((sf::Keyboard::isKeyPressed(sf::Keyboard::W) && controlType == PlayerControlType::WASD)
-                                    || (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && controlType == PlayerControlType::ARROW)))
+      || (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && controlType == PlayerControlType::ARROW)))
     {
       appliedForce.setY(-jumpHeight);
     }

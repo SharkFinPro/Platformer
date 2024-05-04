@@ -31,9 +31,6 @@ private:
   std::weak_ptr<Transform> transform_ptr;
 
   void limitMovement();
-
-  void handleXCollision();
-  void handleYCollision(float minimumTranslationVector);
 };
 
 
