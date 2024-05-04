@@ -8,12 +8,12 @@ Player::Player(PlayerControlType controlType)
   : Component{ComponentType::player}, speed{25}, jumpHeight{550}, controlType{controlType}, appliedForce{0}
 {}
 
-void Player::update([[maybe_unused]] float dt)
+void Player::update([[maybe_unused]] const float& dt)
 {
   handleInput();
 }
 
-void Player::fixedUpdate([[maybe_unused]] float dt)
+void Player::fixedUpdate([[maybe_unused]] const float& dt)
 {
   if (transform_ptr.expired())
   {
