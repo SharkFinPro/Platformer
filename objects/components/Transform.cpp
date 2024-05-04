@@ -15,7 +15,7 @@ Vec3<float> Transform::getPosition() const
   return position;
 }
 
-void Transform::move(Vec3<float> vector)
+void Transform::move(const Vec3<float>& vector)
 {
   newPosition += vector;
 }

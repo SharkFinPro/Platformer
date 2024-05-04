@@ -14,7 +14,7 @@ public:
 
   [[nodiscard]] Vec3<float> getPosition() const;
 
-  void move(Vec3<float> vector);
+  void move(const Vec3<float>& vector);
 
   [[nodiscard]] std::vector<Vec3<float>> getMesh() const;
 
