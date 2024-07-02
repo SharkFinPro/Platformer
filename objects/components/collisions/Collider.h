@@ -10,7 +10,7 @@
 class Object;
 class Transform;
 
-typedef std::vector<Vec3<float>>& Polytope;
+typedef std::vector<Vec3<float>> Polytope;
 
 class Collider : public Component
 {
@@ -34,7 +34,7 @@ private:
 
   static bool triangleCase(Simplex& simplex, Vec3<float>& direction);
 
-  Vec3<float> EPA(Polytope polytope, const std::shared_ptr<Object>& other);
+  Vec3<float> EPA(Polytope& polytope, const std::shared_ptr<Object>& other);
 };
 
 

@@ -45,7 +45,7 @@ bool Collider::collidesWith(const std::shared_ptr<Object>& other, Vec3<float>* m
 
   if (mtv != nullptr)
   {
-    std::vector<Vec3<float>> polytope{simplex.getA(), simplex.getB(), simplex.getC()};
+    Polytope polytope{simplex.getA(), simplex.getB(), simplex.getC()};
 
     *mtv = -EPA(polytope, other);
   }
@@ -129,7 +129,7 @@ struct ClosestEdgeData {
   Vec3<float> b;
 };
 
-float findClosestEdge(Polytope polytope, ClosestEdgeData& closestEdgeData)
+float findClosestEdge(Polytope& polytope, ClosestEdgeData& closestEdgeData)
 {
   Vec3<float> origin{0.0f, 0.0f, 0.0f};
   float minDist = FLT_MAX;
@@ -173,7 +173,7 @@ bool closeEnough(float minDistance, std::optional<float> previousMinDistance, Ve
   return (deltaX + deltaY) < 1;
 }
 
-Vec3<float> getSearchDirection(ClosestEdgeData& closestEdgeData, Polytope polytope)
+Vec3<float> getSearchDirection(ClosestEdgeData& closestEdgeData, Polytope& polytope)
 {
   Vec3<float> searchDirection = closestEdgeData.closestPoint;
 
@@ -200,7 +200,7 @@ Vec3<float> getSearchDirection(ClosestEdgeData& closestEdgeData, Polytope polyto
   return searchDirection;
 }
 
-Vec3<float> Collider::EPA(Polytope polytope, const std::shared_ptr<Object>& other)
+Vec3<float> Collider::EPA(Polytope& polytope, const std::shared_ptr<Object>& other)
 {
   if (transform_ptr.expired())
   {
