@@ -105,7 +105,7 @@ void ObjectManager::checkCollisions()
 
     std::vector<float> distances;
     std::vector<bool> chosenFlags;
-    for (auto object : collidedObjects)
+    for (const auto& object : collidedObjects)
     {
       Vec3<float> mtv;
       collider->collidesWith(object, &mtv);
