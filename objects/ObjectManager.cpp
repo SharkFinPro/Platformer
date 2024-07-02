@@ -93,48 +93,49 @@ void ObjectManager::checkCollisions()
       }
     }
 
-    if (!collidedObjects.empty())
+    if (collidedObjects.empty())
     {
-      auto rb = dynamic_pointer_cast<RigidBody>(object1->getComponent(ComponentType::rigidBody));
+      continue;
+    }
 
-      if (!rb) {
-        continue;
+    auto rb = dynamic_pointer_cast<RigidBody>(object1->getComponent(ComponentType::rigidBody));
+    if (!rb) {
+      continue;
+    }
+
+    std::vector<float> distances;
+    std::vector<bool> chosenFlags;
+    for (auto object : collidedObjects)
+    {
+      Vec3<float> mtv;
+      collider->collidesWith(object, &mtv);
+
+      distances.push_back(mtv.dot(mtv));
+      chosenFlags.push_back(false);
+    }
+
+    std::vector<float> sortedDistances = distances;
+    std::sort(sortedDistances.begin(), sortedDistances.end(), std::greater<>());
+
+    for (int i = 0; i < sortedDistances.size(); i++)
+    {
+      if (sortedDistances[i] == 0)
+      {
+        break;
       }
 
-      std::vector<float> distances;
-      std::vector<bool> chosenFlags;
-      for (auto object : collidedObjects)
+      for (int j = 0; j < distances.size(); j++)
       {
-        Vec3<float> mtv;
-        collider->collidesWith(object, &mtv);
-
-        distances.push_back(mtv.dot(mtv));
-        chosenFlags.push_back(false);
-      }
-
-      std::vector<float> sortedDistances = distances;
-      std::sort(sortedDistances.begin(), sortedDistances.end(), std::greater<>());
-
-      for (int i = 0; i < sortedDistances.size(); i++)
-      {
-        if (sortedDistances[i] == 0)
+        if (sortedDistances[i] == distances[j] && !chosenFlags[j])
         {
-          break;
-        }
+          chosenFlags[j] = true;
 
-        for (int j = 0; j < distances.size(); j++)
-        {
-          if (sortedDistances[i] == distances[j] && !chosenFlags[j])
+          Vec3<float> mtv;
+          if (collider->collidesWith(collidedObjects[j], &mtv))
           {
-            chosenFlags[j] = true;
-
-            Vec3<float> mtv;
-            if (collider->collidesWith(collidedObjects[j], &mtv))
-            {
-              rb->handleCollision(mtv);
-            }
-            continue;
+            rb->handleCollision(mtv);
           }
+          continue;
         }
       }
     }
