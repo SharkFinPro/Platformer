@@ -133,7 +133,7 @@ void ObjectManager::checkCollisions()
           Vec3<float> mtv;
           if (collider->collidesWith(collidedObjects[j], &mtv))
           {
-            rb->handleCollision(mtv);
+            rb->handleCollision(mtv, collidedObjects[j]);
           }
           continue;
         }
