@@ -48,10 +48,6 @@ bool Collider::collidesWith(const std::shared_ptr<Object>& other, Vec3<float>* m
     std::vector<Vec3<float>> polytope{simplex.getA(), simplex.getB(), simplex.getC()};
 
     *mtv = minimumTranslationVector(other, polytope);
-
-//    polytope.push_back(simplex.getA());
-//    polytope.push_back(simplex.getB());
-//    polytope.push_back(simplex.getC());
   }
 
   return true;
