@@ -234,7 +234,7 @@ Vec3<float> Collider::EPA(Polytope& polytope, const std::shared_ptr<Object>& oth
     Vec3<float> searchDirection = getSearchDirection(closestEdgeData, polytope);
 
     Vec3<float> supportPoint = getSupport(otherCollider, searchDirection.normalized());
-    polytope.insert(polytope.begin() + closestEdgeData.closestIndex, supportPoint);
+    polytope.insert(polytope.begin() + closestEdgeData.closestIndex + 1, supportPoint);
 
     previousMinDist = minDist;
     previousClosestPoint = closestEdgeData.closestPoint;
