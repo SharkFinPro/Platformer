@@ -28,14 +28,14 @@ bool Collider::collidesWith(const std::shared_ptr<Object>& other, Vec3<float>* m
   Simplex simplex;
   Vec3<float> direction{1, 0, 0};
 
-  Vec3<float> support = getSupport(otherCollider, direction);
+  Vec3<float> support = getSupport(otherCollider, direction.normalized());
   simplex.addVertex(support);
 
   direction *= -1.0f;
 
   do
   {
-    support = getSupport(otherCollider, direction);
+    support = getSupport(otherCollider, direction.normalized());
 
     if (support.dot(direction) < 0)
       return false;
