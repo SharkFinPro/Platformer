@@ -134,7 +134,7 @@ Vec3<T> Vec3<T>::normalized() const
 {
   T len = length();
 
-  return Vec3<T>(x / len, y / len, z / len);
+  return len == 0 ? *this : Vec3<T>(x / len, y / len, z / len);
 }
 
 template<typename T>

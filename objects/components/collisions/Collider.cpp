@@ -2,13 +2,14 @@
 #include "../../Object.h"
 #include "../Transform.h"
 #include <cfloat>
+#include <cmath>
 #include <iostream>
 
 Collider::Collider()
   : Component{ComponentType::collider}
 {}
 
-bool Collider::collidesWith(const std::shared_ptr<Object>& other, std::vector<Vec3<float>>& polytope, Vec3<float> translation)
+bool Collider::collidesWith(const std::shared_ptr<Object>& other, Vec3<float>* mtv)
 {
   if (transform_ptr.expired())
   {
@@ -24,157 +25,83 @@ bool Collider::collidesWith(const std::shared_ptr<Object>& other, std::vector<Ve
     return false;
 
   Simplex simplex;
-  Vec3<float> direction;
+  Vec3<float> direction{1, 0, 0};
 
-  if (std::shared_ptr<Transform> transform = transform_ptr.lock())
-  {
-    direction = Vec3<float>{ (transform->getPosition() - otherTransform->getPosition()).xy(), 0 } + translation;
-  }
-  Vec3<float> support = getSupport(otherCollider, direction, translation);
-
+  Vec3<float> support = getSupport(otherCollider, direction.normalized());
   simplex.addVertex(support);
+
   direction *= -1.0f;
 
   do
   {
-    support = getSupport(otherCollider, direction, translation);
+    support = getSupport(otherCollider, direction.normalized());
 
     if (support.dot(direction) < 0)
       return false;
 
     simplex.addVertex(support);
-  } while (!nextSimplex(simplex, direction));
+  } while (!expandSimplex(simplex, direction));
 
-  polytope.push_back(simplex.getA());
-  polytope.push_back(simplex.getB());
-  if (simplex.size() == 3)
-    polytope.push_back(simplex.getC());
+  if (mtv != nullptr)
+  {
+    Polytope polytope{simplex.getA(), simplex.getB(), simplex.getC()};
+
+    *mtv = -EPA(polytope, other);
+  }
 
   return true;
 }
 
-Vec3<float> Collider::minimumTranslationVector(std::vector<std::pair<std::shared_ptr<Object>, std::vector<Vec3<float>>>>& collisions)
+Vec3<float> Collider::getSupport(const std::shared_ptr<Collider>& b, Vec3<float> direction)
 {
-  if (collisions.size() == 1)
-    return -EPA(collisions.at(0).second, collisions.at(0).first, Vec3<float>(0));
-
-  auto finalMinimumTranslationVector = Vec3<float>(0);
-  float xCollisions = 0;
-  float yCollisions = 0;
-
-  for (auto& collision : collisions)
-  {
-    auto minimumTranslationVector = EPA(collision.second, collision.first, Vec3<float>(0));
-
-    finalMinimumTranslationVector += minimumTranslationVector;
-
-    if (minimumTranslationVector.getX() != 0)
-      xCollisions++;
-
-    if (minimumTranslationVector.getY() != 0)
-      yCollisions++;
-  }
-
-  if (finalMinimumTranslationVector.getX() != 0 && finalMinimumTranslationVector.getY() != 0)
-  {
-    if (std::fabs(finalMinimumTranslationVector.getX()) > std::fabs(finalMinimumTranslationVector.getY()))
-    {
-      auto theoreticalTransform = Vec3<float>{ -finalMinimumTranslationVector.getX(), 0.0f, 0.0f };
-
-      finalMinimumTranslationVector.setY(0);
-
-      yCollisions = 0;
-      for (auto& collision : collisions)
-      {
-        std::vector<Vec3<float>> polytope;
-        collidesWith(collision.first, polytope, theoreticalTransform);
-
-        if (polytope.empty())
-          continue;
-
-        auto minimumTranslationVector = EPA(polytope, collision.first, theoreticalTransform);
-
-        if (minimumTranslationVector.getY() != 0)
-        {
-          yCollisions++;
-          finalMinimumTranslationVector.setY(finalMinimumTranslationVector.getY() + minimumTranslationVector.getY());
-        }
-      }
-    }
-    else
-    {
-      auto theoreticalTransform = Vec3<float>{ 0.0f, -finalMinimumTranslationVector.getY(), 0.0f };
-
-      finalMinimumTranslationVector.setX(0);
-
-      xCollisions = 0;
-      for (auto& collision : collisions) {
-        std::vector<Vec3<float>> polytope;
-        collidesWith(collision.first, polytope, theoreticalTransform);
-
-        if (polytope.empty())
-          continue;
-
-        auto minimumTranslationVector = EPA(polytope, collision.first, theoreticalTransform);
-
-        if (minimumTranslationVector.getX() != 0) {
-          xCollisions++;
-          finalMinimumTranslationVector.setX(finalMinimumTranslationVector.getX() + minimumTranslationVector.getX());
-        }
-      }
-    }
-  }
-
-  if (xCollisions != 0)
-    finalMinimumTranslationVector.setX(finalMinimumTranslationVector.getX() / xCollisions);
-
-  if (yCollisions != 0)
-    finalMinimumTranslationVector.setY(finalMinimumTranslationVector.getY() / yCollisions);
-
-  return -finalMinimumTranslationVector;
+  return findFurthestPoint(direction) - b->findFurthestPoint(-direction);
 }
 
-Vec3<float> Collider::getSupport(const std::shared_ptr<Collider>& b, Vec3<float> direction, Vec3<float> translation)
+bool Collider::expandSimplex(Simplex& simplex, Vec3<float>& direction)
 {
-  return findFurthestPoint(direction, translation) - b->findFurthestPoint(-direction, Vec3<float>(0));
+  switch (simplex.size())
+  {
+    case 2:
+      return lineCase(simplex, direction);
+    case 3:
+      return triangleCase(simplex, direction);
+    default:
+      return false;
+  }
 }
 
-bool Collider::nextSimplex(Simplex& simplex, Vec3<float>& direction) {
-  if (simplex.size() == 2)
-    return line(simplex, direction);
-  else if (simplex.size() == 3)
-    return triangle(simplex, direction);
+bool Collider::lineCase(Simplex& simplex, Vec3<float>& direction)
+{
+  auto AB = simplex.getB() - simplex.getA();
+  auto AO = -simplex.getA();
+
+  direction = AB.cross(AO).cross(AB);
+
+  if (direction.dot(direction) == 0)
+  {
+    direction = AB.cross({0, 0, 1});
+  }
 
   return false;
 }
 
-bool Collider::line(Simplex& simplex, Vec3<float>& direction)
+bool Collider::triangleCase(Simplex& simplex, Vec3<float>& direction)
 {
-  auto ab = simplex.getB() - simplex.getA();
-  auto ao = -simplex.getA();
+  auto AB = simplex.getB() - simplex.getA();
+  auto AC = simplex.getC() - simplex.getA();
+  auto AO = -simplex.getA();
 
-  direction = ab.cross(ao).cross(ab);
+  auto ABperp = AC.cross(AB).cross(AB);
+  auto ACperp = AB.cross(AC).cross(AC);
 
-  return direction.dot(ao) == 0;
-}
-
-bool Collider::triangle(Simplex& simplex, Vec3<float>& direction)
-{
-  auto ab = simplex.getB() - simplex.getA();
-  auto ac = simplex.getC() - simplex.getA();
-  auto ao = -simplex.getA();
-
-  auto ABperp = ac.cross(ab).cross(ab);
-  auto ACperp = ab.cross(ac).cross(ac);
-
-  if (ABperp.dot(ao) > 0)
+  if (ABperp.dot(AO) > 0)
   {
     simplex.removeC();
     direction = ABperp;
     return false;
   }
 
-  if (ACperp.dot(ao) > 0)
+  if (ACperp.dot(AO) > 0)
   {
     simplex.removeB();
     direction = ACperp;
@@ -184,14 +111,90 @@ bool Collider::triangle(Simplex& simplex, Vec3<float>& direction)
   return true;
 }
 
-Vec3<float> Collider::getClosestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<float> c)
+Vec3<float> Collider::closestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<float> c)
 {
   auto AB = b - a;
+  auto AC = c - a;
 
-  return a + AB * std::clamp((c - a).dot(AB) / AB.dot(AB), 0.0f, 1.0f);
+  auto projection = AC.dot(AB) / AB.dot(AB);
+
+  return a + (AB * projection);
 }
 
-Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, const std::shared_ptr<Object>& other, Vec3<float> translation)
+
+
+float Collider::findClosestEdge(Polytope& polytope, ClosestEdgeData& closestEdgeData)
+{
+  Vec3<float> origin{0.0f, 0.0f, 0.0f};
+  float minDist = FLT_MAX;
+  size_t polytopeLength = polytope.size();
+
+  for (int i = 0; i < polytopeLength; i++)
+  {
+    Vec3<float> current = polytope[i];
+    Vec3<float> next = polytope[(i + 1) % polytopeLength];
+    Vec3<float> c = Collider::closestPointOnLine(current, next, origin);
+    float dist = c.dot(c);
+
+    if (dist < minDist)
+    {
+      minDist = dist;
+      closestEdgeData.closestPoint = c;
+      closestEdgeData.closestIndex = i;
+      closestEdgeData.a = current;
+      closestEdgeData.b = next;
+    }
+  }
+
+  return minDist;
+}
+
+bool Collider::closeEnough(float minDistance, std::optional<float> previousMinDistance, Vec3<float> currentClosestPoint, std::optional<Vec3<float>> previousClosestPoint)
+{
+  if (!previousClosestPoint.has_value())
+  {
+    return false;
+  }
+
+  if (std::fabs(minDistance - previousMinDistance.value()) >= 0.01)
+  {
+    return false;
+  }
+
+  float deltaX = std::fabs(currentClosestPoint.getX() - previousClosestPoint->getX());
+  float deltaY = std::fabs(currentClosestPoint.getY() - previousClosestPoint->getY());
+
+  return (deltaX + deltaY) < 1;
+}
+
+Vec3<float> Collider::getSearchDirection(ClosestEdgeData& closestEdgeData, Polytope& polytope)
+{
+  Vec3<float> searchDirection = closestEdgeData.closestPoint;
+
+  if (searchDirection.dot(searchDirection) < 0.01)
+  {
+    Vec3<float> AB = closestEdgeData.b - closestEdgeData.a;
+    searchDirection = AB.cross({0, 0, AB.getX() < 0 ? 1.0f : -1.0f});
+
+    for (int i = 0; i < polytope.size(); i++)
+    {
+      if (i == closestEdgeData.closestIndex || i == closestEdgeData.closestIndex + 1)
+      {
+        continue;
+      }
+
+      if (searchDirection.dot(polytope[i]) > 0)
+      {
+        searchDirection *= -1;
+        break;
+      }
+    }
+  }
+
+  return searchDirection;
+}
+
+Vec3<float> Collider::EPA(Polytope& polytope, const std::shared_ptr<Object>& other)
 {
   if (transform_ptr.expired())
   {
@@ -206,91 +209,30 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, const std::shared_
   if (!otherTransform || !otherCollider)
     throw std::runtime_error("Collider::EPA::Missing Transform/Collider");
 
-  float threshold = 0.01f;
+  std::optional<Vec3<float>> previousClosestPoint;
+  std::optional<float> previousMinDist;
+  ClosestEdgeData closestEdgeData;
 
-  Vec3<float> closestPoint, a, b;
-  unsigned int closestA = 0;
-
-  Vec3<float> testPoint;
-  Vec3<float> searchDirection;
-
-  do
+  int maxIterations = 25;
+  int iterations = 0;
+  while (iterations < maxIterations)
   {
-    // Find the closest point on polytope
-    float minDist = FLT_MAX;
-    for (size_t i = 0; i < polytope.size(); i++)
-    {
-      Vec3<float> closest = getClosestPointOnLine(polytope.at(i), polytope.at((i + 1) % polytope.size()), {0.0f, 0.0f, 0.0f});
+    iterations++;
+    float minDist = findClosestEdge(polytope, closestEdgeData);
 
-      float dist = (
-        closest.getX() * closest.getX() +
-        closest.getY() * closest.getY() +
-        closest.getZ() * closest.getZ()
-      );
-
-      if (dist < minDist) {
-        minDist = dist;
-        closestPoint = closest;
-        closestA = static_cast<unsigned int>(i);
-        a = polytope.at(i);
-        b = polytope.at((i + 1) % polytope.size());
-      }
-    }
-
-    // Find search direction
-    searchDirection = closestPoint;
-
-    if ((a.getX() == 0 && b.getX() == 0) || (a.getY() == 0 && b.getY() == 0) || minDist == 0)
-    {
-      auto AB = b - a;
-
-      searchDirection = {AB.getY(), -AB.getX(), 0};
-
-      for (auto j : polytope)
-      {
-        if (searchDirection.dot(j) > 0 && !(
-            (j.getX() == a.getX() && j.getY() == a.getY()) ||
-            (j.getX() == b.getX() && j.getY() == b.getY())))
-        {
-          searchDirection *= -1;
-          break;
-        }
-      }
-    }
-
-    // Find and insert new point
-    testPoint = getSupport(otherCollider, searchDirection.normalized(), translation);
-
-    if (testPoint.dot(searchDirection) > 0
-      && !(a.getX() == testPoint.getX() && a.getY() == testPoint.getY())
-      && !(b.getX() == testPoint.getX() && b.getY() == testPoint.getY()))
-    {
-      polytope.insert(polytope.begin() + closestA + 1, testPoint);
-
-      if (polytope.size() == 3)
-      {
-        searchDirection *= -1;
-        testPoint = getSupport(otherCollider, searchDirection.normalized(), translation);
-
-        if (testPoint.dot(searchDirection) > 0
-            && !(a.getX() == testPoint.getX() && a.getY() == testPoint.getY())
-            && !(b.getX() == testPoint.getX() && b.getY() == testPoint.getY()))
-        {
-          polytope.insert(polytope.begin() + closestA, testPoint);
-        }
-      }
-    }
-    else
+    if (closeEnough(minDist, previousMinDist, closestEdgeData.closestPoint, previousClosestPoint))
     {
       break;
     }
-  } while (polytope.size() < 25);
 
-  if (fabs(closestPoint.getX()) < threshold && closestPoint.getX() != 0)
-    closestPoint.setX(0);
+    Vec3<float> searchDirection = getSearchDirection(closestEdgeData, polytope);
 
-  if (fabs(closestPoint.getY()) < threshold && closestPoint.getY() != 0)
-    closestPoint.setY(0);
+    Vec3<float> supportPoint = getSupport(otherCollider, searchDirection.normalized());
+    polytope.insert(polytope.begin() + closestEdgeData.closestIndex + 1, supportPoint);
 
-  return closestPoint;
+    previousMinDist = minDist;
+    previousClosestPoint = closestEdgeData.closestPoint;
+  }
+
+  return closestEdgeData.closestPoint;
 }

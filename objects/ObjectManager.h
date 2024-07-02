@@ -12,7 +12,7 @@ class ObjectManager
 public:
   ObjectManager();
 
-  void update(float dt);
+  void update(const float& dt);
 
   void addObject(std::shared_ptr<Object> object);
   bool removeObject(const std::shared_ptr<Object>& object);
@@ -28,8 +28,8 @@ private:
   float timeAccumulator;
   int ticks;
 
-  void variableUpdate(float dt);
-  void fixedUpdate(float dt);
+  void variableUpdate(const float& dt);
+  void fixedUpdate(const float& dt);
 
   void checkCollisions();
 };

@@ -13,8 +13,8 @@ class Component;
 class Object
 {
 public:
-  void update(float dt);
-  void fixedUpdate(float dt);
+  void update(const float& dt);
+  void fixedUpdate(const float& dt);
 
   void addComponent(std::shared_ptr<Component> component);
   std::shared_ptr<Component> getComponent(ComponentType type) const;
