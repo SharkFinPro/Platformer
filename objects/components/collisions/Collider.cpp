@@ -4,7 +4,6 @@
 #include <cfloat>
 #include <cmath>
 #include <iostream>
-#include <optional>
 
 Collider::Collider()
   : Component{ComponentType::collider}
@@ -122,14 +121,9 @@ Vec3<float> Collider::closestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<floa
   return a + (AB * projection);
 }
 
-struct ClosestEdgeData {
-  Vec3<float> closestPoint;
-  int closestIndex = -1;
-  Vec3<float> a;
-  Vec3<float> b;
-};
 
-float findClosestEdge(Polytope& polytope, ClosestEdgeData& closestEdgeData)
+
+float Collider::findClosestEdge(Polytope& polytope, ClosestEdgeData& closestEdgeData)
 {
   Vec3<float> origin{0.0f, 0.0f, 0.0f};
   float minDist = FLT_MAX;
@@ -155,7 +149,7 @@ float findClosestEdge(Polytope& polytope, ClosestEdgeData& closestEdgeData)
   return minDist;
 }
 
-bool closeEnough(float minDistance, std::optional<float> previousMinDistance, Vec3<float> currentClosestPoint, std::optional<Vec3<float>> previousClosestPoint)
+bool Collider::closeEnough(float minDistance, std::optional<float> previousMinDistance, Vec3<float> currentClosestPoint, std::optional<Vec3<float>> previousClosestPoint)
 {
   if (!previousClosestPoint.has_value())
   {
@@ -173,7 +167,7 @@ bool closeEnough(float minDistance, std::optional<float> previousMinDistance, Ve
   return (deltaX + deltaY) < 1;
 }
 
-Vec3<float> getSearchDirection(ClosestEdgeData& closestEdgeData, Polytope& polytope)
+Vec3<float> Collider::getSearchDirection(ClosestEdgeData& closestEdgeData, Polytope& polytope)
 {
   Vec3<float> searchDirection = closestEdgeData.closestPoint;
 
