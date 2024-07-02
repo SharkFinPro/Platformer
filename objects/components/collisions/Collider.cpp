@@ -129,7 +129,7 @@ struct ClosestEdgeData {
   Vec3<float> b;
 };
 
-float findClosestEdge(std::vector<Vec3<float>>& polytope, ClosestEdgeData& closestEdgeData)
+float findClosestEdge(Polytope polytope, ClosestEdgeData& closestEdgeData)
 {
   Vec3<float> origin{0.0f, 0.0f, 0.0f};
   float minDist = FLT_MAX;
@@ -173,7 +173,7 @@ bool closeEnough(float minDistance, std::optional<float> previousMinDistance, Ve
   return (deltaX + deltaY) < 1;
 }
 
-Vec3<float> getSearchDirection(ClosestEdgeData& closestEdgeData)
+Vec3<float> getSearchDirection(ClosestEdgeData& closestEdgeData, Polytope polytope)
 {
   Vec3<float> searchDirection = closestEdgeData.closestPoint;
 
@@ -181,12 +181,26 @@ Vec3<float> getSearchDirection(ClosestEdgeData& closestEdgeData)
   {
     Vec3<float> AB = closestEdgeData.b - closestEdgeData.a;
     searchDirection = AB.cross({0, 0, AB.getX() < 0 ? 1.0f : -1.0f});
+
+    for (int i = 0; i < polytope.size(); i++)
+    {
+      if (i == closestEdgeData.closestIndex || i == closestEdgeData.closestIndex + 1)
+      {
+        continue;
+      }
+
+      if (searchDirection.dot(polytope[i]) > 0)
+      {
+        searchDirection *= -1;
+        break;
+      }
+    }
   }
 
   return searchDirection;
 }
 
-Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, const std::shared_ptr<Object>& other)
+Vec3<float> Collider::EPA(Polytope polytope, const std::shared_ptr<Object>& other)
 {
   if (transform_ptr.expired())
   {
@@ -217,7 +231,7 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, const std::shared_
       break;
     }
 
-    Vec3<float> searchDirection = getSearchDirection(closestEdgeData);
+    Vec3<float> searchDirection = getSearchDirection(closestEdgeData, polytope);
 
     Vec3<float> supportPoint = getSupport(otherCollider, searchDirection.normalized());
     polytope.insert(polytope.begin() + closestEdgeData.closestIndex, supportPoint);
@@ -225,12 +239,6 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, const std::shared_
     previousMinDist = minDist;
     previousClosestPoint = closestEdgeData.closestPoint;
   }
-
-//  if (fabs(closestPoint.getX()) < threshold && closestPoint.getX() != 0)
-//    closestPoint.setX(0);
-//
-//  if (fabs(closestPoint.getY()) < threshold && closestPoint.getY() != 0)
-//    closestPoint.setY(0);
 
   return closestEdgeData.closestPoint;
 }
