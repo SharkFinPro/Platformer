@@ -57,7 +57,9 @@ void RigidBody::handleCollision(Vec3<float> minimumTranslationVector)
   if (std::shared_ptr<Transform> transform = transform_ptr.lock())
   {
     if (minimumTranslationVector.getY() < 0 && std::fabs(minimumTranslationVector.getY()) > 0.001f)
+    {
       falling = false;
+    }
 
     velocity += minimumTranslationVector;
 
