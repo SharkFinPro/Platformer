@@ -129,7 +129,7 @@ Vec3<float> Collider::closestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<floa
 
 struct ClosestEdgeData {
   Vec3<float> closestPoint;
-  int closestIndex;
+  int closestIndex = -1;
   Vec3<float> a;
   Vec3<float> b;
 };
@@ -138,12 +138,12 @@ float findClosestEdge(std::vector<Vec3<float>>& polytope, ClosestEdgeData& close
 {
   Vec3<float> origin{0.0f, 0.0f, 0.0f};
   float minDist = FLT_MAX;
-  int polytopeLength = polytope.size();
+  size_t polytopeLength = polytope.size();
 
   for (int i = 0; i < polytopeLength; i++)
   {
-    Vec3<float> current = polytope.at(i);
-    Vec3<float> next = polytope.at((i + 1) % polytopeLength);
+    Vec3<float> current = polytope[i];
+    Vec3<float> next = polytope[(i + 1) % polytopeLength];
     Vec3<float> c = Collider::closestPointOnLine(current, next, origin);
     float dist = c.dot(c);
 
@@ -167,7 +167,7 @@ bool closeEnough(float minDistance, std::optional<float> previousMinDistance, Ve
     return false;
   }
 
-  if (std::fabs(minDistance - previousMinDistance.value()) > 0.01)
+  if (std::fabs(minDistance - previousMinDistance.value()) >= 0.01)
   {
     return false;
   }
@@ -227,6 +227,8 @@ Vec3<float> Collider::EPA(std::vector<Vec3<float>>& polytope, const std::shared_
     Vec3<float> supportPoint = getSupport(otherCollider, searchDirection);
     polytope.insert(polytope.begin() + closestEdgeData.closestIndex, supportPoint);
 
+    previousMinDist = minDist;
+    previousClosestPoint = closestEdgeData.closestPoint;
   }
 
 //  if (fabs(closestPoint.getX()) < threshold && closestPoint.getX() != 0)
