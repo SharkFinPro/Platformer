@@ -4,7 +4,7 @@
 #include <cfloat>
 #include <iostream>
 
-Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction, Vec3<float> translation)
+Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction)
 {
   if (transform_ptr.expired())
   {
@@ -21,13 +21,12 @@ Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction, Vec3<float> t
   {
     for (auto& vertex : transform->getMesh())
     {
-      auto vert = vertex + translation;
-      float distance = vert.dot(direction);
+      float distance = vertex.dot(direction);
 
       if (distance > furthestDistance)
       {
         furthestDistance = distance;
-        furthestVertex = vert;
+        furthestVertex = vertex;
       }
     }
   }

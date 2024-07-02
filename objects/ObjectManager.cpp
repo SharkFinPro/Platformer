@@ -3,6 +3,7 @@
 #include "components/RigidBody.h"
 #include "components/Transform.h"
 #include "components/collisions/MeshCollider.h"
+#include <algorithm>
 
 ObjectManager::ObjectManager()
   : window{nullptr}, fixedUpdateDt{1.0f / 50.0f}, timeAccumulator{0.0f}, ticks{0}
@@ -74,7 +75,7 @@ void ObjectManager::checkCollisions()
     if (!collider)
       continue;
 
-    std::vector<std::pair<std::shared_ptr<Object>, std::vector<Vec3<float>>>> collisions;
+    std::vector<std::shared_ptr<Object>> collidedObjects;
     for (auto& object2 : objects)
     {
       if (object1 == object2)
@@ -86,18 +87,56 @@ void ObjectManager::checkCollisions()
       if (!object2->getComponent(ComponentType::transform))
         continue;
 
-      std::vector<Vec3<float>> polytope;
-      if (!collider->collidesWith(object2, polytope))
-        continue;
-
-      collisions.emplace_back(object2, polytope);
+      if (collider->collidesWith(object2, nullptr))
+      {
+        collidedObjects.emplace_back(object2);
+      }
     }
 
-    if (!collisions.empty())
+    if (!collidedObjects.empty())
     {
       auto rb = dynamic_pointer_cast<RigidBody>(object1->getComponent(ComponentType::rigidBody));
-      if (rb)
-        rb->handleCollision(collider->minimumTranslationVector(collisions));
+
+      if (!rb) {
+        continue;
+      }
+
+      std::vector<float> distances;
+      std::vector<bool> chosenFlags;
+      for (auto object : collidedObjects)
+      {
+        Vec3<float> mtv;
+        collider->collidesWith(object, &mtv);
+
+        distances.push_back(mtv.dot(mtv));
+        chosenFlags.push_back(false);
+      }
+
+      std::vector<float> sortedDistances = distances;
+      std::sort(sortedDistances.begin(), sortedDistances.end(), std::greater<>());
+
+      for (int i = 0; i < sortedDistances.size(); i++)
+      {
+        if (sortedDistances[i] == 0)
+        {
+          break;
+        }
+
+        for (int j = 0; j < distances.size(); j++)
+        {
+          if (sortedDistances[i] == distances[j] && !chosenFlags[j])
+          {
+            chosenFlags[j] = true;
+
+            Vec3<float> mtv;
+            if (collider->collidesWith(collidedObjects[j], &mtv))
+            {
+              rb->handleCollision(mtv);
+            }
+            continue;
+          }
+        }
+      }
     }
   }
 }
