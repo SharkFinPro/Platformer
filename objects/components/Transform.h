@@ -10,6 +10,8 @@ class Transform : public Component
 public:
   Transform(float x, float y, std::vector<Vec3<float>> mesh);
 
+  void fixedUpdate(const float& dt) override;
+
   [[nodiscard]] Vec3<float> getPosition() const;
 
   void move(const Vec3<float>& vector);
@@ -21,6 +23,7 @@ public:
 private:
   Vec3<float> initialPosition;
   Vec3<float> position;
+  Vec3<float> newPosition;
 
   std::vector<Vec3<float>> mesh;
 };
