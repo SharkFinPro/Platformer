@@ -17,8 +17,6 @@ public:
 
   bool collidesWith(const std::shared_ptr<Object>& other, Vec3<float>* mtv);
 
-  Vec3<float> minimumTranslationVector(std::shared_ptr<Object> other, std::vector<Vec3<float>>& polytope);
-
   static Vec3<float> closestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<float> c);
 
 protected:

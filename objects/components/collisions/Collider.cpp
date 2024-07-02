@@ -47,15 +47,10 @@ bool Collider::collidesWith(const std::shared_ptr<Object>& other, Vec3<float>* m
   {
     std::vector<Vec3<float>> polytope{simplex.getA(), simplex.getB(), simplex.getC()};
 
-    *mtv = minimumTranslationVector(other, polytope);
+    *mtv = -EPA(polytope, other);
   }
 
   return true;
-}
-
-Vec3<float> Collider::minimumTranslationVector(std::shared_ptr<Object> other, std::vector<Vec3<float>>& polytope)
-{
-  return -EPA(polytope, other);
 }
 
 Vec3<float> Collider::getSupport(const std::shared_ptr<Collider>& b, Vec3<float> direction)
