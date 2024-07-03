@@ -16,8 +16,8 @@ class Player : public Component
 public:
   explicit Player(PlayerControlType controlType);
 
-  void update(const float& dt) override;
-  void fixedUpdate(const float& dt) override;
+  void update(const float dt) override;
+  void fixedUpdate(const float dt) override;
 
 private:
   float speed;

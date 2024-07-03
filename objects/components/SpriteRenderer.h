@@ -12,7 +12,7 @@ class SpriteRenderer : public Component
 public:
   explicit SpriteRenderer(sf::Color color);
 
-  void update(const float& dt) override;
+  void update(const float dt) override;
 
   [[maybe_unused]] void setColor(sf::Color color);
 

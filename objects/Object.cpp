@@ -1,13 +1,13 @@
 #include "Object.h"
 #include "components/Component.h"
 
-void Object::update(const float& dt)
+void Object::update(const float dt)
 {
   for (auto [componentType, component] : components)
     component->update(dt);
 }
 
-void Object::fixedUpdate(const float& dt)
+void Object::fixedUpdate(const float dt)
 {
   for (auto [componentType, component] : components)
     component->fixedUpdate(dt);

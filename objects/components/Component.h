@@ -16,8 +16,8 @@ public:
   void setOwner(Object* owner);
   [[nodiscard]] Object* getOwner() const;
 
-  virtual void update(const float& dt);
-  virtual void fixedUpdate(const float& dt);
+  virtual void update(const float dt);
+  virtual void fixedUpdate(const float dt);
 
 protected:
   ComponentType type;
