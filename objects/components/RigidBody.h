@@ -12,7 +12,7 @@ class RigidBody : public Component
 public:
   RigidBody();
 
-  void fixedUpdate(const float dt) override;
+  void fixedUpdate(float dt) override;
 
   void applyForce(const Vec3<float>& force);
 
