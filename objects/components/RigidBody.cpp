@@ -44,7 +44,7 @@ bool RigidBody::isFalling() const
   return falling;
 }
 
-void RigidBody::handleCollision(Vec3<float> minimumTranslationVector, std::shared_ptr<Object> other)
+void RigidBody::handleCollision(Vec3<float> minimumTranslationVector, const std::shared_ptr<Object>& other)
 {
   if (transform_ptr.expired())
   {

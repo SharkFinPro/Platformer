@@ -18,7 +18,7 @@ public:
 
   [[nodiscard]] bool isFalling() const;
 
-  void handleCollision(Vec3<float> minimumTranslationVector, std::shared_ptr<Object> other);
+  void handleCollision(Vec3<float> minimumTranslationVector, const std::shared_ptr<Object>& other);
 
 private:
   Vec3<float> velocity;
