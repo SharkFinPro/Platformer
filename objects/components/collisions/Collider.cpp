@@ -164,7 +164,7 @@ bool Collider::closeEnough(const float minDistance, const std::optional<float>& 
   float deltaX = std::fabs(currentClosestPoint.getX() - previousClosestPoint->getX());
   float deltaY = std::fabs(currentClosestPoint.getY() - previousClosestPoint->getY());
 
-  return (deltaX + deltaY) < 1;
+  return (deltaX + deltaY) < 1.0f;
 }
 
 Vec3<float> Collider::getSearchDirection(const ClosestEdgeData& closestEdgeData, const Polytope& polytope)
