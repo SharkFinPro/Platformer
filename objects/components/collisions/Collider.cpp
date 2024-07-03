@@ -52,7 +52,7 @@ bool Collider::collidesWith(const std::shared_ptr<Object>& other, Vec3<float>* m
   return true;
 }
 
-Vec3<float> Collider::getSupport(const std::shared_ptr<Collider>& b, Vec3<float> direction)
+Vec3<float> Collider::getSupport(const std::shared_ptr<Collider>& b, const Vec3<float>& direction)
 {
   return findFurthestPoint(direction) - b->findFurthestPoint(-direction);
 }
@@ -111,7 +111,7 @@ bool Collider::triangleCase(Simplex& simplex, Vec3<float>& direction)
   return true;
 }
 
-Vec3<float> Collider::closestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<float> c)
+Vec3<float> Collider::closestPointOnLine(const Vec3<float>& a, const Vec3<float>& b, const Vec3<float>& c)
 {
   auto AB = b - a;
   auto AC = c - a;
@@ -123,7 +123,7 @@ Vec3<float> Collider::closestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<floa
 
 
 
-float Collider::findClosestEdge(Polytope& polytope, ClosestEdgeData& closestEdgeData)
+float Collider::findClosestEdge(const Polytope& polytope, ClosestEdgeData& closestEdgeData)
 {
   Vec3<float> origin{0.0f, 0.0f, 0.0f};
   float minDist = FLT_MAX;
@@ -149,7 +149,7 @@ float Collider::findClosestEdge(Polytope& polytope, ClosestEdgeData& closestEdge
   return minDist;
 }
 
-bool Collider::closeEnough(float minDistance, std::optional<float> previousMinDistance, Vec3<float> currentClosestPoint, std::optional<Vec3<float>> previousClosestPoint)
+bool Collider::closeEnough(const float minDistance, const std::optional<float>& previousMinDistance, const Vec3<float>& currentClosestPoint, const std::optional<Vec3<float>>& previousClosestPoint)
 {
   if (!previousClosestPoint.has_value())
   {
@@ -167,7 +167,7 @@ bool Collider::closeEnough(float minDistance, std::optional<float> previousMinDi
   return (deltaX + deltaY) < 1;
 }
 
-Vec3<float> Collider::getSearchDirection(ClosestEdgeData& closestEdgeData, Polytope& polytope)
+Vec3<float> Collider::getSearchDirection(const ClosestEdgeData& closestEdgeData, const Polytope& polytope)
 {
   Vec3<float> searchDirection = closestEdgeData.closestPoint;
 

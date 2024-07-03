@@ -4,7 +4,7 @@
 #include <cfloat>
 #include <iostream>
 
-Vec3<float> MeshCollider::findFurthestPoint(Vec3<float> direction)
+Vec3<float> MeshCollider::findFurthestPoint(const Vec3<float>& direction)
 {
   if (transform_ptr.expired())
   {
