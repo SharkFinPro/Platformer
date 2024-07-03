@@ -15,7 +15,8 @@ public:
   void update(const float& dt);
 
   void addObject(std::shared_ptr<Object> object);
-  bool removeObject(const std::shared_ptr<Object>& object);
+
+  [[maybe_unused]] bool removeObject(const std::shared_ptr<Object>& object);
 
   void setWindow(sf::RenderWindow* window);
   [[nodiscard]] sf::RenderWindow* getWindow() const;

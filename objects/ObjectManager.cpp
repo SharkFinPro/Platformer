@@ -21,7 +21,7 @@ void ObjectManager::addObject(std::shared_ptr<Object> object)
   objects.push_back(std::move(object));
 }
 
-bool ObjectManager::removeObject(const std::shared_ptr<Object>& object)
+[[maybe_unused]] bool ObjectManager::removeObject(const std::shared_ptr<Object>& object)
 {
   for (int i = 0; i < static_cast<int>(objects.size()); i++)
   {
@@ -105,10 +105,10 @@ void ObjectManager::checkCollisions()
 
     std::vector<float> distances;
     std::vector<bool> chosenFlags;
-    for (size_t i = 0; i < collidedObjects.size(); i++)
+    for (const auto & collidedObject : collidedObjects)
     {
       Vec3<float> mtv;
-      collider->collidesWith(collidedObjects[i], &mtv);
+      collider->collidesWith(collidedObject, &mtv);
 
       distances.push_back(mtv.dot(mtv));
       chosenFlags.push_back(false);
@@ -117,16 +117,16 @@ void ObjectManager::checkCollisions()
     std::vector<float> sortedDistances = distances;
     std::sort(sortedDistances.begin(), sortedDistances.end(), std::greater<>());
 
-    for (size_t i = 0; i < sortedDistances.size(); i++)
+    for (float sortedDistance : sortedDistances)
     {
-      if (sortedDistances[i] == 0)
+      if (sortedDistance == 0)
       {
         break;
       }
 
       for (size_t j = 0; j < distances.size(); j++)
       {
-        if (sortedDistances[i] == distances[j] && !chosenFlags[j])
+        if (sortedDistance == distances[j] && !chosenFlags[j])
         {
           chosenFlags[j] = true;
 
