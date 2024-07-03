@@ -12,13 +12,13 @@ class RigidBody : public Component
 public:
   RigidBody();
 
-  void fixedUpdate(const float& dt) override;
+  void fixedUpdate(float dt) override;
 
   void applyForce(const Vec3<float>& force);
 
   [[nodiscard]] bool isFalling() const;
 
-  void handleCollision(Vec3<float> minimumTranslationVector, std::shared_ptr<Object> other);
+  void handleCollision(Vec3<float> minimumTranslationVector, const std::shared_ptr<Object>& other);
 
 private:
   Vec3<float> velocity;

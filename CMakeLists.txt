@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.24)
 project(platformer)
 
 set(CMAKE_CXX_STANDARD 20)
-#set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -pedantic")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -pedantic")
 
 include_directories(external/include)
 
@@ -19,7 +19,7 @@ add_executable(platformer main.cpp objects/Object.cpp objects/Object.h objects/c
   objects/components/collisions/MeshCollider.h
   objects/components/collisions/Simplex.cpp
   objects/components/collisions/Simplex.h
-        objects/Components.h
+  objects/components/Components.h
 )
 
 target_link_libraries(platformer PRIVATE

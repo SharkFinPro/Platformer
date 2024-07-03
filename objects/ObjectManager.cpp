@@ -9,7 +9,7 @@ ObjectManager::ObjectManager()
   : window{nullptr}, fixedUpdateDt{1.0f / 50.0f}, timeAccumulator{0.0f}, ticks{0}
 {}
 
-void ObjectManager::update(const float& dt)
+void ObjectManager::update(const float dt)
 {
   fixedUpdate(dt);
   variableUpdate(dt);
@@ -21,7 +21,7 @@ void ObjectManager::addObject(std::shared_ptr<Object> object)
   objects.push_back(std::move(object));
 }
 
-bool ObjectManager::removeObject(const std::shared_ptr<Object>& object)
+[[maybe_unused]] bool ObjectManager::removeObject(const std::shared_ptr<Object>& object)
 {
   for (int i = 0; i < static_cast<int>(objects.size()); i++)
   {
@@ -45,13 +45,13 @@ sf::RenderWindow* ObjectManager::getWindow() const
   return window;
 }
 
-void ObjectManager::variableUpdate(const float& dt)
+void ObjectManager::variableUpdate(const float dt)
 {
   for (auto& object : objects)
     object->update(dt);
 }
 
-void ObjectManager::fixedUpdate(const float& dt)
+void ObjectManager::fixedUpdate(const float dt)
 {
   timeAccumulator += dt;
 
@@ -74,6 +74,11 @@ void ObjectManager::checkCollisions()
     auto collider = dynamic_pointer_cast<Collider>(object1->getComponent(ComponentType::collider));
     if (!collider)
       continue;
+
+    auto rb = dynamic_pointer_cast<RigidBody>(object1->getComponent(ComponentType::rigidBody));
+    if (!rb) {
+      continue;
+    }
 
     std::vector<std::shared_ptr<Object>> collidedObjects;
     for (auto& object2 : objects)
@@ -98,35 +103,30 @@ void ObjectManager::checkCollisions()
       continue;
     }
 
-    auto rb = dynamic_pointer_cast<RigidBody>(object1->getComponent(ComponentType::rigidBody));
-    if (!rb) {
-      continue;
-    }
-
+    std::vector<bool> chosenFlags(collidedObjects.size(), false);
     std::vector<float> distances;
-    std::vector<bool> chosenFlags;
-    for (int i = 0; i < collidedObjects.size(); i++)
+
+    for (const auto & collidedObject : collidedObjects)
     {
       Vec3<float> mtv;
-      collider->collidesWith(collidedObjects[i], &mtv);
+      collider->collidesWith(collidedObject, &mtv);
 
       distances.push_back(mtv.dot(mtv));
-      chosenFlags.push_back(false);
     }
 
     std::vector<float> sortedDistances = distances;
     std::sort(sortedDistances.begin(), sortedDistances.end(), std::greater<>());
 
-    for (int i = 0; i < sortedDistances.size(); i++)
+    for (float sortedDistance : sortedDistances)
     {
-      if (sortedDistances[i] == 0)
+      if (sortedDistance == 0)
       {
         break;
       }
 
-      for (int j = 0; j < distances.size(); j++)
+      for (size_t j = 0; j < distances.size(); j++)
       {
-        if (sortedDistances[i] == distances[j] && !chosenFlags[j])
+        if (sortedDistance == distances[j] && !chosenFlags[j])
         {
           chosenFlags[j] = true;
 

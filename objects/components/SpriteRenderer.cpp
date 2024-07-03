@@ -7,7 +7,7 @@ SpriteRenderer::SpriteRenderer(sf::Color color_)
   : Component{ComponentType::spriteRenderer}, color{color_}
 {}
 
-void SpriteRenderer::update([[maybe_unused]] const float& dt)
+void SpriteRenderer::update([[maybe_unused]] const float dt)
 {
   if (transform_ptr.expired())
   {
@@ -31,7 +31,7 @@ void SpriteRenderer::update([[maybe_unused]] const float& dt)
   }
 }
 
-void SpriteRenderer::setColor(sf::Color color_)
+[[maybe_unused]] void SpriteRenderer::setColor(sf::Color color_)
 {
   this->color = color_;
 }

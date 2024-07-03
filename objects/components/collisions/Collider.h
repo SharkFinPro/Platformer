@@ -29,18 +29,18 @@ public:
 
 private:
 
-  Vec3<float> getSupport(const std::shared_ptr<Collider>& b, Vec3<float> direction);
-  virtual Vec3<float> findFurthestPoint(Vec3<float> direction) = 0;
+  Vec3<float> getSupport(const std::shared_ptr<Collider>& b, const Vec3<float>& direction);
+  virtual Vec3<float> findFurthestPoint(const Vec3<float>& direction) = 0;
 
   static bool expandSimplex(Simplex& simplex, Vec3<float>& direction);
   static bool lineCase(Simplex& simplex, Vec3<float>& direction);
   static bool triangleCase(Simplex& simplex, Vec3<float>& direction);
 
   Vec3<float> EPA(Polytope& polytope, const std::shared_ptr<Object>& other);
-  static Vec3<float> closestPointOnLine(Vec3<float> a, Vec3<float> b, Vec3<float> c);
-  static float findClosestEdge(Polytope& polytope, ClosestEdgeData& closestEdgeData);
-  static bool closeEnough(float minDistance, std::optional<float> previousMinDistance, Vec3<float> currentClosestPoint, std::optional<Vec3<float>> previousClosestPoint);
-  static Vec3<float> getSearchDirection(ClosestEdgeData& closestEdgeData, Polytope& polytope);
+  static Vec3<float> closestPointOnLine(const Vec3<float>& a, const Vec3<float>& b, const Vec3<float>& c);
+  static float findClosestEdge(const Polytope& polytope, ClosestEdgeData& closestEdgeData);
+  static bool closeEnough(float minDistance, const std::optional<float>& previousMinDistance, const Vec3<float>& currentClosestPoint, const std::optional<Vec3<float>>& previousClosestPoint);
+  static Vec3<float> getSearchDirection(const ClosestEdgeData& closestEdgeData, const Polytope& polytope);
 
 protected:
   std::weak_ptr<Transform> transform_ptr;

@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "objects/ObjectManager.h"
 #include "objects/Object.h"
-#include "objects/Components.h"
+#include "objects/components/Components.h"
 #include <chrono>
 #include <memory>
 
