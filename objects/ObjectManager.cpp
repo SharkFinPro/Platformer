@@ -75,6 +75,11 @@ void ObjectManager::checkCollisions()
     if (!collider)
       continue;
 
+    auto rb = dynamic_pointer_cast<RigidBody>(object1->getComponent(ComponentType::rigidBody));
+    if (!rb) {
+      continue;
+    }
+
     std::vector<std::shared_ptr<Object>> collidedObjects;
     for (auto& object2 : objects)
     {
@@ -95,11 +100,6 @@ void ObjectManager::checkCollisions()
 
     if (collidedObjects.empty())
     {
-      continue;
-    }
-
-    auto rb = dynamic_pointer_cast<RigidBody>(object1->getComponent(ComponentType::rigidBody));
-    if (!rb) {
       continue;
     }
 
