@@ -14,7 +14,7 @@ public:
 
   void update(const float& dt) override;
 
-  void setColor(sf::Color color);
+  [[maybe_unused]] void setColor(sf::Color color);
 
 private:
   sf::Color color;

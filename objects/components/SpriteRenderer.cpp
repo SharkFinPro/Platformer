@@ -31,7 +31,7 @@ void SpriteRenderer::update([[maybe_unused]] const float& dt)
   }
 }
 
-void SpriteRenderer::setColor(sf::Color color_)
+[[maybe_unused]] void SpriteRenderer::setColor(sf::Color color_)
 {
   this->color = color_;
 }
