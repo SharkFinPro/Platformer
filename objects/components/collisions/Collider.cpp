@@ -3,7 +3,6 @@
 #include "../Transform.h"
 #include <cfloat>
 #include <cmath>
-#include <iostream>
 
 Collider::Collider()
   : Component{ComponentType::collider}
@@ -176,9 +175,9 @@ Vec3<float> Collider::getSearchDirection(const ClosestEdgeData& closestEdgeData,
     Vec3<float> AB = closestEdgeData.b - closestEdgeData.a;
     searchDirection = AB.cross({0, 0, AB.getX() < 0 ? 1.0f : -1.0f});
 
-    for (int i = 0; i < static_cast<int>(polytope.size()); i++)
+    for (size_t i = 0; i < polytope.size(); i++)
     {
-      if (i == closestEdgeData.closestIndex || i == closestEdgeData.closestIndex + 1)
+      if (i == static_cast<size_t>(closestEdgeData.closestIndex) || i == ((closestEdgeData.closestIndex + 1) % polytope.size()))
       {
         continue;
       }
