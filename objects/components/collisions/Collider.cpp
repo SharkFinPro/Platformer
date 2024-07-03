@@ -127,7 +127,7 @@ float Collider::findClosestEdge(Polytope& polytope, ClosestEdgeData& closestEdge
 {
   Vec3<float> origin{0.0f, 0.0f, 0.0f};
   float minDist = FLT_MAX;
-  size_t polytopeLength = polytope.size();
+  int polytopeLength = static_cast<int>(polytope.size());
 
   for (int i = 0; i < polytopeLength; i++)
   {
@@ -176,7 +176,7 @@ Vec3<float> Collider::getSearchDirection(ClosestEdgeData& closestEdgeData, Polyt
     Vec3<float> AB = closestEdgeData.b - closestEdgeData.a;
     searchDirection = AB.cross({0, 0, AB.getX() < 0 ? 1.0f : -1.0f});
 
-    for (int i = 0; i < polytope.size(); i++)
+    for (int i = 0; i < static_cast<int>(polytope.size()); i++)
     {
       if (i == closestEdgeData.closestIndex || i == closestEdgeData.closestIndex + 1)
       {

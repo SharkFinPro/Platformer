@@ -105,7 +105,7 @@ void ObjectManager::checkCollisions()
 
     std::vector<float> distances;
     std::vector<bool> chosenFlags;
-    for (int i = 0; i < collidedObjects.size(); i++)
+    for (size_t i = 0; i < collidedObjects.size(); i++)
     {
       Vec3<float> mtv;
       collider->collidesWith(collidedObjects[i], &mtv);
@@ -117,14 +117,14 @@ void ObjectManager::checkCollisions()
     std::vector<float> sortedDistances = distances;
     std::sort(sortedDistances.begin(), sortedDistances.end(), std::greater<>());
 
-    for (int i = 0; i < sortedDistances.size(); i++)
+    for (size_t i = 0; i < sortedDistances.size(); i++)
     {
       if (sortedDistances[i] == 0)
       {
         break;
       }
 
-      for (int j = 0; j < distances.size(); j++)
+      for (size_t j = 0; j < distances.size(); j++)
       {
         if (sortedDistances[i] == distances[j] && !chosenFlags[j])
         {
