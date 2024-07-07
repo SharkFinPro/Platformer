@@ -24,7 +24,9 @@ std::vector<Vec3<float>> Transform::getMesh() const {
   std::vector<Vec3<float>> transformedMesh;
 
   for (auto& m : mesh)
+  {
     transformedMesh.emplace_back(m + position);
+  }
 
   return transformedMesh;
 }
