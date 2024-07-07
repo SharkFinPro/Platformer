@@ -71,8 +71,8 @@ void ObjectManager::checkCollisions()
 {
   for (const auto& object : objects)
   {
-    auto rigidBody = dynamic_pointer_cast<RigidBody>(object->getComponent(ComponentType::rigidBody));
-    auto collider = dynamic_pointer_cast<Collider>(object->getComponent(ComponentType::collider));
+    auto rigidBody = std::dynamic_pointer_cast<RigidBody>(object->getComponent(ComponentType::rigidBody));
+    auto collider = std::dynamic_pointer_cast<Collider>(object->getComponent(ComponentType::collider));
 
     if (!rigidBody || !collider)
     {
