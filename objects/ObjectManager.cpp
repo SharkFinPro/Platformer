@@ -23,11 +23,11 @@ void ObjectManager::addObject(std::shared_ptr<Object> object)
 
 [[maybe_unused]] bool ObjectManager::removeObject(const std::shared_ptr<Object>& object)
 {
-  for (int i = 0; i < static_cast<int>(objects.size()); i++)
+  for (size_t i = 0; i < objects.size(); i++)
   {
     if (objects[i] == object)
     {
-      objects.erase(objects.begin() + i);
+      objects.erase(objects.begin() + static_cast<int>(i));
       return true;
     }
   }
@@ -48,7 +48,9 @@ sf::RenderWindow* ObjectManager::getWindow() const
 void ObjectManager::variableUpdate(const float dt)
 {
   for (auto& object : objects)
+  {
     object->update(dt);
+  }
 }
 
 void ObjectManager::fixedUpdate(const float dt)
@@ -58,7 +60,9 @@ void ObjectManager::fixedUpdate(const float dt)
   while (timeAccumulator >= fixedUpdateDt)
   {
     for (auto& object : objects)
+    {
       object->fixedUpdate(fixedUpdateDt);
+    }
 
     checkCollisions();
 
