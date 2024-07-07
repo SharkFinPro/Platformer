@@ -22,8 +22,9 @@ void Transform::reset()
 
 std::vector<Vec3<float>> Transform::getMesh() const {
   std::vector<Vec3<float>> transformedMesh;
+  transformedMesh.reserve(mesh.size());
 
-  for (auto& m : mesh)
+  for (const auto& m : mesh)
   {
     transformedMesh.emplace_back(m + position);
   }
