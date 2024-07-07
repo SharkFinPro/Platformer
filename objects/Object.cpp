@@ -3,7 +3,7 @@
 
 void Object::update(const float dt)
 {
-  for (auto [componentType, component] : components)
+  for (auto& [componentType, component] : components)
   {
     component->update(dt);
   }
@@ -11,7 +11,7 @@ void Object::update(const float dt)
 
 void Object::fixedUpdate(const float dt)
 {
-  for (auto [componentType, component] : components)
+  for (auto& [componentType, component] : components)
   {
     component->fixedUpdate(dt);
   }
@@ -25,12 +25,10 @@ void Object::addComponent(std::shared_ptr<Component> component)
 
 std::shared_ptr<Component> Object::getComponent(const ComponentType type) const
 {
-  for (auto [componentType, component] : components)
+  auto component = components.find(type);
+  if (component != components.end())
   {
-    if (componentType == type)
-    {
-      return component;
-    }
+    return component->second;
   }
 
   return nullptr;
