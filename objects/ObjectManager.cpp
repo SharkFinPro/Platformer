@@ -23,11 +23,11 @@ void ObjectManager::addObject(std::shared_ptr<Object> object)
 
 [[maybe_unused]] bool ObjectManager::removeObject(const std::shared_ptr<Object>& object)
 {
-  for (int i = 0; i < static_cast<int>(objects.size()); i++)
+  for (size_t i = 0; i < objects.size(); i++)
   {
     if (objects[i] == object)
     {
-      objects.erase(objects.begin() + i);
+      objects.erase(objects.begin() + static_cast<int>(i));
       return true;
     }
   }
@@ -48,7 +48,9 @@ sf::RenderWindow* ObjectManager::getWindow() const
 void ObjectManager::variableUpdate(const float dt)
 {
   for (auto& object : objects)
+  {
     object->update(dt);
+  }
 }
 
 void ObjectManager::fixedUpdate(const float dt)
@@ -58,7 +60,9 @@ void ObjectManager::fixedUpdate(const float dt)
   while (timeAccumulator >= fixedUpdateDt)
   {
     for (auto& object : objects)
+    {
       object->fixedUpdate(fixedUpdateDt);
+    }
 
     checkCollisions();
 
@@ -69,73 +73,79 @@ void ObjectManager::fixedUpdate(const float dt)
 
 void ObjectManager::checkCollisions()
 {
-  for (auto& object1 : objects)
+  for (const auto& object : objects)
   {
-    auto collider = dynamic_pointer_cast<Collider>(object1->getComponent(ComponentType::collider));
-    if (!collider)
-      continue;
+    auto rigidBody = std::dynamic_pointer_cast<RigidBody>(object->getComponent(ComponentType::rigidBody));
+    auto collider = std::dynamic_pointer_cast<Collider>(object->getComponent(ComponentType::collider));
 
-    auto rb = dynamic_pointer_cast<RigidBody>(object1->getComponent(ComponentType::rigidBody));
-    if (!rb) {
+    if (!rigidBody || !collider)
+    {
       continue;
     }
 
     std::vector<std::shared_ptr<Object>> collidedObjects;
-    for (auto& object2 : objects)
+    findCollisions(object, collider, collidedObjects);
+
+    if (!collidedObjects.empty())
     {
-      if (object1 == object2)
-        continue;
-
-      if (!object2->getComponent(ComponentType::collider))
-        continue;
-
-      if (!object2->getComponent(ComponentType::transform))
-        continue;
-
-      if (collider->collidesWith(object2, nullptr))
-      {
-        collidedObjects.emplace_back(object2);
-      }
+      handleCollisions(rigidBody, collider, collidedObjects);
     }
+  }
+}
 
-    if (collidedObjects.empty())
+void ObjectManager::findCollisions(const std::shared_ptr<Object>& object,
+                                   const std::shared_ptr<Collider>& collider,
+                                   std::vector<std::shared_ptr<Object>>& collidedObjects)
+{
+  for (const auto& other : objects)
+  {
+    if (other == object)
     {
       continue;
     }
 
-    std::vector<bool> chosenFlags(collidedObjects.size(), false);
-    std::vector<float> distances;
-
-    for (const auto & collidedObject : collidedObjects)
+    if (collider->collidesWith(other, nullptr))
     {
-      Vec3<float> mtv;
-      collider->collidesWith(collidedObject, &mtv);
+      collidedObjects.emplace_back(other);
+    }
+  }
+}
 
-      distances.push_back(mtv.dot(mtv));
+void ObjectManager::handleCollisions(const std::shared_ptr<RigidBody>& rigidBody,
+                                     const std::shared_ptr<Collider>& collider,
+                                     std::vector<std::shared_ptr<Object>>& collidedObjects)
+{
+  std::vector<bool> chosenFlags(collidedObjects.size(), false);
+  std::vector<float> distances;
+
+  for (const auto& collidedObject : collidedObjects)
+  {
+    Vec3<float> mtv;
+    collider->collidesWith(collidedObject, &mtv);
+
+    distances.push_back(mtv.dot(mtv));
+  }
+
+  std::vector<float> sortedDistances = distances;
+  std::sort(sortedDistances.begin(), sortedDistances.end(), std::greater<>());
+
+  for (float sortedDistance : sortedDistances)
+  {
+    if (sortedDistance == 0)
+    {
+      break;
     }
 
-    std::vector<float> sortedDistances = distances;
-    std::sort(sortedDistances.begin(), sortedDistances.end(), std::greater<>());
-
-    for (float sortedDistance : sortedDistances)
+    for (size_t j = 0; j < distances.size(); j++)
     {
-      if (sortedDistance == 0)
+      if (sortedDistance == distances[j] && !chosenFlags[j])
       {
-        break;
-      }
+        chosenFlags[j] = true;
 
-      for (size_t j = 0; j < distances.size(); j++)
-      {
-        if (sortedDistance == distances[j] && !chosenFlags[j])
+        Vec3<float> mtv;
+        if (collider->collidesWith(collidedObjects[j], &mtv))
         {
-          chosenFlags[j] = true;
-
-          Vec3<float> mtv;
-          if (collider->collidesWith(collidedObjects[j], &mtv))
-          {
-            rb->handleCollision(mtv, collidedObjects[j]);
-          }
-          continue;
+          rigidBody->handleCollision(mtv, collidedObjects[j]);
         }
       }
     }

@@ -11,7 +11,9 @@ Vec3<float> MeshCollider::findFurthestPoint(const Vec3<float>& direction)
     transform_ptr = std::dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
     if (transform_ptr.expired())
+    {
       throw std::runtime_error("MeshCollider::findFurthestPoint::Missing transform component");
+    }
   }
 
   float furthestDistance = -FLT_MAX;

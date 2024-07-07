@@ -13,7 +13,9 @@ void RigidBody::fixedUpdate(const float dt)
     transform_ptr = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
     if (transform_ptr.expired())
+    {
       return;
+    }
   }
 
   if (std::shared_ptr<Transform> transform = transform_ptr.lock())
@@ -21,7 +23,9 @@ void RigidBody::fixedUpdate(const float dt)
     falling = true;
 
     if (doGravity)
+    {
       applyForce(gravity * dt);
+    }
 
     limitMovement();
 
@@ -51,7 +55,9 @@ void RigidBody::handleCollision(Vec3<float> minimumTranslationVector, const std:
     transform_ptr = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
     if (transform_ptr.expired())
+    {
       return;
+    }
   }
 
   if (std::shared_ptr<Transform> transform = transform_ptr.lock())
@@ -64,7 +70,8 @@ void RigidBody::handleCollision(Vec3<float> minimumTranslationVector, const std:
     if (other != nullptr)
     {
       auto otherRb = dynamic_pointer_cast<RigidBody>(other->getComponent(ComponentType::rigidBody));
-      if (otherRb) {
+      if (otherRb)
+      {
         otherRb->handleCollision(-minimumTranslationVector, nullptr);
       }
     }

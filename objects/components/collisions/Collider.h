@@ -37,7 +37,7 @@ private:
   static bool triangleCase(Simplex& simplex, Vec3<float>& direction);
 
   Vec3<float> EPA(Polytope& polytope, const std::shared_ptr<Object>& other);
-  static Vec3<float> closestPointOnLine(const Vec3<float>& a, const Vec3<float>& b, const Vec3<float>& c);
+  static Vec3<float> closestPointOnLine(const Vec3<float>& a, const Vec3<float>& b);
   static float findClosestEdge(const Polytope& polytope, ClosestEdgeData& closestEdgeData);
   static bool closeEnough(float minDistance, const std::optional<float>& previousMinDistance, const Vec3<float>& currentClosestPoint, const std::optional<Vec3<float>>& previousClosestPoint);
   static Vec3<float> getSearchDirection(const ClosestEdgeData& closestEdgeData, const Polytope& polytope);

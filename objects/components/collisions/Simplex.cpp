@@ -11,8 +11,10 @@ size_t Simplex::size() const
 
 void Simplex::removeB()
 {
-  if (length == 0)
+  if (length < 1)
+  {
     return;
+  }
 
   length--;
   vertices[1] = vertices[2];
@@ -20,8 +22,10 @@ void Simplex::removeB()
 
 void Simplex::removeC()
 {
-  if (length == 0)
+  if (length < 2)
+  {
     return;
+  }
 
   length--;
 }
@@ -29,7 +33,9 @@ void Simplex::removeC()
 void Simplex::addVertex(Vec3<float> vertex)
 {
   for (auto i = length; i > 0; i--)
+  {
     vertices[i] = vertices[i - 1];
+  }
 
   vertices[0] = vertex;
   length++;

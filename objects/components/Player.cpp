@@ -20,13 +20,17 @@ void Player::fixedUpdate([[maybe_unused]] const float dt)
     transform_ptr = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
     if (transform_ptr.expired())
+    {
       return;
+    }
   }
 
   if (std::shared_ptr<Transform> transform = transform_ptr.lock())
   {
     if (transform->getPosition().getY() > 2000)
+    {
       transform->reset();
+    }
   }
 
   if (rigidBody_ptr.expired())
@@ -34,7 +38,9 @@ void Player::fixedUpdate([[maybe_unused]] const float dt)
     rigidBody_ptr = dynamic_pointer_cast<RigidBody>(getOwner()->getComponent(ComponentType::rigidBody));
 
     if (rigidBody_ptr.expired())
+    {
       return;
+    }
   }
 
   if (std::shared_ptr<RigidBody> rigidBody = rigidBody_ptr.lock())
@@ -52,7 +58,9 @@ void Player::handleInput()
     rigidBody_ptr = dynamic_pointer_cast<RigidBody>(getOwner()->getComponent(ComponentType::rigidBody));
 
     if (rigidBody_ptr.expired())
+    {
       return;
+    }
   }
 
   float xForce = 0;
@@ -68,7 +76,9 @@ void Player::handleInput()
   }
 
   if (xForce != 0)
+  {
     appliedForce.setX(xForce);
+  }
 
   if (std::shared_ptr<RigidBody> rigidBody = rigidBody_ptr.lock())
   {

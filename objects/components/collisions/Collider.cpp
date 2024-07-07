@@ -15,13 +15,17 @@ bool Collider::collidesWith(const std::shared_ptr<Object>& other, Vec3<float>* m
     transform_ptr = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
     if (transform_ptr.expired())
+    {
       throw std::runtime_error("Collider::EPA::Missing Transform");
+    }
   }
 
   auto otherTransform = dynamic_pointer_cast<Transform>(other->getComponent(ComponentType::transform));
   auto otherCollider = dynamic_pointer_cast<Collider>(other->getComponent(ComponentType::collider));
   if (!otherTransform || !otherCollider)
+  {
     return false;
+  }
 
   Simplex simplex;
   Vec3<float> direction{1, 0, 0};
@@ -36,7 +40,9 @@ bool Collider::collidesWith(const std::shared_ptr<Object>& other, Vec3<float>* m
     support = getSupport(otherCollider, direction.normalized());
 
     if (support.dot(direction) < 0)
+    {
       return false;
+    }
 
     simplex.addVertex(support);
   } while (!expandSimplex(simplex, direction));
@@ -110,12 +116,12 @@ bool Collider::triangleCase(Simplex& simplex, Vec3<float>& direction)
   return true;
 }
 
-Vec3<float> Collider::closestPointOnLine(const Vec3<float>& a, const Vec3<float>& b, const Vec3<float>& c)
+Vec3<float> Collider::closestPointOnLine(const Vec3<float>& a, const Vec3<float>& b)
 {
   auto AB = b - a;
-  auto AC = c - a;
+  auto AO = -a;
 
-  auto projection = AC.dot(AB) / AB.dot(AB);
+  auto projection = AO.dot(AB) / AB.dot(AB);
 
   return a + (AB * projection);
 }
@@ -124,7 +130,6 @@ Vec3<float> Collider::closestPointOnLine(const Vec3<float>& a, const Vec3<float>
 
 float Collider::findClosestEdge(const Polytope& polytope, ClosestEdgeData& closestEdgeData)
 {
-  Vec3<float> origin{0.0f, 0.0f, 0.0f};
   float minDist = FLT_MAX;
   int polytopeLength = static_cast<int>(polytope.size());
 
@@ -132,7 +137,7 @@ float Collider::findClosestEdge(const Polytope& polytope, ClosestEdgeData& close
   {
     Vec3<float> current = polytope[i];
     Vec3<float> next = polytope[(i + 1) % polytopeLength];
-    Vec3<float> c = Collider::closestPointOnLine(current, next, origin);
+    Vec3<float> c = Collider::closestPointOnLine(current, next);
     float dist = c.dot(c);
 
     if (dist < minDist)
@@ -200,13 +205,17 @@ Vec3<float> Collider::EPA(Polytope& polytope, const std::shared_ptr<Object>& oth
     transform_ptr = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
     if (transform_ptr.expired())
+    {
       throw std::runtime_error("Collider::EPA::Missing Transform");
+    }
   }
 
   auto otherTransform = dynamic_pointer_cast<Transform>(other->getComponent(ComponentType::transform));
   auto otherCollider = dynamic_pointer_cast<Collider>(other->getComponent(ComponentType::collider));
   if (!otherTransform || !otherCollider)
+  {
     throw std::runtime_error("Collider::EPA::Missing Transform/Collider");
+  }
 
   std::optional<Vec3<float>> previousClosestPoint;
   std::optional<float> previousMinDist;
