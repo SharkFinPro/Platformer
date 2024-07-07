@@ -14,7 +14,9 @@ void SpriteRenderer::update([[maybe_unused]] const float dt)
     transform_ptr = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
     if (transform_ptr.expired())
+    {
       return;
+    }
   }
 
   if (std::shared_ptr<Transform> transform = transform_ptr.lock())
@@ -23,7 +25,9 @@ void SpriteRenderer::update([[maybe_unused]] const float dt)
     sf::ConvexShape shape;
     shape.setPointCount(mesh.size());
     for (int i = 0; i < static_cast<int>(mesh.size()); i++)
+    {
       shape.setPoint(i, sf::Vector2f(mesh[i].getX(), mesh[i].getY()));
+    }
 
     shape.setFillColor(color);
 
