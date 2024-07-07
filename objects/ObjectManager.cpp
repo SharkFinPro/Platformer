@@ -93,24 +93,28 @@ void ObjectManager::checkCollisions()
   }
 }
 
-void ObjectManager::findCollisions(const std::shared_ptr<Object>& object1,
+void ObjectManager::findCollisions(const std::shared_ptr<Object>& object,
                                    const std::shared_ptr<Collider>& collider,
                                    std::vector<std::shared_ptr<Object>>& collidedObjects)
 {
-  for (auto& object2 : objects)
+  for (const auto& other : objects)
   {
-    if (object1 == object2)
-      continue;
-
-    if (!object2->getComponent(ComponentType::collider))
-      continue;
-
-    if (!object2->getComponent(ComponentType::transform))
-      continue;
-
-    if (collider->collidesWith(object2, nullptr))
+    if (other == object)
     {
-      collidedObjects.emplace_back(object2);
+      continue;
+    }
+
+    auto otherCollider = other->getComponent(ComponentType::collider);
+    auto otherTransform = other->getComponent(ComponentType::transform);
+
+    if (!otherCollider || !otherTransform)
+    {
+      continue;
+    }
+
+    if (collider->collidesWith(other, nullptr))
+    {
+      collidedObjects.emplace_back(other);
     }
   }
 }
