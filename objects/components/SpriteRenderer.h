@@ -17,7 +17,7 @@ public:
   [[maybe_unused]] void setColor(sf::Color color);
 
 private:
-  sf::Color color;
+  sf::ConvexShape shape;
   std::weak_ptr<Transform> transform_ptr;
 };
 
