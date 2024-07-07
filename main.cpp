@@ -32,11 +32,17 @@ int main()
     // check all the window's events that were triggered since the last iteration of the loop
     sf::Event event{};
     while (window.pollEvent(event))
+    {
       if (event.type == sf::Event::Closed)
+      {
         window.close();
+      }
+    }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+    {
       window.close();
+    }
 
     // clear the window with black color
     window.clear(sf::Color{200, 200, 200});
@@ -64,10 +70,14 @@ void loadObjects (ObjectManager& objectManager)
   objectManager.addObject(createBlock(900, 1005, 250, 50));
 
   for (int i = 0; i < 9; i++)
+  {
     objectManager.addObject(createBlock(static_cast<float>(i) * 50.0f + 75.0f, 925, 50, 50));
+  }
 
   for (int i = 0; i < 30; i++)
+  {
     objectManager.addObject(createBlock(100, static_cast<float>(i) * 50.0f + 75.0f, 50, 50));
+  }
 }
 
 std::vector<Vec3<float>> createQuadMesh(float width, float height)
