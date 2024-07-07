@@ -205,7 +205,9 @@ Vec3<float> Collider::EPA(Polytope& polytope, const std::shared_ptr<Object>& oth
     transform_ptr = dynamic_pointer_cast<Transform>(owner->getComponent(ComponentType::transform));
 
     if (transform_ptr.expired())
+    {
       throw std::runtime_error("Collider::EPA::Missing Transform");
+    }
   }
 
   auto otherTransform = dynamic_pointer_cast<Transform>(other->getComponent(ComponentType::transform));
