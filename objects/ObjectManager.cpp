@@ -151,7 +151,6 @@ void ObjectManager::handleCollisions(const std::shared_ptr<RigidBody>& rigidBody
         {
           rigidBody->handleCollision(mtv, collidedObjects[j]);
         }
-        continue;
       }
     }
   }
