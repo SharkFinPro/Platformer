@@ -110,12 +110,12 @@ bool Collider::triangleCase(Simplex& simplex, Vec3<float>& direction)
   return true;
 }
 
-Vec3<float> Collider::closestPointOnLine(const Vec3<float>& a, const Vec3<float>& b, const Vec3<float>& c)
+Vec3<float> Collider::closestPointOnLine(const Vec3<float>& a, const Vec3<float>& b)
 {
   auto AB = b - a;
-  auto AC = c - a;
+  auto AO = -a;
 
-  auto projection = AC.dot(AB) / AB.dot(AB);
+  auto projection = AO.dot(AB) / AB.dot(AB);
 
   return a + (AB * projection);
 }
@@ -124,7 +124,6 @@ Vec3<float> Collider::closestPointOnLine(const Vec3<float>& a, const Vec3<float>
 
 float Collider::findClosestEdge(const Polytope& polytope, ClosestEdgeData& closestEdgeData)
 {
-  Vec3<float> origin{0.0f, 0.0f, 0.0f};
   float minDist = FLT_MAX;
   int polytopeLength = static_cast<int>(polytope.size());
 
@@ -132,7 +131,7 @@ float Collider::findClosestEdge(const Polytope& polytope, ClosestEdgeData& close
   {
     Vec3<float> current = polytope[i];
     Vec3<float> next = polytope[(i + 1) % polytopeLength];
-    Vec3<float> c = Collider::closestPointOnLine(current, next, origin);
+    Vec3<float> c = Collider::closestPointOnLine(current, next);
     float dist = c.dot(c);
 
     if (dist < minDist)
