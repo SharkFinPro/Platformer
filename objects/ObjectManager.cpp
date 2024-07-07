@@ -69,22 +69,18 @@ void ObjectManager::fixedUpdate(const float dt)
 
 void ObjectManager::checkCollisions()
 {
-  for (auto& object1 : objects)
+  for (const auto& object : objects)
   {
-    auto rigidBody = dynamic_pointer_cast<RigidBody>(object1->getComponent(ComponentType::rigidBody));
-    if (!rigidBody)
-    {
-      continue;
-    }
+    auto rigidBody = dynamic_pointer_cast<RigidBody>(object->getComponent(ComponentType::rigidBody));
+    auto collider = dynamic_pointer_cast<Collider>(object->getComponent(ComponentType::collider));
 
-    auto collider = dynamic_pointer_cast<Collider>(object1->getComponent(ComponentType::collider));
-    if (!collider)
+    if (!rigidBody || !collider)
     {
       continue;
     }
 
     std::vector<std::shared_ptr<Object>> collidedObjects;
-    findCollisions(object1, collider, collidedObjects);
+    findCollisions(object, collider, collidedObjects);
 
     if (!collidedObjects.empty())
     {
