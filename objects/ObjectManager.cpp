@@ -104,14 +104,6 @@ void ObjectManager::findCollisions(const std::shared_ptr<Object>& object,
       continue;
     }
 
-    auto otherCollider = other->getComponent(ComponentType::collider);
-    auto otherTransform = other->getComponent(ComponentType::transform);
-
-    if (!otherCollider || !otherTransform)
-    {
-      continue;
-    }
-
     if (collider->collidesWith(other, nullptr))
     {
       collidedObjects.emplace_back(other);
