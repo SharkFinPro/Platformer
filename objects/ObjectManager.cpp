@@ -119,7 +119,7 @@ void ObjectManager::handleCollisions(const std::shared_ptr<RigidBody>& rigidBody
   std::vector<bool> chosenFlags(collidedObjects.size(), false);
   std::vector<float> distances;
 
-  for (const auto & collidedObject : collidedObjects)
+  for (const auto& collidedObject : collidedObjects)
   {
     Vec3<float> mtv;
     collider->collidesWith(collidedObject, &mtv);
