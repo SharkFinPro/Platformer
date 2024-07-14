@@ -1,7 +1,7 @@
 #ifndef PLATFORMER_SIMPLEX_H
 #define PLATFORMER_SIMPLEX_H
 
-#include "../../math/Vec3.h"
+#include "../../../math/Vec3.h"
 
 class Simplex
 {
