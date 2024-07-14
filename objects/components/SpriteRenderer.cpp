@@ -3,9 +3,11 @@
 #include "../Object.h"
 #include "../ObjectManager.h"
 
-SpriteRenderer::SpriteRenderer(sf::Color color_)
-  : Component{ComponentType::spriteRenderer}, color{color_}
-{}
+SpriteRenderer::SpriteRenderer(sf::Color color)
+  : Component{ComponentType::spriteRenderer}
+{
+  shape.setFillColor(color);
+}
 
 void SpriteRenderer::update([[maybe_unused]] const float dt)
 {
@@ -22,20 +24,18 @@ void SpriteRenderer::update([[maybe_unused]] const float dt)
   if (std::shared_ptr<Transform> transform = transform_ptr.lock())
   {
     auto mesh = transform->getMesh();
-    sf::ConvexShape shape;
+
     shape.setPointCount(mesh.size());
     for (int i = 0; i < static_cast<int>(mesh.size()); i++)
     {
       shape.setPoint(i, sf::Vector2f(mesh[i].getX(), mesh[i].getY()));
     }
 
-    shape.setFillColor(color);
-
     getOwner()->getOwner()->getWindow()->draw(shape);
   }
 }
 
-[[maybe_unused]] void SpriteRenderer::setColor(sf::Color color_)
+[[maybe_unused]] void SpriteRenderer::setColor(sf::Color color)
 {
-  this->color = color_;
+  shape.setFillColor(color);
 }
