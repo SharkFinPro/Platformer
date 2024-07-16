@@ -27,6 +27,7 @@ private:
   Vec3<float> gravity;
 
   bool falling;
+  bool wasFalling;
 
   std::weak_ptr<Transform> transform_ptr;
 

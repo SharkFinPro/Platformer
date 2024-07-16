@@ -3,7 +3,7 @@
 #include "Transform.h"
 
 RigidBody::RigidBody()
-  : Component{ComponentType::rigidBody}, velocity{0}, doGravity{true}, gravity{0, 9.81f, 0}, falling{true}
+  : Component{ComponentType::rigidBody}, velocity{0}, doGravity{true}, gravity{0, 9.81f, 0}, falling{true}, wasFalling{true}
 {}
 
 void RigidBody::fixedUpdate(const float dt)
@@ -64,7 +64,15 @@ void RigidBody::handleCollision(Vec3<float> minimumTranslationVector, const std:
   {
     if (minimumTranslationVector.getY() < 0 && std::fabs(minimumTranslationVector.getY()) > 0.001f)
     {
-      falling = false;
+      if (!wasFalling)
+      {
+        falling = false;
+        wasFalling = true;
+      }
+      else
+      {
+        wasFalling = false;
+      }
     }
 
     if (other != nullptr)

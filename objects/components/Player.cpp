@@ -5,7 +5,7 @@
 #include <SFML/Window/Keyboard.hpp>
 
 Player::Player(PlayerControlType controlType)
-  : Component{ComponentType::player}, speed{25}, jumpHeight{550}, controlType{controlType}, appliedForce{0}
+  : Component{ComponentType::player}, speed{25}, jumpHeight{450}, controlType{controlType}, appliedForce{0}
 {}
 
 void Player::update([[maybe_unused]] const float dt)
