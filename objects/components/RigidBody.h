@@ -28,6 +28,7 @@ private:
 
   bool falling;
   bool wasFalling;
+  bool wasWasFalling;
 
   std::weak_ptr<Transform> transform_ptr;
 

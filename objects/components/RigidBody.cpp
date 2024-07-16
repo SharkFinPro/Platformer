@@ -20,6 +20,11 @@ void RigidBody::fixedUpdate(const float dt)
 
   if (std::shared_ptr<Transform> transform = transform_ptr.lock())
   {
+
+    wasWasFalling = wasFalling;
+
+    wasFalling = true;
+
     falling = true;
 
     if (doGravity)
@@ -64,10 +69,9 @@ void RigidBody::handleCollision(Vec3<float> minimumTranslationVector, const std:
   {
     if (minimumTranslationVector.getY() < 0 && std::fabs(minimumTranslationVector.getY()) > 0.001f)
     {
-      if (!wasFalling)
+      if (!wasWasFalling)
       {
         falling = false;
-        wasFalling = true;
       }
       else
       {
