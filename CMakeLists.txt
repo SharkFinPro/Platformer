@@ -3,12 +3,6 @@ project(platformer)
 
 set(CMAKE_CXX_STANDARD 20)
 
-if (MSVC)
-  set(CMAKE_CXX_FLAGS "/w4")
-else()
-  set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -pedantic")
-endif()
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_executable(${PROJECT_NAME}
@@ -37,6 +31,12 @@ add_executable(${PROJECT_NAME}
   objects/components/collisions/Simplex.h
   objects/components/Components.h
 )
+
+if (MSVC)
+  target_compile_options(${PROJECT_NAME} PRIVATE /W4)
+else()
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Werror -pedantic)
+endif()
 
 include(FetchContent)
 
