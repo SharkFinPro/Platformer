@@ -123,7 +123,7 @@ Vec3<float> Collider::closestPointOnLine(const Vec3<float>& a, const Vec3<float>
 
   auto projection = AO.dot(AB) / AB.dot(AB);
 
-  return a + (AB * projection);
+  return a + AB * projection;
 }
 
 
@@ -168,7 +168,7 @@ bool Collider::closeEnough(const float minDistance, const std::optional<float>& 
   float deltaX = std::fabs(currentClosestPoint.getX() - previousClosestPoint->getX());
   float deltaY = std::fabs(currentClosestPoint.getY() - previousClosestPoint->getY());
 
-  return (deltaX + deltaY) < 1.0f;
+  return deltaX + deltaY < 1.0f;
 }
 
 Vec3<float> Collider::getSearchDirection(const ClosestEdgeData& closestEdgeData, const Polytope& polytope)
@@ -182,7 +182,7 @@ Vec3<float> Collider::getSearchDirection(const ClosestEdgeData& closestEdgeData,
 
     for (size_t i = 0; i < polytope.size(); i++)
     {
-      if (i == static_cast<size_t>(closestEdgeData.closestIndex) || i == ((closestEdgeData.closestIndex + 1) % polytope.size()))
+      if (i == static_cast<size_t>(closestEdgeData.closestIndex) || i == (closestEdgeData.closestIndex + 1) % polytope.size())
       {
         continue;
       }
