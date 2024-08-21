@@ -91,7 +91,8 @@ std::vector<Vec3<float>> createQuadMesh(const float width, const float height)
   return mesh;
 }
 
-std::shared_ptr<Object> createPlayer(float x, float y, const float width, const float height, PlayerControlType controlType, sf::Color color)
+std::shared_ptr<Object> createPlayer(float x, float y, const float width, const float height,
+                                     PlayerControlType controlType, sf::Color color)
 {
   const std::vector<std::shared_ptr<Component>> components {
     std::make_shared<Transform>(x, y, createQuadMesh(width, height)),
