@@ -4,7 +4,7 @@
 #include "../Object.h"
 #include <SFML/Window/Keyboard.hpp>
 
-Player::Player(PlayerControlType controlType)
+Player::Player(const PlayerControlType controlType)
   : Component{ComponentType::player}, speed{25}, jumpHeight{450}, controlType{controlType}, appliedForce{0}
 {}
 

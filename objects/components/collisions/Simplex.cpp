@@ -30,7 +30,7 @@ void Simplex::removeC()
   length--;
 }
 
-void Simplex::addVertex(Vec3<float> vertex)
+void Simplex::addVertex(const Vec3<float> vertex)
 {
   for (auto i = length; i > 0; i--)
   {

@@ -3,7 +3,7 @@
 #include "../Object.h"
 #include "../ObjectManager.h"
 
-SpriteRenderer::SpriteRenderer(sf::Color color)
+SpriteRenderer::SpriteRenderer(const sf::Color color)
   : Component{ComponentType::spriteRenderer}
 {
   shape.setFillColor(color);
@@ -35,7 +35,7 @@ void SpriteRenderer::update([[maybe_unused]] const float dt)
   }
 }
 
-[[maybe_unused]] void SpriteRenderer::setColor(sf::Color color)
+[[maybe_unused]] void SpriteRenderer::setColor(const sf::Color color)
 {
   shape.setFillColor(color);
 }

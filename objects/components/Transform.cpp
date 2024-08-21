@@ -1,7 +1,7 @@
 #include "Transform.h"
 #include <utility>
 
-Transform::Transform(float x, float y, std::vector<Vec3<float>> mesh)
+Transform::Transform(const float x, const float y, std::vector<Vec3<float>> mesh)
   : Component(ComponentType::transform), initialPosition{x, y, 0}, position{initialPosition}, mesh{std::move(mesh)}
 {}
 
