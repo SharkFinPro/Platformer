@@ -25,10 +25,10 @@ int main()
 
   std::chrono::steady_clock::time_point previous = std::chrono::steady_clock::now();
 
-  // run the program as long as the window is open
+  // Run the program as long as the window is open
   while (window.isOpen())
   {
-    // check all the window's events that were triggered since the last iteration of the loop
+    // Check all the window's events that were triggered since the last iteration of the loop
     sf::Event event{};
     while (window.pollEvent(event))
     {
@@ -43,17 +43,17 @@ int main()
       window.close();
     }
 
-    // clear the window with black color
+    // Clear the window with a light gray color
     window.clear(sf::Color{200, 200, 200});
 
-    // Delta Time based off previous frame
+    // Delta time based off previous frame
     std::chrono::steady_clock::time_point current = std::chrono::steady_clock::now();
     float dt = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(current - previous).count()) / 1000000.0f;
     previous = current;
 
     objectManager.update(dt);
 
-    // end the current frame
+    // Display the current frame
     window.display();
   }
 }
