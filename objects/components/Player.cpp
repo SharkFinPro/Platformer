@@ -82,8 +82,9 @@ void Player::handleInput()
 
   if (const std::shared_ptr<RigidBody> rigidBody = rigidBody_ptr.lock())
   {
-    if (!rigidBody->isFalling() && ((sf::Keyboard::isKeyPressed(sf::Keyboard::W) && controlType == PlayerControlType::WASD)
-      || (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && controlType == PlayerControlType::ARROW)))
+    if (!rigidBody->isFalling() &&
+        ((sf::Keyboard::isKeyPressed(sf::Keyboard::W) && controlType == PlayerControlType::WASD) ||
+        (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && controlType == PlayerControlType::ARROW)))
     {
       appliedForce.setY(-jumpHeight);
     }
