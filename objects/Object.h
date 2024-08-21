@@ -1,8 +1,6 @@
 #ifndef PLATFORMER_OBJECT_H
 #define PLATFORMER_OBJECT_H
 
-#include <SFML/Graphics.hpp>
-#include <string>
 #include <unordered_map>
 #include <memory>
 
