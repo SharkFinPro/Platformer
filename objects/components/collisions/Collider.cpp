@@ -136,9 +136,8 @@ float Collider::findClosestEdge(const Polytope& polytope, ClosestEdgeData& close
     Vec3<float> current = polytope[i];
     Vec3<float> next = polytope[(i + 1) % polytopeLength];
     Vec3<float> c = closestPointOnLine(current, next);
-    const float dist = c.dot(c);
 
-    if (dist < minDist)
+    if (const float dist = c.dot(c); dist < minDist)
     {
       minDist = dist;
       closestEdgeData.closestPoint = c;
