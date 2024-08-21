@@ -104,7 +104,7 @@ std::shared_ptr<Object> createPlayer(float x, float y, const float width, const 
   return std::make_shared<Object>(components);
 }
 
-std::shared_ptr<Object> createBlock(float x, float y, float width, float height, sf::Color color)
+std::shared_ptr<Object> createBlock(float x, float y, const float width, const float height, sf::Color color)
 {
   const std::vector<std::shared_ptr<Component>> components {
     std::make_shared<Transform>(x, y, createQuadMesh(width, height)),
@@ -115,7 +115,7 @@ std::shared_ptr<Object> createBlock(float x, float y, float width, float height,
   return std::make_shared<Object>(components);
 }
 
-std::shared_ptr<Object> createRigidBlock(float x, float y, float width, float height, sf::Color color)
+std::shared_ptr<Object> createRigidBlock(float x, float y, const float width, const float height, sf::Color color)
 {
   const std::vector<std::shared_ptr<Component>> components {
     std::make_shared<Transform>(x, y, createQuadMesh(width, height)),
