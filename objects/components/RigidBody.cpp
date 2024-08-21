@@ -81,8 +81,7 @@ void RigidBody::handleCollision(const Vec3<float> minimumTranslationVector, cons
 
     if (other != nullptr)
     {
-      auto otherRb = dynamic_pointer_cast<RigidBody>(other->getComponent(ComponentType::rigidBody));
-      if (otherRb)
+      if (const auto otherRb = dynamic_pointer_cast<RigidBody>(other->getComponent(ComponentType::rigidBody)))
       {
         otherRb->handleCollision(-minimumTranslationVector, nullptr);
       }
