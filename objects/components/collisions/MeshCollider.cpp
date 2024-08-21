@@ -23,7 +23,7 @@ Vec3<float> MeshCollider::findFurthestPoint(const Vec3<float>& direction)
   {
     for (auto& vertex : transform->getMesh())
     {
-      float distance = vertex.dot(direction);
+      const float distance = vertex.dot(direction);
 
       if (distance > furthestDistance)
       {

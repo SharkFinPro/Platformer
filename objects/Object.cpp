@@ -29,7 +29,7 @@ void Object::addComponent(std::shared_ptr<Component> component)
 
 std::shared_ptr<Component> Object::getComponent(const ComponentType type) const
 {
-  auto component = components.find(type);
+  const auto component = components.find(type);
   if (component != components.end())
   {
     return component->second;
