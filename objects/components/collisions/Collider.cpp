@@ -75,7 +75,7 @@ bool Collider::expandSimplex(Simplex& simplex, Vec3<float>& direction)
   }
 }
 
-bool Collider::lineCase(Simplex& simplex, Vec3<float>& direction)
+bool Collider::lineCase(const Simplex& simplex, Vec3<float>& direction)
 {
   const auto AB = simplex.getB() - simplex.getA();
   const auto AO = -simplex.getA();

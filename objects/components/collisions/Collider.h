@@ -33,7 +33,7 @@ private:
   virtual Vec3<float> findFurthestPoint(const Vec3<float>& direction) = 0;
 
   static bool expandSimplex(Simplex& simplex, Vec3<float>& direction);
-  static bool lineCase(Simplex& simplex, Vec3<float>& direction);
+  static bool lineCase(const Simplex& simplex, Vec3<float>& direction);
   static bool triangleCase(Simplex& simplex, Vec3<float>& direction);
 
   Vec3<float> EPA(Polytope& polytope, const std::shared_ptr<Object>& other);
