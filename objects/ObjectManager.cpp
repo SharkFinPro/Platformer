@@ -35,9 +35,9 @@ void ObjectManager::addObject(std::shared_ptr<Object> object)
   return false;
 }
 
-void ObjectManager::setWindow(sf::RenderWindow* window_)
+void ObjectManager::setWindow(sf::RenderWindow* window)
 {
-  window = window_;
+  this->window = window;
 }
 
 sf::RenderWindow* ObjectManager::getWindow() const
