@@ -25,7 +25,7 @@ void Player::fixedUpdate([[maybe_unused]] const float dt)
     }
   }
 
-  if (std::shared_ptr<Transform> transform = transform_ptr.lock())
+  if (const std::shared_ptr<Transform> transform = transform_ptr.lock())
   {
     if (transform->getPosition().getY() > 2000)
     {
@@ -43,7 +43,7 @@ void Player::fixedUpdate([[maybe_unused]] const float dt)
     }
   }
 
-  if (std::shared_ptr<RigidBody> rigidBody = rigidBody_ptr.lock())
+  if (const std::shared_ptr<RigidBody> rigidBody = rigidBody_ptr.lock())
   {
     rigidBody->applyForce(appliedForce * dt);
   }
@@ -80,7 +80,7 @@ void Player::handleInput()
     appliedForce.setX(xForce);
   }
 
-  if (std::shared_ptr<RigidBody> rigidBody = rigidBody_ptr.lock())
+  if (const std::shared_ptr<RigidBody> rigidBody = rigidBody_ptr.lock())
   {
     if (!rigidBody->isFalling() && ((sf::Keyboard::isKeyPressed(sf::Keyboard::W) && controlType == PlayerControlType::WASD)
       || (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && controlType == PlayerControlType::ARROW)))

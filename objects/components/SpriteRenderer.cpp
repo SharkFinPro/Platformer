@@ -21,9 +21,9 @@ void SpriteRenderer::update([[maybe_unused]] const float dt)
     }
   }
 
-  if (std::shared_ptr<Transform> transform = transform_ptr.lock())
+  if (const std::shared_ptr<Transform> transform = transform_ptr.lock())
   {
-    auto mesh = transform->getMesh();
+    const auto mesh = transform->getMesh();
 
     shape.setPointCount(mesh.size());
     for (int i = 0; i < static_cast<int>(mesh.size()); i++)

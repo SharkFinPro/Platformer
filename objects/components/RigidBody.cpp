@@ -18,7 +18,7 @@ void RigidBody::fixedUpdate(const float dt)
     }
   }
 
-  if (std::shared_ptr<Transform> transform = transform_ptr.lock())
+  if (const std::shared_ptr<Transform> transform = transform_ptr.lock())
   {
 
     wasWasFalling = wasFalling;
@@ -65,7 +65,7 @@ void RigidBody::handleCollision(Vec3<float> minimumTranslationVector, const std:
     }
   }
 
-  if (std::shared_ptr<Transform> transform = transform_ptr.lock())
+  if (const std::shared_ptr<Transform> transform = transform_ptr.lock())
   {
     if (minimumTranslationVector.getY() < 0 && std::fabs(minimumTranslationVector.getY()) > 0.001f)
     {

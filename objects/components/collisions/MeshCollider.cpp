@@ -19,7 +19,7 @@ Vec3<float> MeshCollider::findFurthestPoint(const Vec3<float>& direction)
   float furthestDistance = -FLT_MAX;
   Vec3<float> furthestVertex;
 
-  if (std::shared_ptr<Transform> transform = transform_ptr.lock())
+  if (const std::shared_ptr<Transform> transform = transform_ptr.lock())
   {
     for (auto& vertex : transform->getMesh())
     {
