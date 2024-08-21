@@ -3,7 +3,8 @@
 #include "Transform.h"
 
 RigidBody::RigidBody()
-  : Component{ComponentType::rigidBody}, velocity{0}, doGravity{true}, gravity{0, 9.81f, 0}, falling{true}, wasFalling{true}
+  : Component{ComponentType::rigidBody}, velocity{0}, doGravity{true}, gravity{0, 9.81f, 0}, falling{true},
+    wasFalling{true}, wasWasFalling(true)
 {}
 
 void RigidBody::fixedUpdate(const float dt)
@@ -18,9 +19,8 @@ void RigidBody::fixedUpdate(const float dt)
     }
   }
 
-  if (std::shared_ptr<Transform> transform = transform_ptr.lock())
+  if (const std::shared_ptr<Transform> transform = transform_ptr.lock())
   {
-
     wasWasFalling = wasFalling;
 
     wasFalling = true;
@@ -53,7 +53,7 @@ bool RigidBody::isFalling() const
   return falling;
 }
 
-void RigidBody::handleCollision(Vec3<float> minimumTranslationVector, const std::shared_ptr<Object>& other)
+void RigidBody::handleCollision(const Vec3<float> minimumTranslationVector, const std::shared_ptr<Object>& other)
 {
   if (transform_ptr.expired())
   {
@@ -65,7 +65,7 @@ void RigidBody::handleCollision(Vec3<float> minimumTranslationVector, const std:
     }
   }
 
-  if (std::shared_ptr<Transform> transform = transform_ptr.lock())
+  if (const std::shared_ptr<Transform> transform = transform_ptr.lock())
   {
     if (minimumTranslationVector.getY() < 0 && std::fabs(minimumTranslationVector.getY()) > 0.001f)
     {
@@ -81,8 +81,7 @@ void RigidBody::handleCollision(Vec3<float> minimumTranslationVector, const std:
 
     if (other != nullptr)
     {
-      auto otherRb = dynamic_pointer_cast<RigidBody>(other->getComponent(ComponentType::rigidBody));
-      if (otherRb)
+      if (const auto otherRb = dynamic_pointer_cast<RigidBody>(other->getComponent(ComponentType::rigidBody)))
       {
         otherRb->handleCollision(-minimumTranslationVector, nullptr);
       }

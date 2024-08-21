@@ -35,9 +35,9 @@ void ObjectManager::addObject(std::shared_ptr<Object> object)
   return false;
 }
 
-void ObjectManager::setWindow(sf::RenderWindow* window_)
+void ObjectManager::setWindow(sf::RenderWindow* window)
 {
-  window = window_;
+  this->window = window;
 }
 
 sf::RenderWindow* ObjectManager::getWindow() const
@@ -47,7 +47,7 @@ sf::RenderWindow* ObjectManager::getWindow() const
 
 void ObjectManager::variableUpdate(const float dt)
 {
-  for (auto& object : objects)
+  for (const auto& object : objects)
   {
     object->update(dt);
   }
@@ -59,7 +59,7 @@ void ObjectManager::fixedUpdate(const float dt)
 
   while (timeAccumulator >= fixedUpdateDt)
   {
-    for (auto& object : objects)
+    for (const auto& object : objects)
     {
       object->fixedUpdate(fixedUpdateDt);
     }
@@ -127,9 +127,9 @@ void ObjectManager::handleCollisions(const std::shared_ptr<RigidBody>& rigidBody
   }
 
   std::vector<float> sortedDistances = distances;
-  std::sort(sortedDistances.begin(), sortedDistances.end(), std::greater<>());
+  std::ranges::sort(sortedDistances, std::greater());
 
-  for (float sortedDistance : sortedDistances)
+  for (const float sortedDistance : sortedDistances)
   {
     if (sortedDistance == 0)
     {

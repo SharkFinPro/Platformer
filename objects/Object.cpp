@@ -1,6 +1,19 @@
 #include "Object.h"
 #include "components/Component.h"
 
+Object::Object()
+  : owner(nullptr)
+{}
+
+Object::Object(const std::vector<std::shared_ptr<Component>>& components)
+  : owner(nullptr)
+{
+  for (const auto& component : components)
+  {
+    addComponent(component);
+  }
+}
+
 void Object::update(const float dt)
 {
   for (auto& [componentType, component] : components)
@@ -25,8 +38,7 @@ void Object::addComponent(std::shared_ptr<Component> component)
 
 std::shared_ptr<Component> Object::getComponent(const ComponentType type) const
 {
-  auto component = components.find(type);
-  if (component != components.end())
+  if (const auto component = components.find(type); component != components.end())
   {
     return component->second;
   }

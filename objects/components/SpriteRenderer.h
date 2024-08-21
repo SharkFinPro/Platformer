@@ -7,7 +7,7 @@
 
 class Transform;
 
-class SpriteRenderer : public Component
+class SpriteRenderer final : public Component
 {
 public:
   explicit SpriteRenderer(sf::Color color);

@@ -9,9 +9,12 @@ class Object;
 class Transform;
 class RigidBody;
 
-enum PlayerControlType { WASD, ARROW };
+enum PlayerControlType {
+  WASD,
+  ARROW
+};
 
-class Player : public Component
+class Player final : public Component
 {
 public:
   explicit Player(PlayerControlType controlType);

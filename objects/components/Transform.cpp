@@ -1,7 +1,7 @@
 #include "Transform.h"
 #include <utility>
 
-Transform::Transform(float x, float y, std::vector<Vec3<float>> mesh)
+Transform::Transform(const float x, const float y, std::vector<Vec3<float>> mesh)
   : Component(ComponentType::transform), initialPosition{x, y, 0}, position{initialPosition}, mesh{std::move(mesh)}
 {}
 
@@ -20,7 +20,8 @@ void Transform::reset()
   position = initialPosition;
 }
 
-std::vector<Vec3<float>> Transform::getMesh() const {
+std::vector<Vec3<float>> Transform::getMesh() const
+{
   std::vector<Vec3<float>> transformedMesh;
   transformedMesh.reserve(mesh.size());
 

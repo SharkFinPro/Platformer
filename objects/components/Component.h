@@ -3,7 +3,13 @@
 
 class Object;
 
-enum class ComponentType { collider, player, rigidBody, spriteRenderer, transform };
+enum class ComponentType {
+  collider,
+  player,
+  rigidBody,
+  spriteRenderer,
+  transform
+};
 
 class Component
 {

@@ -7,7 +7,7 @@
 
 class Transform;
 
-class RigidBody : public Component
+class RigidBody final : public Component
 {
 public:
   RigidBody();
@@ -21,6 +21,9 @@ public:
   void handleCollision(Vec3<float> minimumTranslationVector, const std::shared_ptr<Object>& other);
 
 private:
+  void limitMovement();
+
+private:
   Vec3<float> velocity;
 
   bool doGravity;
@@ -31,8 +34,6 @@ private:
   bool wasWasFalling;
 
   std::weak_ptr<Transform> transform_ptr;
-
-  void limitMovement();
 };
 
 

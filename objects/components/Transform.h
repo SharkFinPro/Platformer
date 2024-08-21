@@ -5,7 +5,7 @@
 #include "../../math/Vec3.h"
 #include <vector>
 
-class Transform : public Component
+class Transform final : public Component
 {
 public:
   Transform(float x, float y, std::vector<Vec3<float>> mesh);

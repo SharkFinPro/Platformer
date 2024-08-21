@@ -2,7 +2,7 @@
 #include "../../Object.h"
 #include "../Transform.h"
 #include <cfloat>
-#include <iostream>
+#include <stdexcept>
 
 Vec3<float> MeshCollider::findFurthestPoint(const Vec3<float>& direction)
 {
@@ -19,13 +19,11 @@ Vec3<float> MeshCollider::findFurthestPoint(const Vec3<float>& direction)
   float furthestDistance = -FLT_MAX;
   Vec3<float> furthestVertex;
 
-  if (std::shared_ptr<Transform> transform = transform_ptr.lock())
+  if (const std::shared_ptr<Transform> transform = transform_ptr.lock())
   {
     for (auto& vertex : transform->getMesh())
     {
-      float distance = vertex.dot(direction);
-
-      if (distance > furthestDistance)
+      if (const float distance = vertex.dot(direction); distance > furthestDistance)
       {
         furthestDistance = distance;
         furthestVertex = vertex;

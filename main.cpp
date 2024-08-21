@@ -19,41 +19,36 @@ int main()
   loadObjects(objectManager);
 
   // Create the window
-  sf::RenderWindow window(sf::VideoMode{1920, 1080}, "Platformer", sf::Style::None);
+  sf::RenderWindow window(sf::VideoMode{1920, 1080}, "Platformer", sf::Style::Titlebar | sf::Style::Close);
   window.setMouseCursorVisible(false);
   objectManager.setWindow(&window);
 
-  std::chrono::steady_clock::time_point previous = std::chrono::steady_clock::now();
+  auto previous = std::chrono::steady_clock::now();
 
-  // run the program as long as the window is open
+  // Run the program as long as the window is open
   while (window.isOpen())
   {
-    // check all the window's events that were triggered since the last iteration of the loop
+    // Check all the window's events that were triggered since the last iteration of the loop
     sf::Event event{};
     while (window.pollEvent(event))
     {
-      if (event.type == sf::Event::Closed)
+      if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
       {
         window.close();
       }
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
-    {
-      window.close();
-    }
-
-    // clear the window with black color
+    // Clear the window with a light gray color
     window.clear(sf::Color{200, 200, 200});
 
-    // Delta Time based off previous frame
-    std::chrono::steady_clock::time_point current = std::chrono::steady_clock::now();
-    float dt = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(current - previous).count()) / 1000000.0f;
+    // Delta time based off previous frame
+    auto current = std::chrono::steady_clock::now();
+    float dt = std::chrono::duration<float>(current - previous).count();
     previous = current;
 
     objectManager.update(dt);
 
-    // end the current frame
+    // Display the current frame
     window.display();
   }
 }
@@ -79,49 +74,51 @@ void loadObjects (ObjectManager& objectManager)
   }
 }
 
-std::vector<Vec3<float>> createQuadMesh(float width, float height)
+std::vector<Vec3<float>> createQuadMesh(const float width, const float height)
 {
-  auto mesh = std::vector<Vec3<float>>{};
-  mesh.emplace_back(-width / 2, -height / 2, 0);
-  mesh.emplace_back(width / 2, -height / 2, 0);
-  mesh.emplace_back(width / 2, height / 2, 0);
-  mesh.emplace_back(-width / 2, height / 2, 0);
+  const auto mesh = std::vector<Vec3<float>> {
+    {-width / 2, -height / 2, 0},
+    {width / 2, -height / 2, 0},
+    {width / 2, height / 2, 0},
+    {-width / 2, height / 2, 0}
+  };
 
   return mesh;
 }
 
-std::shared_ptr<Object> createPlayer(float x, float y, float width, float height, PlayerControlType controlType, sf::Color color)
+std::shared_ptr<Object> createPlayer(float x, float y, const float width, const float height,
+                                     PlayerControlType controlType, sf::Color color)
 {
-  auto object = std::make_shared<Object>();
+  const std::vector<std::shared_ptr<Component>> components {
+    std::make_shared<Transform>(x, y, createQuadMesh(width, height)),
+    std::make_shared<RigidBody>(),
+    std::make_shared<Player>(controlType),
+    std::make_shared<SpriteRenderer>(color),
+    std::make_shared<MeshCollider>()
+  };
 
-  object->addComponent(std::make_shared<Transform>(x, y, createQuadMesh(width, height)));
-  object->addComponent(std::make_shared<RigidBody>());
-  object->addComponent(std::make_shared<Player>(controlType));
-  object->addComponent(std::make_shared<SpriteRenderer>(color));
-  object->addComponent(std::make_shared<MeshCollider>());
-
-  return object;
+  return std::make_shared<Object>(components);
 }
 
-std::shared_ptr<Object> createBlock(float x, float y, float width, float height, sf::Color color)
+std::shared_ptr<Object> createBlock(float x, float y, const float width, const float height, sf::Color color)
 {
-  auto object = std::make_shared<Object>();
+  const std::vector<std::shared_ptr<Component>> components {
+    std::make_shared<Transform>(x, y, createQuadMesh(width, height)),
+    std::make_shared<MeshCollider>(),
+    std::make_shared<SpriteRenderer>(color)
+  };
 
-  object->addComponent(std::make_shared<Transform>(x, y, createQuadMesh(width, height)));
-  object->addComponent(std::make_shared<MeshCollider>());
-  object->addComponent(std::make_shared<SpriteRenderer>(color));
-
-  return object;
+  return std::make_shared<Object>(components);
 }
 
-std::shared_ptr<Object> createRigidBlock(float x, float y, float width, float height, sf::Color color)
+std::shared_ptr<Object> createRigidBlock(float x, float y, const float width, const float height, sf::Color color)
 {
-  auto object = std::make_shared<Object>();
+  const std::vector<std::shared_ptr<Component>> components {
+    std::make_shared<Transform>(x, y, createQuadMesh(width, height)),
+    std::make_shared<MeshCollider>(),
+    std::make_shared<RigidBody>(),
+    std::make_shared<SpriteRenderer>(color)
+  };
 
-  object->addComponent(std::make_shared<Transform>(x, y, createQuadMesh(width, height)));
-  object->addComponent(std::make_shared<MeshCollider>());
-  object->addComponent(std::make_shared<RigidBody>());
-  object->addComponent(std::make_shared<SpriteRenderer>(color));
-
-  return object;
+  return std::make_shared<Object>(components);
 }

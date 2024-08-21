@@ -1,10 +1,9 @@
 #ifndef PLATFORMER_OBJECT_H
 #define PLATFORMER_OBJECT_H
 
-#include <SFML/Graphics.hpp>
-#include <string>
 #include <unordered_map>
 #include <memory>
+#include <vector>
 
 class ObjectManager;
 enum class ComponentType;
@@ -13,6 +12,9 @@ class Component;
 class Object
 {
 public:
+  Object();
+  explicit Object(const std::vector<std::shared_ptr<Component>>& components);
+
   void update(float dt);
   void fixedUpdate(float dt);
 
