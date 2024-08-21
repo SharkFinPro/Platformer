@@ -20,7 +20,8 @@ void Transform::reset()
   position = initialPosition;
 }
 
-std::vector<Vec3<float>> Transform::getMesh() const {
+std::vector<Vec3<float>> Transform::getMesh() const
+{
   std::vector<Vec3<float>> transformedMesh;
   transformedMesh.reserve(mesh.size());
 
