@@ -7,7 +7,7 @@
 
 class Transform;
 
-class RigidBody : public Component
+class RigidBody final : public Component
 {
 public:
   RigidBody();

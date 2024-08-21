@@ -3,7 +3,7 @@
 
 #include "Collider.h"
 
-class MeshCollider : public Collider
+class MeshCollider final : public Collider
 {
 private:
   Vec3<float> findFurthestPoint(const Vec3<float>& direction) override;
