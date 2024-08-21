@@ -13,6 +13,8 @@ class Component;
 class Object
 {
 public:
+  Object();
+
   void update(float dt);
   void fixedUpdate(float dt);
 

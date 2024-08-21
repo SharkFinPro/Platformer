@@ -1,6 +1,10 @@
 #include "Object.h"
 #include "components/Component.h"
 
+Object::Object()
+  : owner(nullptr)
+{}
+
 void Object::update(const float dt)
 {
   for (auto& [componentType, component] : components)
