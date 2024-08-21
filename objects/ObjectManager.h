@@ -36,7 +36,7 @@ private:
 
   void checkCollisions();
 
-  void findCollisions(const std::shared_ptr<Object>& object1, const std::shared_ptr<Collider>& collider, std::vector<std::shared_ptr<Object>>& collidedObjects);
+  void findCollisions(const std::shared_ptr<Object>& object, const std::shared_ptr<Collider>& collider, std::vector<std::shared_ptr<Object>>& collidedObjects);
 
   static void handleCollisions(const std::shared_ptr<RigidBody>& rigidBody, const std::shared_ptr<Collider>& collider, std::vector<std::shared_ptr<Object>>& collidedObjects);
 };
