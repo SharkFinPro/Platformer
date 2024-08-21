@@ -127,7 +127,7 @@ void ObjectManager::handleCollisions(const std::shared_ptr<RigidBody>& rigidBody
   }
 
   std::vector<float> sortedDistances = distances;
-  std::sort(sortedDistances.begin(), sortedDistances.end(), std::greater<>());
+  std::ranges::sort(sortedDistances, std::greater());
 
   for (float sortedDistance : sortedDistances)
   {
