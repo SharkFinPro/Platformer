@@ -24,14 +24,8 @@ public:
   [[nodiscard]] sf::RenderWindow* getWindow() const;
 
 private:
-  std::vector<std::shared_ptr<Object>> objects;
-  sf::RenderWindow* window;
-
-  const float fixedUpdateDt;
-  float timeAccumulator;
-  int ticks;
-
   void variableUpdate(float dt);
+
   void fixedUpdate(float dt);
 
   void checkCollisions();
@@ -39,6 +33,14 @@ private:
   void findCollisions(const std::shared_ptr<Object>& object, const std::shared_ptr<Collider>& collider, std::vector<std::shared_ptr<Object>>& collidedObjects);
 
   static void handleCollisions(const std::shared_ptr<RigidBody>& rigidBody, const std::shared_ptr<Collider>& collider, std::vector<std::shared_ptr<Object>>& collidedObjects);
+
+private:
+  std::vector<std::shared_ptr<Object>> objects;
+  sf::RenderWindow* window;
+
+  const float fixedUpdateDt;
+  float timeAccumulator;
+  int ticks;
 };
 
 #endif //PLATFORMER_OBJECTMANAGER_H
