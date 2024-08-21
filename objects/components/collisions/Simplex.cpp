@@ -41,17 +41,17 @@ void Simplex::addVertex(Vec3<float> vertex)
   length++;
 }
 
-const Vec3<float>& Simplex::getA()
+const Vec3<float>& Simplex::getA() const
 {
   return vertices[0];
 }
 
-const Vec3<float>& Simplex::getB()
+const Vec3<float>& Simplex::getB() const
 {
   return vertices[1];
 }
 
-const Vec3<float>& Simplex::getC()
+const Vec3<float>& Simplex::getC() const
 {
   return vertices[2];
 }

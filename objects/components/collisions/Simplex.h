@@ -10,9 +10,9 @@ public:
 
   [[nodiscard]] size_t size() const;
 
-  const Vec3<float>& getA();
-  const Vec3<float>& getB();
-  const Vec3<float>& getC();
+  const Vec3<float>& getA() const;
+  const Vec3<float>& getB() const;
+  const Vec3<float>& getC() const;
 
   void removeB();
   void removeC();
