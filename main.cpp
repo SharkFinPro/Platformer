@@ -79,13 +79,14 @@ void loadObjects (ObjectManager& objectManager)
   }
 }
 
-std::vector<Vec3<float>> createQuadMesh(float width, float height)
+std::vector<Vec3<float>> createQuadMesh(const float width, const float height)
 {
-  auto mesh = std::vector<Vec3<float>>{};
-  mesh.emplace_back(-width / 2, -height / 2, 0);
-  mesh.emplace_back(width / 2, -height / 2, 0);
-  mesh.emplace_back(width / 2, height / 2, 0);
-  mesh.emplace_back(-width / 2, height / 2, 0);
+  const auto mesh = std::vector<Vec3<float>> {
+    {-width / 2, -height / 2, 0},
+    {width / 2, -height / 2, 0},
+    {width / 2, height / 2, 0},
+    {-width / 2, height / 2, 0}
+  };
 
   return mesh;
 }
