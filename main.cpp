@@ -91,38 +91,38 @@ std::vector<Vec3<float>> createQuadMesh(const float width, const float height)
   return mesh;
 }
 
-std::shared_ptr<Object> createPlayer(float x, float y, float width, float height, PlayerControlType controlType, sf::Color color)
+std::shared_ptr<Object> createPlayer(float x, float y, const float width, const float height, PlayerControlType controlType, sf::Color color)
 {
-  auto object = std::make_shared<Object>();
+  const std::vector<std::shared_ptr<Component>> components {
+    std::make_shared<Transform>(x, y, createQuadMesh(width, height)),
+    std::make_shared<RigidBody>(),
+    std::make_shared<Player>(controlType),
+    std::make_shared<SpriteRenderer>(color),
+    std::make_shared<MeshCollider>()
+  };
 
-  object->addComponent(std::make_shared<Transform>(x, y, createQuadMesh(width, height)));
-  object->addComponent(std::make_shared<RigidBody>());
-  object->addComponent(std::make_shared<Player>(controlType));
-  object->addComponent(std::make_shared<SpriteRenderer>(color));
-  object->addComponent(std::make_shared<MeshCollider>());
-
-  return object;
+  return std::make_shared<Object>(components);
 }
 
 std::shared_ptr<Object> createBlock(float x, float y, float width, float height, sf::Color color)
 {
-  auto object = std::make_shared<Object>();
+  const std::vector<std::shared_ptr<Component>> components {
+    std::make_shared<Transform>(x, y, createQuadMesh(width, height)),
+    std::make_shared<MeshCollider>(),
+    std::make_shared<SpriteRenderer>(color)
+  };
 
-  object->addComponent(std::make_shared<Transform>(x, y, createQuadMesh(width, height)));
-  object->addComponent(std::make_shared<MeshCollider>());
-  object->addComponent(std::make_shared<SpriteRenderer>(color));
-
-  return object;
+  return std::make_shared<Object>(components);
 }
 
 std::shared_ptr<Object> createRigidBlock(float x, float y, float width, float height, sf::Color color)
 {
-  auto object = std::make_shared<Object>();
+  const std::vector<std::shared_ptr<Component>> components {
+    std::make_shared<Transform>(x, y, createQuadMesh(width, height)),
+    std::make_shared<MeshCollider>(),
+    std::make_shared<RigidBody>(),
+    std::make_shared<SpriteRenderer>(color)
+  };
 
-  object->addComponent(std::make_shared<Transform>(x, y, createQuadMesh(width, height)));
-  object->addComponent(std::make_shared<MeshCollider>());
-  object->addComponent(std::make_shared<RigidBody>());
-  object->addComponent(std::make_shared<SpriteRenderer>(color));
-
-  return object;
+  return std::make_shared<Object>(components);
 }

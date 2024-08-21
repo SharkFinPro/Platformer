@@ -5,6 +5,15 @@ Object::Object()
   : owner(nullptr)
 {}
 
+Object::Object(const std::vector<std::shared_ptr<Component>>& components)
+  : owner(nullptr)
+{
+  for (const auto& component : components)
+  {
+    addComponent(component);
+  }
+}
+
 void Object::update(const float dt)
 {
   for (auto& [componentType, component] : components)
