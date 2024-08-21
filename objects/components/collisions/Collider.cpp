@@ -3,6 +3,7 @@
 #include "../Transform.h"
 #include <cfloat>
 #include <cmath>
+#include <stdexcept>
 
 Collider::Collider()
   : Component{ComponentType::collider}
