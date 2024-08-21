@@ -19,7 +19,7 @@ int main()
   loadObjects(objectManager);
 
   // Create the window
-  sf::RenderWindow window(sf::VideoMode{1920, 1080}, "Platformer", sf::Style::None);
+  sf::RenderWindow window(sf::VideoMode{1920, 1080}, "Platformer", sf::Style::Titlebar | sf::Style::Close);
   window.setMouseCursorVisible(false);
   objectManager.setWindow(&window);
 

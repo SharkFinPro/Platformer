@@ -2,6 +2,7 @@
 #include "../../Object.h"
 #include "../Transform.h"
 #include <cfloat>
+#include <stdexcept>
 
 Vec3<float> MeshCollider::findFurthestPoint(const Vec3<float>& direction)
 {
