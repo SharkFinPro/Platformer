@@ -21,7 +21,6 @@ void RigidBody::fixedUpdate(const float dt)
 
   if (const std::shared_ptr<Transform> transform = transform_ptr.lock())
   {
-
     wasWasFalling = wasFalling;
 
     wasFalling = true;
