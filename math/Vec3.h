@@ -23,8 +23,8 @@ public:
   void setY(T y);
   void setZ(T z);
 
-  T dot(Vec3<T> other) const;
-  Vec3<T> cross(Vec3<T> other) const;
+  T dot(const Vec3<T>& other) const;
+  Vec3<T> cross(const Vec3<T>& other) const;
 
   T length() const;
 
@@ -108,13 +108,13 @@ void Vec3<T>::setZ(T z_)
 }
 
 template<typename T>
-T Vec3<T>::dot(Vec3<T> other) const
+T Vec3<T>::dot(const Vec3<T>& other) const
 {
   return x * other.x + y * other.y + z * other.z;
 }
 
 template<typename T>
-Vec3<T> Vec3<T>::cross(Vec3<T> other) const
+Vec3<T> Vec3<T>::cross(const Vec3<T>& other) const
 {
   return {
     y * other.z - z * other.y,
