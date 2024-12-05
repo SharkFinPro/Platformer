@@ -23,8 +23,8 @@ public:
   void setY(T y);
   void setZ(T z);
 
-  T dot(Vec3<T> other) const;
-  Vec3<T> cross(Vec3<T> other) const;
+  T dot(const Vec3<T>& other) const;
+  Vec3<T> cross(const Vec3<T>& other) const;
 
   T length() const;
 
@@ -33,11 +33,11 @@ public:
   Vec3<T> operator+(Vec3<T> const& other) const;
   Vec3<T> operator-(Vec3<T> const& other) const;
   Vec3<T> operator-() const;
-  Vec3<T> operator*(float scalar) const;
+  Vec3<T> operator*(T scalar) const;
 
   Vec3<T> operator+=(Vec3<T> const& other);
   Vec3<T> operator-=(Vec3<T> const& other);
-  Vec3<T> operator*=(float scalar);
+  Vec3<T> operator*=(T scalar);
 
 private:
   T x;
@@ -108,13 +108,13 @@ void Vec3<T>::setZ(T z_)
 }
 
 template<typename T>
-T Vec3<T>::dot(Vec3<T> other) const
+T Vec3<T>::dot(const Vec3<T>& other) const
 {
   return x * other.x + y * other.y + z * other.z;
 }
 
 template<typename T>
-Vec3<T> Vec3<T>::cross(Vec3<T> other) const
+Vec3<T> Vec3<T>::cross(const Vec3<T>& other) const
 {
   return {
     y * other.z - z * other.y,
@@ -156,7 +156,7 @@ Vec3<T> Vec3<T>::operator-() const
 }
 
 template<typename T>
-Vec3<T> Vec3<T>::operator*(const float scalar) const
+Vec3<T> Vec3<T>::operator*(const T scalar) const
 {
   return { x * scalar, y * scalar, z * scalar };
 }
@@ -182,7 +182,7 @@ Vec3<T> Vec3<T>::operator-=(const Vec3<T>& other)
 }
 
 template<typename T>
-Vec3<T> Vec3<T>::operator*=(float scalar)
+Vec3<T> Vec3<T>::operator*=(T scalar)
 {
   x *= scalar;
   y *= scalar;

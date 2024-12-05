@@ -22,11 +22,11 @@ public:
 
   Vec2<T> operator+(Vec2<T> const& other) const;
   Vec2<T> operator-(Vec2<T> const& other) const;
-  Vec2<T> operator*(float scalar) const;
+  Vec2<T> operator*(T scalar) const;
 
   Vec2<T> operator+=(Vec2<T> const& other);
   Vec2<T> operator-=(Vec2<T> const& other);
-  Vec2<T> operator*=(float scalar);
+  Vec2<T> operator*=(T scalar);
 
 private:
   T x;
@@ -92,7 +92,7 @@ Vec2<T> Vec2<T>::operator-(const Vec2<T>& other) const
 }
 
 template<typename T>
-Vec2<T> Vec2<T>::operator*(const float scalar) const
+Vec2<T> Vec2<T>::operator*(const T scalar) const
 {
   return { x * scalar, y * scalar };
 }
@@ -118,7 +118,7 @@ Vec2<T> Vec2<T>::operator-=(const Vec2<T>& other)
 }
 
 template<typename T>
-Vec2<T> Vec2<T>::operator*=(float scalar)
+Vec2<T> Vec2<T>::operator*=(T scalar)
 {
   auto newVector = *this * scalar;
   x = newVector.x;
